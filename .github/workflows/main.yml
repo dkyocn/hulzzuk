@@ -90,7 +90,7 @@ jobs:
           source: "target/*war"
           target: "/tmp"
           script:  |
-            mv /app/tomcat/dev/apache-tomcat-10.1.39/webapps/hulzzuk.war /app/tomcat/dev/war/hulzzuk_backup.war 
-            mv *.war /app/tomcat/dev/apache-tomcat-10.1.39/webapps/hulzzuk.war
-            /app/tomcat/dev/apache-tomcat-10.1.39/bin/./shutdown.sh
-            /app/tomcat/dev/apache-tomcat-10.1.39/bin/./startup.sh
+            sudo mv /app/tomcat/dev/apache-tomcat-10.1.39/webapps/hulzzuk.war /app/tomcat/dev/war/hulzzuk_backup.war 
+            sudo mv *.war /app/tomcat/dev/apache-tomcat-10.1.39/webapps/hulzzuk.war
+            sudo /app/tomcat/dev/apache-tomcat-10.1.39/bin/./shutdown.sh
+            sudo /app/tomcat/dev/apache-tomcat-10.1.39/bin/./startup.sh
