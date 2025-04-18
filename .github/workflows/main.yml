@@ -87,7 +87,7 @@ jobs:
           host: ${{secrets.HOST}}
           username: ${{secrets.USER_NAME}}
           port: ${{secrets.PORT}}
-          source: "target/*war"
+          source: "target/*.war"
           target: "/tmp"
           script:  |
             sudo mv /app/tomcat/dev/apache-tomcat-10.1.39/webapps/hulzzuk.war /app/tomcat/dev/war/hulzzuk_backup.war 
