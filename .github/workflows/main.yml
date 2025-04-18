@@ -99,7 +99,11 @@ jobs:
           username: ${{secrets.USER_NAME}}
           port: ${{secrets.PORT}}
           script:  |
+            echo mv hulzzuk backup
             sudo mv /app/tomcat/dev/apache-tomcat-10.1.39/webapps/hulzzuk.war /app/tomcat/dev/war/hulzzuk_backup.war 
+            echo mv hulzzuk-0.0.1-SNAPSHOT
             sudo mv /app/tomcat/dev/war/target/hulzzuk-0.0.1-SNAPSHOT.war /app/tomcat/dev/apache-tomcat-10.1.39/webapps/hulzzuk.war
+            echo tomcat down
             sudo /app/tomcat/dev/apache-tomcat-10.1.39/bin/./shutdown.sh
+            echo tomcat start
             sudo /app/tomcat/dev/apache-tomcat-10.1.39/bin/./startup.sh
