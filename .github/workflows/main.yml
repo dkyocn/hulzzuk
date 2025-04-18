@@ -100,6 +100,6 @@ jobs:
           port: ${{secrets.PORT}}
           script:  |
             sudo mv /app/tomcat/dev/apache-tomcat-10.1.39/webapps/hulzzuk.war /app/tomcat/dev/war/hulzzuk_backup.war 
-            sudo mv /app/tomcat/dev/war/hulzzuk.war /app/tomcat/dev/apache-tomcat-10.1.39/webapps/
+            sudo mv /app/tomcat/dev/war/target/hulzzuk-0.0.1-SNAPSHOT.war /app/tomcat/dev/apache-tomcat-10.1.39/webapps/hulzzuk.war
             sudo /app/tomcat/dev/apache-tomcat-10.1.39/bin/./shutdown.sh
             sudo /app/tomcat/dev/apache-tomcat-10.1.39/bin/./startup.sh
