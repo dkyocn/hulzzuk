@@ -78,8 +78,19 @@ jobs:
         with:
           name: hulzzuk-war
           path: target/
+          
+      # 4. aws 서버 파일 복사
+      - name: Copy files to remote server
+        uses: appleboy/scp-action@master
+        with: 
+          password: ${{secrets.PASSWORD}}
+          host: ${{secrets.HOST}}
+          username: ${{secrets.USER_NAME}}
+          port: ${{secrets.PORT}}
+          source: "target/*.war"
+          target: "/app/tomcat/dev/war"
       
-      # 4. aws 서버 배포
+      # 5. aws 서버 배포
       - name: excuting remote ssh commands
         uses: appleboy/ssh-action@master
         with:
@@ -87,10 +98,8 @@ jobs:
           host: ${{secrets.HOST}}
           username: ${{secrets.USER_NAME}}
           port: ${{secrets.PORT}}
-          source: "target/*.war"
-          target: "/tmp"
           script:  |
             sudo mv /app/tomcat/dev/apache-tomcat-10.1.39/webapps/hulzzuk.war /app/tomcat/dev/war/hulzzuk_backup.war 
-            sudo mv *.war /app/tomcat/dev/apache-tomcat-10.1.39/webapps/hulzzuk.war
+            sudo mv /app/tomcat/dev/war/hulzzuk.war /app/tomcat/dev/apache-tomcat-10.1.39/webapps/
             sudo /app/tomcat/dev/apache-tomcat-10.1.39/bin/./shutdown.sh
             sudo /app/tomcat/dev/apache-tomcat-10.1.39/bin/./startup.sh
