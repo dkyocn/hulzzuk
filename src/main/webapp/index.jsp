@@ -1,10 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+
+
+</head>
+
 <script type="text/javascript" src="${ pageContext.servletContext.contextPath }/resources/js/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
 function movePage(){
@@ -20,9 +26,12 @@ function sendMail(){
 }
 </script>
 </head>
+
 <body>
-<h1> HELLO WORLD </h1>
+
 <button onclick="movePage();">first 로그인</button>
 <button onclick="sendMail();">mail 보내기</button>
+
+<c:import url="/WEB-INF/views/common/footer.jsp" />
 </body>
 </html>
