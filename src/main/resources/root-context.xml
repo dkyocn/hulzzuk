@@ -24,8 +24,8 @@
 	<bean class="org.apache.commons.dbcp.BasicDataSource" id="realDataSource" destroy-method="close">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
 		<property name="url" value="jdbc:oracle:thin:@13.209.51.216:21521:xe" />
-		<property name="username" value="c##test" />
-		<property name="password" value="test2504" />
+		<property name="username" value="system" />
+		<property name="password" value="oracle" />
 		<!-- <property name="username" value="c##grit" />
 		<property name="password" value="hulZZuk04" /> -->	
 	</bean>
