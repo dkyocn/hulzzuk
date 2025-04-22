@@ -28,9 +28,12 @@ function sendMail(){
 </head>
 
 <body>
+
 <c:import url="/WEB-INF/views/common/header.jsp"/>
 
 <button onclick="movePage();">first 로그인</button>
 <button onclick="sendMail();">mail 보내기</button>
+
+<c:import url="/WEB-INF/views/common/footer.jsp" />
 </body>
 </html>
