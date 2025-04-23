@@ -3,10 +3,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+
+
+</head>
+
 <script type="text/javascript" src="${ pageContext.servletContext.contextPath }/resources/js/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
 function movePage(){
@@ -27,14 +32,14 @@ function noticeDetail(){
 }
 </script>
 </head>
+
 <body>
-<h1> HELLO WORLD </h1>
+
+<c:import url="/WEB-INF/views/common/header.jsp"/>
+
 <button onclick="movePage();">first 로그인</button>
 <button onclick="sendMail();">mail 보내기</button>
-<c:url var="noti" value="notice/select.do">
-<%--    <c:param name="noticeId" value="${ notice.noticeId }" />--%>
-    <c:param name="noticeId" value="101" />
-</c:url>
-<a href="${noti}">1</a>
+
+<c:import url="/WEB-INF/views/common/footer.jsp" />
 </body>
 </html>

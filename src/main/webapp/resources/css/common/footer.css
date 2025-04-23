@@ -1,0 +1,52 @@
+.footer {
+  background-color: #ffffff;
+  color: #000000;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13px;
+  border-top: 1px solid #ddd;
+  line-height: 1.6;
+}
+
+.footer-top {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 50px;
+  margin-top: 20px;
+}
+
+.footer-top a {
+  color: #000;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+/* hover: 마우스를 글자 위에 올렸을 때 보여지는 속성*/
+.footer-top a:hover {
+  text-decoration: underline;
+}
+
+.footer-divider {
+  border-top: 1px solid #ddd;
+  margin: 20px 0 30px 0;
+}
+
+.footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 40px;
+  max-width: 920px;
+  margin: 30px o;
+  margin-top: 30px;
+  margin-left: 480px;
+  margin-bottom: 30px;
+}
+
+.footer-section {
+  padding-left: 30px;
+  /* flex: 1 1 30% : 기본 너비는 30% , 공간이 남으면 1비율만큼 늘어남, 공간이 부족하면 1비율만큼 줄어듦*/
+  flex: 1 1 30%;
+  min-width: 250px;
+}
