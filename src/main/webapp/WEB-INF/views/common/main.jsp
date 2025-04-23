@@ -85,8 +85,10 @@
 		<section class="tiles">
 
 			<div id="logDiv">
-				<button class="title" onclick="movePage();">Log</button>
-				<hr class="titlehr">
+				<div class="title">
+					<button class="title" onclick="movePage();">Log</button>
+					<hr class="titlehr">
+				</div>
 				<div class="carouselWrapper" data-track="logTop">
 					<button class="prevBtn">❮</button>
 					<div id="logTop" class="sliderOuter">
@@ -165,9 +167,11 @@
 			<br> <br>
 
 			<div id="accoDiv">
-				<button class="title" onclick="movePage();">숙소</button>
-				<hr class="titlehr">
-				<div class="carouselWrapper">
+				<div class="title">
+					<button class="title" onclick="movePage();">숙소</button>
+					<hr class="titlehr">
+				</div>
+				<div class="carouselWrapper" data-track="accoTop">
 					<button class="prevBtn" onclick="prevSlide()">❮</button>
 					<div id="accoTop" class="sliderOuter">
 						<div class="sliderTrack">
@@ -245,8 +249,10 @@
 			<br> <br>
 
 			<div id="restDiv">
-				<button class="title" onclick="movePage();">식당</button>
-				<hr class="titlehr">
+				<div class="title">
+					<button class="title" onclick="movePage();">식당</button>
+					<hr class="titlehr">
+				</div>
 				<div class="carouselWrapper">
 					<button class="prevBtn" onclick="prevSlide()">❮</button>
 					<div id="restTop" class="sliderOuter">
@@ -325,8 +331,10 @@
 			<br> <br>
 
 			<div id="attrDiv">
-				<button class="title" onclick="movePage();">즐길거리</button>
-				<hr class="titlehr">
+				<div class="title">
+					<button class="title" onclick="movePage();">즐길거리</button>
+					<hr class="titlehr">
+				</div>
 				<div class="carouselWrapper">
 					<button class="prevBtn" onclick="prevSlide()">❮</button>
 					<div id="attrTop" class="sliderOuter">
@@ -406,7 +414,6 @@
 		</section>
 	</div>
 	<!-- Scripts -->
-	<script src="resources/assets/js/jquery.min.js"></script>
 	<script src="resources/assets/js/browser.min.js"></script>
 	<script src="resources/assets/js/breakpoints.min.js"></script>
 	<script src="resources/assets/js/util.js"></script>

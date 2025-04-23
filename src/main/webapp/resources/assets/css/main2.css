@@ -331,7 +331,7 @@ input[type="text"], input[type="password"], input[type="email"], input[type="tel
 	background-color: transparent;
 	border: none;
 	border-radius: 0;
-	border-bottom: solid 1px #c9c9c9;
+	/*border-bottom: solid 1px #c9c9c9;*/
 	color: inherit;
 	display: block;
 	outline: 0;
@@ -345,11 +345,11 @@ input[type="text"]:invalid, input[type="password"]:invalid, input[type="email"]:
 	box-shadow: none;
 }
 
-input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus,
-	input[type="tel"]:focus, select:focus, textarea:focus {
-	border-bottom-color: #f2849e;
-	box-shadow: inset 0 -1px 0 0 #f2849e;
-}
+/*input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus,*/
+/*	input[type="tel"]:focus, select:focus, textarea:focus {*/
+/*	border-bottom-color: #f2849e;*/
+/*	box-shadow: inset 0 -1px 0 0 #f2849e;*/
+/*}*/
 
 select {
 	background-image:
@@ -638,10 +638,10 @@ input[type="submit"].disabled, input[type="submit"]:disabled, input[type="reset"
 .tiles {
 	display: flex;
 	flex-wrap: wrap;
-	postion: relative;
+	position: relative;
 	flex-direction: column;
 	align-content: center;
-	width: 1920px;
+	width: 100%;
 }
 
 .tiles article {
@@ -897,7 +897,7 @@ body.is-touch .tiles article .content {
 /* inner */
 .inner {
 	display: flex;
-	width: 1920px;
+	width: 100%;
 	max-width: 68em;
 	margin: 0 auto;
 	padding: 0 2.5em;
@@ -920,13 +920,18 @@ body.is-touch .tiles article .content {
 }
 
 #top3 {
-	width: 1920px;
+	width: 100%;
 	margin: 0 auto;
 }
 
 /* title */
+div.title {
+	margin-left: 22%;
+	font-family: "Source Sans Pro", Helvetica, sans-serif;
+	font-size: 16pt;
+	font-weight: 500;
+}
 button.title {
-	margin-left: 16%; color : #E96A18;
 	background: none;
 	border: none;
 	font-family: "Source Sans Pro", Helvetica, sans-serif;
@@ -938,7 +943,7 @@ button.title {
 }
 
 hr.titlehr {
-	margin-left: 17% !important;
+	margin-left: 1% !important;
 	width: 25%;
 	margin-left: 0;
 	margin-right: auto;
@@ -955,27 +960,27 @@ hr.titlehr {
 	justify-content: center;
 	position: relative;
 	margin: 10px 5px 0px;
-	width: 1600px;
+	width: 100%;
 }
 
 #logDiv {
 	justify-content: center;
-	width: 1700px;
+	width: 100%;
 }
 
 #accoDiv {
 	justify-content: center;
-	width: 1700px;
+	width: 100%;
 }
 
 #restDiv {
 	justify-content: center;
-	width: 1700px;
+	width: 100%;
 }
 
 #attrDiv {
 	justify-content: center;
-	width: 1700px;
+	width: 100%;
 }
 
 .sliderTrack {
@@ -1018,13 +1023,15 @@ hr.titlehr {
 	height: 45px;
 	display: flex;
 	align-items: center;
+	transform: translateY(-50%);
 	justify-content: center;
 	margin: 0 5px;
 }
 
 /* ------------- 검색창 -------------*/
 .search-box #category {
-	width: 100px;
+	text-align: center;
+	width: 104px;
 	border: none;
 	font-size: 16px;
 }
