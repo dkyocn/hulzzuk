@@ -62,8 +62,8 @@
 </head>
 
 
-<body class="is-preload">
-	<%-- <c:import url="/WEB-INF/views/common/header.jsp" /> --%>
+<body>
+	<c:import url="/WEB-INF/views/common/header.jsp" />
 	<div class="inner">
 		<img id="logo" src="resources/images/hulzzuk01.png"> <br>
 		<form class="search-box" action="" method="get">
@@ -412,6 +412,6 @@
 	<script src="resources/assets/js/util.js"></script>
 	<script src="resources/assets/js/main.js"></script>
 
-	<%-- <c:import url="/WEB-INF/views/common/footer.jsp" /> --%>
+	<c:import url="/WEB-INF/views/common/footer.jsp" />
 </body>
 </html>
