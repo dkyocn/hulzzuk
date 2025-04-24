@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="planMapper">
+
+    <resultMap type="Plan" id="resultVO">
+        <result property="planId" column="PLAN_ID" />
+        <result property="planTitle" column="PLAN_TITLE" />
+        <result property="planPlace" column="PLAN_PLACE" />
+        <result property="planStartDate" column="PLAN_START_DATE" jdbcType="DATE"/>
+        <result property="planEndDate" column="PLAN_END_DATE"  jdbcType="DATE" />
+    </resultMap>
+
+<!--    <select id="getPlanPage" parameterType="hashMap" resultMap="resultVO">-->
+<!--        <![CDATA[-->
+<!--        select PLAN_ID, PLAN_TITLE, PLAN_PLACE, PLAN_START_DATE, PLAN_END_DATE-->
+<!--        from (select row_number() over (order by regdate desc) rn, PLAN_ID, PLAN_TITLE, PLAN_PLACE, PLAN_START_DATE, PLAN_END_DATE-->
+<!--              from TB_PLAN-->
+<!--              where PLAN_TITLE like '%' || #{keyword} || '%')-->
+<!--        where rn > ((#{pageMaker.pageNum}-1) * #{pageMaker.numPerPage}) and rn <= #{pageMaker.pageNum} * #{pageMaker.numPerPage}-->
+<!--        ]]>-->
+<!--    </select>-->
+
+    <select id="getPlanPage" parameterType="hashMap" resultMap="resultVO">
+        SELECT PLAN_ID, PLAN_TITLE, PLAN_PLACE, PLAN_START_DATE, PLAN_END_DATE
+        FROM (SELECT ROWNUM RNUM, PLAN_ID, PLAN_TITLE, PLAN_PLACE, PLAN_START_DATE, PLAN_END_DATE
+              FROM TB_PLAN
+                where PLAN_TITLE like '%' || #{ keyword } || '%')
+        WHERE RNUM BETWEEN #{ paging.startRow } AND #{ paging.endRow }
+    </select>
+
+    <select id="countPlan" parameterType="string" resultType="_int">
+        select count(*)  from TB_PLAN where PLAN_TITLE like '%' || #{keyword} || '%'
+    </select>
+
+
+</mapper>
