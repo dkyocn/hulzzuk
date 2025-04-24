@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="userMapper">
+
+	<resultMap type="User" id="resultList">
+		<result property="userId" column="USER_ID" />
+		<result property="userPwd" column="USER_PWD" />
+		<result property="userNick" column="USER_NICK" />
+		<result property="gender" column="USER_GENDER" />
+		<result property="userAge" column="USER_AGE" />
+		<result property="userKey" column="USER_KEY" />
+		<result property="userPath" column="USER_PATH" />
+		<result property="userRefreshCode" column="USER_REFRESHCODE" />
+		<result property="adminYN" column="ADMIN_YN" />
+	</resultMap>
+
+	<!-- 회원 정보 조회 -->
+	<select id="selectUser" parameterType="string"
+		resultMap="resultList">
+		select *
+		from tb_user
+		where user_id = #{ userId }
+	</select>
+	
+</mapper>
