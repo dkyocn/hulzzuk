@@ -52,7 +52,11 @@
     </ul>
 
     <ul class="menu-section">
-        <li><a href="#">공지사항</a></li>
+        <c:url var="noti" value="notice/select.do">
+            <c:param name="noticeId" value="1" />
+        </c:url>
+        <a href="${noti}">1</a>
+        <li><a href="${noti}">공지사항</a></li>
         <li><a href="#">FAQ</a></li>
         <li><a href="#">고객의 소리</a></li>
     </ul>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="noticeMapper">
+
+	<resultMap type="Notice" id="resultVO">
+		<result property="noticeId" column="NOTICE_ID" />
+		<result property="title" column="TITLE" />
+		<result property="content" column="CONTENT" />
+		<result property="isPinned" column="IS_PINNED" />
+		<result property="createdAt" column="CREATED_AT" />
+		<result property="updatedAt" column="UPDATED_AT" />
+		<!-- <result property="category" column="CATEGORY" /> -->
+	</resultMap>
+
+	<select id="getNoticeById" parameterType="Long" resultMap="resultVO">
+        SELECT NOTICE_ID, TITLE, CONTENT, IS_PINNED, CREATED_AT, UPDATED_AT
+		FROM TB_NOTICE where notice_id = #{noticeId}
+    </select>
+
+
+</mapper>
