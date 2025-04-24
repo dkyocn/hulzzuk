@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -25,7 +26,9 @@ function sendMail(){
 	//location 내장객체의 href 속성을 사용함 : 상대경로, 절대경로 둘 다 사용 가능함
 	location.href = 'mail.do';  //서버측으로 로그인 페이지 내보내기 요청 보냄
 }
+
 </script> --%>
+
 </head>
 
 <body>
