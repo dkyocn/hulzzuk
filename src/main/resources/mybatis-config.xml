@@ -11,6 +11,11 @@
 	 	<setting name="cacheEnabled" value="false" />
 	 </settings>
 
+<typeAliases>
+    <typeAlias type="com.hulzzuk.log.model.vo.LogVO" alias="log"/>
+    <typeAlias type="com.hulzzuk.log.model.vo.PageCriteria" alias="pageCriteria"/>
+</typeAliases>
+
 	<!-- 존재하지 않는 클래스와 매퍼파일을 먼저 등록 설정하면 톰켓 구동 안함 : 에러 발생함 -->
 	<!-- <typeAliases>		
 		<typeAlias type="com.hulzzuk.user.vo.UserVO" alias="User" />
@@ -20,6 +25,7 @@
 	
 	<mappers>
 		<mapper resource="mappers/test-mapper.xml" />
+		<mapper resource="mappers/log-mapper.xml" />
 		<!-- <mapper resource="mappers/notice-mapper.xml" />
 		<mapper resource="mappers/board-mapper.xml" /> -->
 	</mappers>

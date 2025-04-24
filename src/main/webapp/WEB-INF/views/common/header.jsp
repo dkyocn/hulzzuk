@@ -28,7 +28,7 @@
 
     <div class="rmenu">
         <a href="#">My 찜</a>
-        <a href="#">여행로그</a>
+        <a href="${pageContext.request.contextPath}/WEB-INF/views/logs/log.jsp"">여행로그</a>
         <a href="#">일정</a>
         <a href="#">프로필</a>
     </div>
