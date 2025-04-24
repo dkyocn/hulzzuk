@@ -60,7 +60,35 @@
 <c:forEach items="${ requestScope.list }" var="plan">
     <div class="planList">
         <div class="planContent">
-            <img class="planImg" src="${pageContext.request.contextPath}/resources/images/pic03.jpg" alt="">
+            <c:choose>
+                <c:when test="${ plan.planPlace == '부산' }">
+                    <img class="planImg" src="${pageContext.request.contextPath}/resources/images/plan/busan.jpeg" alt="">
+                </c:when>
+                <c:when test="${ plan.planPlace == '강원' }">
+                    <img class="planImg" src="${pageContext.request.contextPath}/resources/images/plan/gangwon.jpeg" alt="">
+                </c:when>
+                <c:when test="${ plan.planPlace == '제주' }">
+                    <img class="planImg" src="${pageContext.request.contextPath}/resources/images/plan/jeju.jpeg" alt="">
+                </c:when>
+                <c:when test="${ plan.planPlace == '서울' }">
+                    <img class="planImg" src="${pageContext.request.contextPath}/resources/images/plan/seoul.jpg" alt="">
+                </c:when>
+                <c:when test="${ plan.planPlace == '충청' }">
+                    <img class="planImg" src="${pageContext.request.contextPath}/resources/images/plan/chungcheong.jpeg" alt="">
+                </c:when>
+                <c:when test="${ plan.planPlace == '경기' }">
+                    <img class="planImg" src="${pageContext.request.contextPath}/resources/images/plan/gyeonggi.jpeg" alt="">
+                </c:when>
+                <c:when test="${ plan.planPlace == '인천' }">
+                    <img class="planImg" src="${pageContext.request.contextPath}/resources/images/plan/incheon.jpeg" alt="">
+                </c:when>
+                <c:when test="${ plan.planPlace == '경상' }">
+                    <img class="planImg" src="${pageContext.request.contextPath}/resources/images/plan/gyeongsang.jpeg" alt="">
+                </c:when>
+                <c:when test="${ plan.planPlace == '전라' }">
+                    <img class="planImg" src="${pageContext.request.contextPath}/resources/images/plan/jeolla.jpeg" alt="">
+                </c:when>
+            </c:choose>
             <div class="planContentTitle">
                 <c:url var="bd" value="select.do">
                     <c:param name="bnum" value="${ plan.planId }" />
@@ -73,31 +101,6 @@
         <img class="planMenu" src="${pageContext.request.contextPath}/resources/images/plan/menu.png">
     </div>
 </c:forEach>
-<%-- 조회된 게시글 목록 출력 --%>
-<%--<table align="center" width="650" border="1" cellspacing="0" cellpadding="0">--%>
-<%--    <tr>--%>
-<%--        <th>번호</th>--%>
-<%--        <th>제목</th>--%>
-<%--        <th>장소</th>--%>
-<%--        <th>시작날짜</th>--%>
-<%--        <th>종료날짜</th>--%>
-<%--    </tr>--%>
-<%--    <c:forEach items="${ requestScope.list }" var="plan">--%>
-<%--        <tr align="center">--%>
-<%--            <td>${ plan.planId }</td>--%>
-<%--            <td align="left">--%>
-<%--                <c:url var="bd" value="select.do">--%>
-<%--                    <c:param name="bnum" value="${ plan.planId }" />--%>
-<%--                    <c:param name="page" value="${ nowpage }" />--%>
-<%--                </c:url>--%>
-<%--                <a href="${ bd }">${ plan.planTitle }</a>--%>
-<%--            </td>--%>
-<%--            <td>${ plan.planPlace }</td>--%>
-<%--            <td>${ plan.planStartDate }</td>--%>
-<%--            <td>${ plan.planEndDate }</td>--%>
-<%--        </tr>--%>
-<%--    </c:forEach>--%>
-<%--</table>--%>
 <c:import url="/WEB-INF/views/common/pagination.jsp" />
 <c:import url="/WEB-INF/views/common/footer.jsp" />
 </body>
