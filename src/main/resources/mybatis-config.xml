@@ -15,6 +15,7 @@
 	<typeAliases>
 		<typeAlias type="com.hulzzuk.notice.model.vo.NoticeVO" alias="Notice" />
 		<typeAlias type="com.hulzzuk.log.model.vo.LogVO" alias="log"/>
+		<typeAlias type="com.hulzzuk.user.model.vo.UserVO" alias="User" />
 		<typeAlias type="com.hulzzuk.plan.model.vo.PlanVO" alias="Plan" />
 	</typeAliases>
 	
@@ -22,6 +23,7 @@
 		<mapper resource="mappers/test-mapper.xml" />
 		<mapper resource="mappers/log-mapper.xml" />
 		<mapper resource="mappers/notice-mapper.xml" />
+		<mapper resource="mappers/user-mapper.xml"/>
 		<mapper resource="mappers/plan-mapper.xml" />
 	</mappers>
 </configuration>
