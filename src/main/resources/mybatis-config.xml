@@ -13,21 +13,17 @@
 
 	<!-- 존재하지 않는 클래스와 매퍼파일을 먼저 등록 설정하면 톰켓 구동 안함 : 에러 발생함 -->
 
-	<!-- <typeAliases>		
-		<typeAlias type="com.hulzzuk.user.vo.UserVO" alias="User" />
+	<typeAliases>		
+		<typeAlias type="com.hulzzuk.user.model.vo.UserVO" alias="User" />
 		<typeAlias type="com.hulzzuk.notice.model.vo.NoticeVO" alias="Notice" />	
-		<typeAlias type="com.hulzzuk.location.model.vo.LocationVO" alias="Location" />
-								
-	</typeAliases> -->
+		<typeAlias type="com.hulzzuk.location.model.vo.LocationVO" alias="Location" />			
+	</typeAliases>
 	
 	<mappers>
 		<mapper resource="mappers/test-mapper.xml" />
-    <mapper resource="mappers/notice-mapper.xml" />
-		<!-- 
-		<mapper resource="mappers/board-mapper.xml" />
+		  <mapper resource="mappers/notice-mapper.xml" />
 		<mapper resource="mappers/acco-mapper.xml" />
 		<mapper resource="mappers/rest-mapper.xml" />
 		<mapper resource="mappers/attr-mapper.xml" />
-		 -->
 	</mappers>
 </configuration>
