@@ -10,6 +10,7 @@
 		<result property="userNick" column="USER_NICK" />
 		<result property="gender" column="USER_GENDER" />
 		<result property="userAge" column="USER_AGE" />
+		<result property="userProfile" column="USER_PROFILE" />
 		<result property="userKey" column="USER_KEY" />
 		<result property="userPath" column="USER_PATH" />
 		<result property="userRefreshCode" column="USER_REFRESHCODE" />

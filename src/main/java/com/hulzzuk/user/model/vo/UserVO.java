@@ -12,6 +12,7 @@ public class UserVO implements java.io.Serializable {
 	private String userNick;		//	USER_NICK	VARCHAR2(20 BYTE)
 	private String gender;			//	USER_GENDER	CHAR(1 BYTE)
 	private Date userAge;			//	USER_AGE	DATE
+	private String userProfile;		//  USER_PROFILE VARCHAR2(500 BYTE)
 	private String userKey;			//	USER_KEY	VARCHAR2(30 BYTE)
 	private String userPath; 		//	USER_PATH	VARCHAR2(30 BYTE)
 	private String userRefreshCode;	//	USER_REFRESHCODE	VARCHAR2(255 BYTE)
@@ -29,14 +30,15 @@ public class UserVO implements java.io.Serializable {
 		super();
 	}
 
-	public UserVO(String userId, String userPwd, String userNick, String gender, Date userAge, String userKey,
-			String userPath, String userRefreshCode, String adminYN) {
+	public UserVO(String userId, String userPwd, String userNick, String gender, Date userAge, String userProfile,
+			String userKey,	String userPath, String userRefreshCode, String adminYN) {
 		super();
 		this.userId = userId;
 		this.userPwd = userPwd;
 		this.userNick = userNick;
 		this.gender = gender;
 		this.userAge = userAge;
+		this.userProfile = userProfile;
 		this.userKey = userKey;
 		this.userPath = userPath;
 		this.userRefreshCode = userRefreshCode;
@@ -71,6 +73,14 @@ public class UserVO implements java.io.Serializable {
 
 	public String getGender() {
 		return gender;
+	}
+
+	public String getUserProfile() {
+		return userProfile;
+	}
+
+	public void setUserProfile(String userProfile) {
+		this.userProfile = userProfile;
 	}
 
 	public void setGender(String gender) {

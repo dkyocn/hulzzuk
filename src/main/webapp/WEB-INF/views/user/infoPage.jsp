@@ -68,7 +68,7 @@ table #infoDetail>th {
 	<div id="info">
 		<tr>
 			<th text-align="center"></th>
-			<td><img src="/hulzzuk/resources/images/hulzzuk01.png"> <%-- <c:if test="${ !empty requestScope.user.photoFileName }">
+			<td><img src="${ requestScope.user.userProfile }"> <%-- <c:if test="${ !empty requestScope.user.photoFileName }">
 			<div id="myphoto" style="margin:0; width:150px; height:160px; padding:0; border:1px solid navy;">
 				사진 첨부가 없을 경우를 위한 미리보기용 이미지 출력되게 함
 				<img src="/first/resources/photoFiles/${ requestScope.user.photoFileName }" id="photo" 
