@@ -21,7 +21,6 @@ public class UserController {
 	private UserService userService;
 	
 	// 내 정보 보기 페이지
-	@ResponseBody
 	@RequestMapping(value = "select.do", method = RequestMethod.GET, produces = "application/json; charset:UTF-8")
 	public ModelAndView userDetailMethod(@RequestParam("userId") String userId) {
 		

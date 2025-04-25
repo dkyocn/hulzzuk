@@ -1,6 +1,8 @@
 package com.hulzzuk.user.model.vo;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.Period;
 
 public class UserVO implements java.io.Serializable {
 	private static final long serialVersionUID = -163877130673884040L;
@@ -9,11 +11,19 @@ public class UserVO implements java.io.Serializable {
 	private String userPwd; 		//	USER_PWD	VARCHAR2(255 BYTE)
 	private String userNick;		//	USER_NICK	VARCHAR2(20 BYTE)
 	private String gender;			//	USER_GENDER	CHAR(1 BYTE)
-	private Date userAge;	//	USER_AGE	DATE
+	private Date userAge;			//	USER_AGE	DATE
 	private String userKey;			//	USER_KEY	VARCHAR2(30 BYTE)
 	private String userPath; 		//	USER_PATH	VARCHAR2(30 BYTE)
 	private String userRefreshCode;	//	USER_REFRESHCODE	VARCHAR2(255 BYTE)
 	private String adminYN;			//	ADMIN_YN	VARCHAR2(4 BYTE)
+	
+	// 나이 계산 메소드
+	public int getAge() {
+		if(userAge == null) return 0;
+		LocalDate birth = userAge.toLocalDate();
+		LocalDate today = LocalDate.now();
+		return Period.between(birth, today).getYears();
+	}
 	
 	public UserVO() {
 		super();

@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
 	            mv.setViewName("user/infoPage"); // user/myPage.jsp로 이동
 	            mv.addObject("user", user);    // 모델에 user 객체 추가
 	        } else {
-	        	throw new IllegalArgumentException(ErrorCode.NOTICE_NOT_FOUND.getMessage());
+	        	throw new IllegalArgumentException(ErrorCode.USER_NOT_FOUND.getMessage());
 	        }
 		  
 		return mv;
