@@ -77,7 +77,7 @@
     <ul class="menu-section">
         <li><a href="#">마이페이지</a></li>
         <li class="mymenu"><a href="#">My 여행로그</a></li>
-        <li class="mymenu"><a href="#">My 일정</a></li>
+        <li class="mymenu"><a href="${ pageContext.servletContext.contextPath }/plan/page.do?page=1">My 일정</a></li>
         <li class="mymenu"><a href="#">My 찜</a></li>
         <li class="mymenu"><a href="#">My 리뷰</a></li>
     </ul>

@@ -3,10 +3,10 @@ package com.hulzzuk.notice.model.vo;
 import java.io.Serializable;
 import java.sql.Date;
 
-import com.hulzzuk.common.vo.PageMaker;
+import com.hulzzuk.common.vo.Paging;
 import com.hulzzuk.notice.enummeration.Category;
 
-public class NoticeVO extends PageMaker implements Serializable {
+public class NoticeVO extends Paging implements Serializable {
 
 	private long noticeId; // 공지사항 id
 	private String title; // 제목
@@ -24,7 +24,6 @@ public class NoticeVO extends PageMaker implements Serializable {
 
 	public NoticeVO(long noticeId, String title, String content, int isPinned, Date createdAt, Date updatedAt,
 			Category category) {
-		super();
 		this.noticeId = noticeId;
 		this.title = title;
 		this.content = content;
