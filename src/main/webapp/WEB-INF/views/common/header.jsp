@@ -28,7 +28,7 @@
 
     <div class="rmenu">
         <a href="#">My 찜</a>
-        <a href="${pageContext.request.contextPath}/WEB-INF/views/logs/log.jsp"">여행로그</a>
+        <a href="${pageContext.request.contextPath}/log/page.do?page=1">여행로그</a>
         <a href="#">일정</a>
         <a href="#">프로필</a>
     </div>
@@ -55,7 +55,6 @@
         <c:url var="noti" value="notice/select.do">
             <c:param name="noticeId" value="1" />
         </c:url>
-        <a href="${noti}">1</a>
         <li><a href="${noti}">공지사항</a></li>
         <li><a href="#">FAQ</a></li>
         <li><a href="#">고객의 소리</a></li>
