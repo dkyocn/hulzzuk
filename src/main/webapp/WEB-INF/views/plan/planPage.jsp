@@ -45,13 +45,31 @@
             });
         });
     </script>
+    <style>
+        .delete {
+            background-image: url("${pageContext.request.contextPath}/resources/images/common/delete.png");
+        }
+
+        .edit {
+            background-image: url("${pageContext.request.contextPath}/resources/images/common/edit.png");
+        }
+
+        .delete:hover {
+            background-image: url("${pageContext.request.contextPath}/resources/images/common/delete-orange.png");
+        }
+
+        .edit:hover {
+            background-image: url("${pageContext.request.contextPath}/resources/images/common/edit-orange.png");
+        }
+
+    </style>
 </head>
 <body>
 <c:import url="/WEB-INF/views/common/header.jsp" />
 <div>
     <div class="planPageTitle">
         <h1 class="planTitle">여행 일정</h1>
-        <button class="planCreateBtn" onclick="location.href='${ pageContext.servletContext.contextPath }/blist.do?page=1';">
+        <button class="planCreateBtn" onclick="location.href='${ pageContext.servletContext.contextPath }/plan/moveCreate.do';">
             <img class="planCreateImg" src="${pageContext.request.contextPath}/resources/images/plan/add-button-black.png">
             <span class="planCreateText">새로운 일정</span> </button>
     </div>
@@ -91,14 +109,25 @@
             </c:choose>
             <div class="planContentTitle">
                 <c:url var="bd" value="select.do">
-                    <c:param name="bnum" value="${ plan.planId }" />
+                    <c:param name="planId" value="${ plan.planId }" />
                     <c:param name="page" value="${ nowpage }" />
                 </c:url>
                 <a class="planName" href="${ bd }">${ plan.planTitle }</a>
                 <p class="planDate">${ plan.planStartDate } ~ ${ plan.planEndDate }</p>
             </div>
         </div>
-        <img class="planMenu" src="${pageContext.request.contextPath}/resources/images/plan/menu.png">
+        <div class="deleteEdit">
+            <c:url var="delete" value="/plan/moveDelete.do">
+                <c:param name="planId" value="${ plan.planId }" />
+                <c:param name="page" value="${ nowpage }" />
+            </c:url>
+            <div class="delete" onclick="window.location.href='${delete}'"></div>
+            <c:url var="edit" value="/plan/moveUpdate.do">
+                <c:param name="planId" value="${ plan.planId }" />
+                <c:param name="page" value="${ nowpage }" />
+            </c:url>
+            <div class="edit" onclick="window.location.href='${edit}'"></div>
+        </div>
     </div>
 </c:forEach>
 <c:import url="/WEB-INF/views/common/pagination.jsp" />

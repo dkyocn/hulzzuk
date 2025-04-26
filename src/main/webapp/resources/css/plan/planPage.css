@@ -84,7 +84,25 @@ p.planDate {
     margin: 1% 0 0 5%;
 }
 
-img.planMenu {
+.deleteEdit {
+    display: flex;
+}
+
+.delete, .edit{
+    cursor: pointer;
+    margin-left: 4px;
     width: 32px;
     height: 32px;
 }
+
+/*.delete {*/
+/*    background-image: url("/resources/images/common/delete.png");*/
+/*}*/
+
+/*.edit {*/
+/*    background-image: url("/resources/images/common/edit.png");*/
+/*}*/
+
+/*.delete:hover, .edit:hover {*/
+/*    display: none;*/
+/*}*/

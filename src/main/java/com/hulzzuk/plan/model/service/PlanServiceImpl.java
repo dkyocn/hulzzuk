@@ -16,7 +16,7 @@ public class PlanServiceImpl implements PlanService {
     private PlanDao planDao;
 
     @Override
-    public ModelAndView getPlanPage(String action, String keyword, String page, String slimit, ModelAndView mv) {
+    public ModelAndView getPlanPage(String keyword, String page, String slimit, ModelAndView mv) {
 
         // 페이징 처리
         int currentPage = 1;
@@ -45,7 +45,6 @@ public class PlanServiceImpl implements PlanService {
             // ModelAndView : Model + View
             mv.addObject("list", planPage); // request.setAttribute("list", list) 와 같음
             mv.addObject("paging", paging);
-            mv.addObject("action", action);
             mv.addObject("keyword", keyword);
 
             mv.setViewName("plan/planPage");
