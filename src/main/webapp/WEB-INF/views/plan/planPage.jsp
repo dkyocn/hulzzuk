@@ -44,6 +44,11 @@
                 planCreateText.style.color = defaultTextColor;
             });
         });
+
+        function openDeletePopup(url) {
+            // 팝업 창 열기 (가로 400px, 세로 300px)
+            window.open(url, 'deletePopup', 'width=350,height=250');
+        }
     </script>
     <style>
         .delete {
@@ -117,11 +122,15 @@
             </div>
         </div>
         <div class="deleteEdit">
-            <c:url var="delete" value="/plan/moveDelete.do">
-                <c:param name="planId" value="${ plan.planId }" />
-                <c:param name="page" value="${ nowpage }" />
+            <c:url var="delete" value="moveDelete.do">
+                <c:param name="planId" value="${plan.planId}" />
+                <c:param name="message" value="삭제에 동의한 장소 및 체크리스트가<br> 삭제됩니다.<br> 정말 삭제하시겠습니까?" />
+                <c:param name="actionUrl" value="/plan/delete.do?planId=${plan.planId}" />
+                <!-- 크기 파라미터 추가 -->
+                <c:param name="width" value="350" />
+                <c:param name="height" value="300" />
             </c:url>
-            <div class="delete" onclick="window.location.href='${delete}'"></div>
+            <div class="delete" onclick="openDeletePopup('${delete}')"></div>
             <c:url var="edit" value="/plan/moveUpdate.do">
                 <c:param name="planId" value="${ plan.planId }" />
                 <c:param name="page" value="${ nowpage }" />

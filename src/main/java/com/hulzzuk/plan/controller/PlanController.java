@@ -70,10 +70,28 @@ public class PlanController {
     }
 
     @RequestMapping("moveDelete.do")
-    public ModelAndView moveDeletePage(ModelAndView mv, @RequestParam(name = "planId") long planId) {
+    public ModelAndView moveDeletePage(ModelAndView mv,
+                                       @RequestParam(name = "planId") long planId,
+                                       @RequestParam(name = "message") String message,
+                                       @RequestParam(name = "actionUrl") String actionUrl,
+                                       @RequestParam(name = "width") int width,
+                                       @RequestParam(name = "height") int height) {
         mv.addObject("planId", planId);
+        mv.addObject("message", message);
+        mv.addObject("actionUrl", actionUrl);
+        mv.addObject("width", width);
+        mv.addObject("height", height);
+
         mv.setViewName("common/popUp");
 
         return mv;
+    }
+
+    @RequestMapping("delete.do")
+    public String deletePlan(@RequestParam(name = "planId") long planId) {
+        // 삭제 로직
+//        planService.deletePlan(planId);
+        // 삭제 후 목록 페이지로 리다이렉트
+        return "redirect:/plan/page.do";
     }
 }
