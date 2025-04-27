@@ -5,5 +5,5 @@ import org.springframework.web.servlet.ModelAndView;
 
 public interface PlanService {
 
-    ModelAndView getPlanPage(String action, String keyword, String page, String limit, ModelAndView modelAndView);
+    ModelAndView getPlanPage(String keyword, String page, String limit, ModelAndView modelAndView);
 }

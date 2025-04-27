@@ -26,6 +26,7 @@
 		<mapper resource="mappers/acco-mapper.xml" />
 		<mapper resource="mappers/rest-mapper.xml" />
 		<mapper resource="mappers/attr-mapper.xml" />
+		<mapper resource="mappers/user-mapper.xml"/>
 		<mapper resource="mappers/plan-mapper.xml" />
 	</mappers>
 </configuration>
