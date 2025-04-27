@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -88,10 +89,11 @@ public class PlanController {
     }
 
     @RequestMapping("delete.do")
+    @ResponseBody
     public String deletePlan(@RequestParam(name = "planId") long planId) {
         // 삭제 로직
 //        planService.deletePlan(planId);
         // 삭제 후 목록 페이지로 리다이렉트
-        return "redirect:/plan/page.do";
+        return "success";
     }
 }
