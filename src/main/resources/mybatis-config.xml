@@ -16,8 +16,13 @@
 	<typeAliases>		
 		<typeAlias type="com.hulzzuk.user.model.vo.UserVO" alias="User" />
 		<typeAlias type="com.hulzzuk.notice.model.vo.NoticeVO" alias="Notice" />	
+<<<<<<< HEAD
 		<typeAlias type="com.hulzzuk.location.model.vo.LocationVO" alias="Location" />	
 		<typeAlias type="com.hulzzuk.review.model.vo.ReviewVO" alias="Review" />			
+=======
+		<typeAlias type="com.hulzzuk.location.model.vo.LocationVO" alias="Location" />			
+		<typeAlias type="com.hulzzuk.plan.model.vo.PlanVO" alias="Plan" />
+>>>>>>> e14ab3e24890fe69bfdd3e6d3d49f10bbbee1a88
 	</typeAliases>
 	
 	<mappers>
@@ -26,6 +31,11 @@
 		<mapper resource="mappers/acco-mapper.xml" />
 		<mapper resource="mappers/rest-mapper.xml" />
 		<mapper resource="mappers/attr-mapper.xml" />
+<<<<<<< HEAD
 		<mapper resource="mappers/review-mapper.xml" />
+=======
+		<mapper resource="mappers/user-mapper.xml"/>
+		<mapper resource="mappers/plan-mapper.xml" />
+>>>>>>> e14ab3e24890fe69bfdd3e6d3d49f10bbbee1a88
 	</mappers>
 </configuration>

@@ -43,13 +43,13 @@
     <a href="#">고객의 소리</a>
     <c:if test="${ !empty sessionScope.loginUser }">
 	    <a href="#">My 여행</a>
-	    <a href="#">My 로그</a>
+        <a href="${ pageContext.servletContext.contextPath }/plan/page.do?page=1">My 로그</a>
 	    <a href="#">My 찜</a>
 	    <a href="#">My 리뷰</a>
     </c:if>
     <c:if test="${ empty sessionScope.loginUser }">
-	    <a href="#">My 여행</a>
-	    <a href="#">My 로그</a>
+	    <a href="#">My 여행 로그</a>
+	    <a href="#">My 일정</a>
 	    <a href="#">My 찜</a>
 	    <a href="${ pageContext.servletContext.contextPath }/review/list.do?locId=15&locationEnum=ACCO&sortEnum=DATEDESC">My 리뷰</a>
     </c:if>
