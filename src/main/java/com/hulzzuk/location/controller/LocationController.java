@@ -1,5 +1,7 @@
 package com.hulzzuk.location.controller;
 
+import java.util.ArrayList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +12,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.hulzzuk.location.model.enumeration.LocationEnum;
 import com.hulzzuk.location.model.service.LocationService;
+import com.hulzzuk.common.enumeration.SortEnum;
+import com.hulzzuk.common.vo.Paging;
 
 @Controller
+@RequestMapping("loc")
 public class LocationController {
 	private static final Logger logger = LoggerFactory.getLogger(LocationController.class);
 	
@@ -19,42 +24,25 @@ public class LocationController {
 	private LocationService locationService;
 	
 //  상세보기 요청 처리용 메소드
-	@RequestMapping("select.do")
-	public ModelAndView locationDetailMethod(@RequestParam(name = "locId") String locId, ModelAndView mv, LocationEnum locationEnum) {
-
-		return locationService.getLocationById(locationEnum, mv, locId);
-
-	}
+	  @RequestMapping("select.do") 
+	  public ModelAndView locationDetailMethod(@RequestParam(name = "locId") String locId, 
+			  ModelAndView mv,@RequestParam(name = "locationEnum") LocationEnum locationEnum) {
+	  
+	  return locationService.getLocationById(locationEnum, mv, locId);
+	  
+	  }
 	
-	// 요청처리하는 메소드(db 까지 연결되는 요청)
-	
-	/**
-	 * 전체 목록보기 요청 처리용 메소드
-	 * @param mv
-	 * @param locationEnum
-	 * @param keyword
-	 * @param pageCriteria 
-	 * @param sortEnum
-	 * @return
-	 */
-	/*@RequestMapping("page.do")
-	public ModelAndView getLocationList(ModelAndView mv, LocationEnum locationEnum, @RequestParam(name="keyword", required= false) String keyword, 
-			SortEnum sortEnum) {
-		
-		ArrayList<Location> list = locationService.selectList(paging);
+	// 검색페이지(페이징 처리)
+	  @RequestMapping("page.do")
+	    public ModelAndView getLocationList(ModelAndView mv,
+	                                        @RequestParam(name = "keyword", required = false) String keyword,
+	                                        @RequestParam(name = "locationEnum") LocationEnum locationEnum,
+	                                        @RequestParam(name = "sortEnum", required = false) SortEnum sortEnum,
+	                                        @RequestParam(name = "page", required = false) String  page,
+	                                        @RequestParam(name = "limit", required = false) String limit) {
 
-		if (list != null && list.size() > 0) { // 조회 성공시
-			// ModelAndView : Model + View
-			mv.addObject("list", list); // request.setAttribute("list", list) 와 같음
-			mv.addObject("paging", paging);
+	        return locationService.getLocationList(locationEnum, keyword, page, limit, sortEnum, mv);
+	    }
 
-			mv.setViewName("location/locationListView");
-		} else { // 조회 실패시
-			mv.addObject("message", currentPage + "페이지에 출력할 숙소 목록 조회 실패!");
-			mv.setViewName("common/error");
-		}
 
-		return mv;
-	}*/
-	
 }

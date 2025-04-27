@@ -27,7 +27,7 @@
   </select>
   
 	<!-- 맛집 리스트 조회: keyword 검색 + 정렬 -->
-  <select id="getRestList" resultMap="resultList" parameterType="map">
+ <!--  <select id="getRestList" parameterType="hashMap" resultMap="resultList">
     SELECT A.REST_PLACENAME, A.REST_ROAD_ADDRESSNAME
     FROM TB_REST A
     <where>
@@ -49,12 +49,42 @@
         ORDER BY REST_PLACENAME ASC
       </otherwise>
     </choose>
-    WHERE RNUM BETWEEN 1 AND 10
-  </select>
+     WHERE RNUM BETWEEN #{ paging.startRow } AND #{ paging.endRow }
+  </select> -->
+  
+   <!-- 숙소 리스트 조회: keyword 검색 + 정렬 -->
+  <select id="getRestList" parameterType="hashMap" resultMap="resultList">
+  SELECT * FROM ( SELECT ROWNUM AS RNUM, A.*
+    								FROM ( SELECT A.REST_ID, A.REST_PLACENAME, A.REST_ROAD_ADDRESSNAME
+      												FROM TB_REST A
+												      <where>
+												        <if test="keyword != null and keyword != ''">
+												          (REST_PLACENAME LIKE '%' || #{keyword} || '%' OR REST_ROAD_ADDRESSNAME LIKE '%' || #{keyword} || '%')
+												        </if>
+												      </where>
+												      <choose>
+												        <when test="sortEnum == 'LOVEDESC'">
+												          ORDER BY (SELECT COUNT(*) FROM TB_LOVE L WHERE L.REST_ID = A.REST_ID) DESC
+												        </when>
+												        <when test="sortEnum == 'REVIEWDESC'">
+												          ORDER BY (SELECT COUNT(*) FROM TB_REVIEW R WHERE R.REST_ID = A.REST_ID) DESC
+												        </when>
+												        <when test="sortEnum == 'NAMEDESC'">
+												          ORDER BY REST_PLACENAME DESC
+												        </when>
+												        <otherwise>
+												          ORDER BY REST_PLACENAME ASC
+												        </otherwise>
+												      </choose>
+												    ) A
+										)
+  WHERE RNUM BETWEEN #{paging.startRow} AND #{paging.endRow}
+</select>
 
   <!-- 상세 조회 -->
-  <select id="getRestById" parameterType="string" resultType="Location">
+  <select id="getRestById" parameterType="string" resultMap="resultList">
     SELECT *
     FROM TB_REST
     WHERE REST_ID = #{ restId }
   </select>
+  </mapper>

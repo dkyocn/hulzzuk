@@ -18,8 +18,7 @@
   
    <!-- 총 갯수 -->
   <select id="getAccoListCount" resultType="_int" parameterType="string">
-    SELECT COUNT(*)
-    FROM TB_ACCO
+    SELECT COUNT(*) FROM TB_ACCO
     <where>
       <if test="keyword != null and keyword != ''">
         (ACCO_PLACENAME LIKE '%' || #{keyword} || '%' OR ACCO_ROAD_ADDRESSNAME LIKE '%' || #{keyword} || '%')
@@ -28,37 +27,65 @@
   </select>
   
 	<!-- 숙소 리스트 조회: keyword 검색 + 정렬 -->
-  <select id="getAccoList" resultMap="resultList" parameterType="map">
+<!--   <select id="getAccoList" parameterType="hashMap" resultMap="resultList">
     SELECT A.ACCO_PLACENAME, A.ACCO_ROAD_ADDRESSNAME
     FROM TB_ACCO A
     <where>
-      <if test="keyword != null and keyword != ''">
-        (ACCO_PLACENAME LIKE '%' || #{keyword} || '%' OR ACCO_ROAD_ADDRESSNAME LIKE '%' || #{keyword} || '%')
-      </if>
+	      <if test="keyword != null and keyword != ''">
+	        (ACCO_PLACENAME LIKE '%' || #{keyword} || '%' OR ACCO_ROAD_ADDRESSNAME LIKE '%' || #{keyword} || '%')
+	      </if>
     </where>
     <choose>
-      <when test="sortEnum == 'LOVEDESC'">
-        ORDER BY (SELECT COUNT(*) FROM TB_LOVE L WHERE L.ACCO_ID = A.ACCO_ID) DESC
-      </when>
-      <when test="sortEnum == 'REVIEWDESC'">
-        ORDER BY (SELECT COUNT(*) FROM TB_REVIEW R WHERE R.ACCO_ID = A.ACCO_ID) DESC
-      </when>
-      <when test="sortEnum == 'NAMEDESC'">
-        ORDER BY ACCO_PLACENAME DESC
-      </when>
-      <otherwise>
-        ORDER BY ACCO_PLACENAME ASC
-      </otherwise>
+	      <when test="sortEnum == 'LOVEDESC'">
+	        ORDER BY (SELECT COUNT(*) FROM TB_LOVE L WHERE L.ACCO_ID = A.ACCO_ID) DESC
+	      </when>
+	      <when test="sortEnum == 'REVIEWDESC'">
+	        ORDER BY (SELECT COUNT(*) FROM TB_REVIEW R WHERE R.ACCO_ID = A.ACCO_ID) DESC
+	      </when>
+	      <when test="sortEnum == 'NAMEDESC'">
+	        ORDER BY ACCO_PLACENAME DESC
+	      </when>
+	      <otherwise>
+	        ORDER BY ACCO_PLACENAME ASC
+	      </otherwise>
     </choose>
-    WHERE RNUM BETWEEN 1 AND 10
-  </select>
+     WHERE RNUM BETWEEN #{ paging.startRow } AND #{ paging.endRow }
+  </select> -->
+  
+   <select id="getAccoList" parameterType="hashMap" resultMap="resultList">
+  SELECT * FROM ( SELECT ROWNUM AS RNUM, A.*
+    								FROM ( SELECT A.ACCO_ID, A.ACCO_PLACENAME, A.ACCO_ROAD_ADDRESSNAME
+      												FROM TB_ACCO A
+												      <where>
+												        <if test="keyword != null and keyword != ''">
+												          (ACCO_PLACENAME LIKE '%' || #{keyword} || '%' OR ACCO_ROAD_ADDRESSNAME LIKE '%' || #{keyword} || '%')
+												        </if>
+												      </where>
+												      <choose>
+												        <when test="sortEnum == 'LOVEDESC'">
+												          ORDER BY (SELECT COUNT(*) FROM TB_LOVE L WHERE L.ACCO_ID = A.ACCO_ID) DESC
+												        </when>
+												        <when test="sortEnum == 'REVIEWDESC'">
+												          ORDER BY (SELECT COUNT(*) FROM TB_REVIEW R WHERE R.ACCO_ID = A.ACCO_ID) DESC
+												        </when>
+												        <when test="sortEnum == 'NAMEDESC'">
+												          ORDER BY ACCO_PLACENAME DESC
+												        </when>
+												        <otherwise>
+												          ORDER BY ACCO_PLACENAME ASC
+												        </otherwise>
+												      </choose>
+												    ) A
+										)
+  WHERE RNUM BETWEEN #{paging.startRow} AND #{paging.endRow}
+</select>
 
-  <!-- 상세 조회 -->
-  <select id="getAccoById" parameterType="string" resultMap="resultLocation">
+ <!-- 상세 조회 -->
+  <select id="getAccoById" parameterType="string" resultMap="resultList">
     SELECT *
     FROM TB_ACCO
     WHERE ACCO_ID = #{accoId}
   </select>
-  
+ 
 </mapper>
 	

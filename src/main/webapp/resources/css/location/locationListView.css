@@ -1,0 +1,90 @@
+@charset "UTF-8";
+
+/* inner */
+.inner {
+	display: flex;
+	width: 100%;
+	max-width: 68em;
+	margin: 0 auto;
+	padding: 0 2.5em;
+	flex-direction: column;
+	align-content: center;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+.inner #logo {
+	width: 298px;
+	height: 133px;
+	left: 50%;
+}
+
+.custom-title {
+    background: none;
+    border: none;
+    font-family: "Source Sans Pro", Helvetica, sans-serif;
+    font-size: 16pt;
+    font-weight: 500;
+    line-height: 1.75;
+    box-shadow: none;
+    color: #E96A18;
+}
+
+
+/* ------------- 검색창 -------------*/
+.search-box #category {
+	text-align: center;
+	width: 104px;
+	border: none;
+	font-size: 16px;
+}
+
+.search-box {
+	display: flex;
+	align-items: center;
+	height: 50px;
+	width: 450px;
+	padding: 0 10px;
+	box-sizing: border-box;
+	background: #fff;
+	border: 1px solid #E96A18;
+	border-radius: 40px;
+	margin-top: 60px;
+	margin-bottom: 0;
+	overflow: auto;
+}
+
+.search-txt {
+	border-width: 0;
+	flex: 1;
+	border: none;
+	font-size: 16px;
+	color: #585858;
+	height: 100%;
+	line-height: 1;
+	padding: 0;
+	background: none;
+}
+
+.search-btn {
+	flex: 0 0 auto;
+	width: 40px;
+	height: 40px;
+	border: none ;
+	background: none;
+	color: #E96A18;
+	font-size: 16px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	box-shadow: none;
+}
+
+.search-btn>img {
+	width: 30px;
+	height: 30px;
+	color: #585858;
+	border: none;
+	
+}

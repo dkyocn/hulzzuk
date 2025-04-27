@@ -15,10 +15,11 @@
 
 <footer class="footer">
   <div class="footer-top">
-   <%--  
-   	<a href="${ pageContext.servletContext.contextPath }/loc/page.do?locationEnum=ACCO&pageCriteria=1&sortEnum=LOVEDESC">숙소</a>
-    <a href="${ pageContext.servletContext.contextPath }/loc/page.do?locationEnum=REST}&pageCriteria=1&sortEnum=LOVEDESC">맛집</a>
-    <a href="${ pageContext.servletContext.contextPath }/loc/page.do?locationEnum=ATTR&pageCriteria=1&sortEnum=LOVEDESC">즐길거리</a>
+ 
+   	<a href="${ pageContext.servletContext.contextPath }/loc/page.do?locationEnum=ACCO&page=1&sortEnum=LOVEDESC">숙소</a>
+    <a href="${ pageContext.servletContext.contextPath }/loc/page.do?locationEnum=REST&page=1&sortEnum=LOVEDESC">맛집</a>
+    <a href="${ pageContext.servletContext.contextPath }/loc/page.do?locationEnum=ATTR&page=1&sortEnum=LOVEDESC">즐길거리</a>
+     <%-- 
     <a href="${ pageContext.servletContext.contextPath }/log/page.do">여행로그</a>
     <a href="${ pageContext.servletContext.contextPath }/notice/page.do?category=NOTICE">공지사항</a>
     <a href="${ pageContext.servletContext.contextPath }/notice/page.do?category=FAQ">FAQ</a>
@@ -36,9 +37,6 @@
 	    <a href="${ pageContext.servletContext.contextPath }/page.do?locationEnum=ATTR&keyword=${ }&pageCriteria=${ }&sortEnum=${}">MY 리뷰</a>
     </c:if>
      --%>
-    <a href="#">숙소</a>
-    <a href="#">맛집</a>
-    <a href="#">즐길거리</a>
 	<a href="#">여행로그</a>
     <a href="#">공지사항</a>
     <a href="#">FAQ</a>
@@ -53,7 +51,7 @@
 	    <a href="#">My 여행</a>
 	    <a href="#">My 로그</a>
 	    <a href="#">My 찜</a>
-	    <a href="#">My 리뷰</a>
+	    <a href="${ pageContext.servletContext.contextPath }/review/list.do?locId=15&locationEnum=ACCO&sortEnum=DATEDESC">My 리뷰</a>
     </c:if>
   </div>
 

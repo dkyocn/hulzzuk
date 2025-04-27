@@ -16,7 +16,8 @@
 	<typeAliases>		
 		<typeAlias type="com.hulzzuk.user.model.vo.UserVO" alias="User" />
 		<typeAlias type="com.hulzzuk.notice.model.vo.NoticeVO" alias="Notice" />	
-		<typeAlias type="com.hulzzuk.location.model.vo.LocationVO" alias="Location" />			
+		<typeAlias type="com.hulzzuk.location.model.vo.LocationVO" alias="Location" />	
+		<typeAlias type="com.hulzzuk.review.model.vo.ReviewVO" alias="Review" />			
 	</typeAliases>
 	
 	<mappers>
@@ -25,5 +26,6 @@
 		<mapper resource="mappers/acco-mapper.xml" />
 		<mapper resource="mappers/rest-mapper.xml" />
 		<mapper resource="mappers/attr-mapper.xml" />
+		<mapper resource="mappers/review-mapper.xml" />
 	</mappers>
 </configuration>

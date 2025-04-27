@@ -1,0 +1,14 @@
+a.page {
+    text-decoration: none !important;
+}
+
+b.currentPage {
+    color: #E96A18;
+}
+
+div.pagination {
+    text-align: center;
+    margin-top: 1.5%;
+    margin-bottom: 1%;
+    font-size: 15px;
+}
