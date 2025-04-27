@@ -125,7 +125,7 @@
             <c:url var="delete" value="moveDelete.do">
                 <c:param name="planId" value="${plan.planId}" />
                 <c:param name="message" value="삭제에 동의한 장소 및 체크리스트가<br> 삭제됩니다.<br> 정말 삭제하시겠습니까?" />
-                <c:param name="actionUrl" value="/plan/delete.do?planId=${plan.planId}" />
+                <c:param name="actionUrl" value="${pageContext.servletContext.contextPath}/plan/delete.do?planId=${plan.planId}" />
                 <!-- 크기 파라미터 추가 -->
                 <c:param name="width" value="350" />
                 <c:param name="height" value="300" />
