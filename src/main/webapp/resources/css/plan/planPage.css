@@ -1,0 +1,108 @@
+div.planPageTitle {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-left: 4%;
+    padding-right: 3%;
+}
+
+h1.planTitle {
+    margin-bottom: 0;
+}
+
+hr.planTitleHr {
+    border-width: 2px 0 0 0;
+    border-color: black;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-bottom: 1.5%;
+}
+
+button.planCreateBtn {
+    height: 20px;
+    border: none;
+    align-items: center;
+    display: flex;
+    background: none;
+    cursor: pointer;
+    position: relative;
+}
+
+img.planCreateImg {
+    height: 16px;
+    margin-right: 5px;
+    width: 16px;
+}
+
+/* 텍스트 스타일 */
+span.planCreateText {
+    color: black;
+    font-size: 14px; /* 버튼 높이에 맞게 조정 */
+}
+
+div.planList {
+    margin-bottom: 2%;
+    padding-left: 4%;
+    padding-right: 4%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+div.planContent {
+    width: 50%;
+    display: flex;
+}
+
+img.planImg {
+    width: 136px;
+    height: 105px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+div.planContentTitle {
+    width: 100%;
+    margin-top: 2%;
+}
+
+a.planName {
+    font-size: 31px;
+    margin: 0 0 0 5%;
+    color: #000000; /* 검정색으로 변경 */
+    text-decoration: none; /* 밑줄 제거 */
+}
+
+a.planName:hover {
+    color: #E96A18;
+    text-decoration: none; /* 밑줄 제거 */
+}
+
+p.planDate {
+    font-size: 18px;
+    margin: 1% 0 0 5%;
+}
+
+.deleteEdit {
+    display: flex;
+}
+
+.delete, .edit{
+    cursor: pointer;
+    margin-left: 4px;
+    width: 32px;
+    height: 32px;
+}
+
+/*.delete {*/
+/*    background-image: url("/resources/images/common/delete.png");*/
+/*}*/
+
+/*.edit {*/
+/*    background-image: url("/resources/images/common/edit.png");*/
+/*}*/
+
+/*.delete:hover, .edit:hover {*/
+/*    display: none;*/
+/*}*/
