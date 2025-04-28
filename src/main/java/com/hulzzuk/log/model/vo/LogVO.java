@@ -15,7 +15,7 @@ public class LogVO {
     private Date createdAt;
     private Date updatedAt;
     
-    
+    private int loveCount; // 추가: 좋아요 수
     
 	public LogVO() {
 		super();
@@ -24,7 +24,7 @@ public class LogVO {
 
 
 	public LogVO(long logId, String imagePath, String logTitle, Date logStartDate, Date logEndDate, int planDay,
-			String userId, Date createdAt, Date updatedAt) {
+			String userId, Date createdAt, Date updatedAt, int loveCount) {
 		super();
 		this.logId = logId;
 		this.imagePath = imagePath;
@@ -35,6 +35,7 @@ public class LogVO {
 		this.userId = userId;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
+		this.loveCount = loveCount;
 	}
 
 
@@ -147,7 +148,8 @@ public class LogVO {
     
 	
 	
-	
+    public int getLoveCount() { return loveCount; }
+    public void setLoveCount(int loveCount) { this.loveCount = loveCount; }
 	
 	
     

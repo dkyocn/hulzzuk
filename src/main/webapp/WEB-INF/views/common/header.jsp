@@ -48,9 +48,9 @@
         <li><a href="#">숙소</a></li>
         <li><a href="#">맛집</a></li>
         <li><a href="#">즐길거리</a></li>
-        <li><a href="#">여행로그</a></li>
+        <li><a href="${ pageContext.servletContext.contextPath }log/page.do?page=1">여행로그</a></li>
     </ul>
-
+s
     <ul class="menu-section">
         <c:url var="noti" value="notice/select.do">
             <c:param name="noticeId" value="1" />

@@ -3,9 +3,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:tx="http://www.springframework.org/schema/tx"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
-		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<!-- 1. DataSource 등록 -->
@@ -23,11 +22,11 @@
 	 -->		
 	<bean class="org.apache.commons.dbcp.BasicDataSource" id="realDataSource" destroy-method="close">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@13.209.51.216:21521:xe" />
-		<property name="username" value="system" />
-		<property name="password" value="oracle" />
-		<!-- <property name="username" value="c##grit" />
-		<property name="password" value="hulZZuk04" /> -->	
+		<property name="url" value="jdbc:oracle:thin:@13.209.51.216:21521/xe" />
+		<!-- <property name="username" value="system" />
+		<property name="password" value="oracle" />-->	
+		<property name="username" value="c##grit" />
+		<property name="password" value="hulZZuk04" /> 
 	</bean>
 	
 	<!-- 2. 실행할 쿼리문에 전달되는 값과 ? 에 적용을 확인하기 위한 로그와 
