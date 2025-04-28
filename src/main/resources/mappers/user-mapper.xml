@@ -24,5 +24,14 @@
 		from tb_user
 		where user_id = #{ userId }
 	</select>
+
+	<!-- 로그인용 쿼리 -->
+	<select id="loginMethod" parameterType="User"
+		resultMap="resultList">
+		select * from tb_user
+		where user_id = #{ userId } and user_pwd = #{ userPwd }
+	</select>
 	
+	
+
 </mapper>
