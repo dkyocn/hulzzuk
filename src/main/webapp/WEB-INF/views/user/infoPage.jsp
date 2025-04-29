@@ -3,24 +3,25 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <title>hulzzuk</title>
+
 <script type="text/javascript"
 	src="${ pageContext.servletContext.contextPath }/resources/js/jquery-3.7.1.min.js"></script>
 <link
 	href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap"
 	rel="stylesheet">
 <style type="text/css">
-div#info {
+form#info {
 	width: 1000px;
 	text-align: center;
 	border: 1px solid #585858;
 	margin: 0 auto;
 }
 
-div#info img {
+form#info img {
 	width: 250px;
 	height: 250px;
 	border: 1px solid #585858;
@@ -35,7 +36,7 @@ td {
 	width: 500px;
 }
 
-div #info>td #nickname {
+form #info>td #nickname {
 	border-width: none;
 	outline: none;
 	text-align: center;
@@ -65,28 +66,23 @@ table #infoDetail>th {
 </head>
 <body>
 	<c:import url="/WEB-INF/views/common/header.jsp" />
-	<div id="info">
+	<form id="info" enctype="multipart/form-data">
 		<tr>
 			<th text-align="center"></th>
-			<td><img src="${ requestScope.user.userProfile }"> <%-- <c:if test="${ !empty requestScope.user.photoFileName }">
-			<div id="myphoto" style="margin:0; width:150px; height:160px; padding:0; border:1px solid navy;">
-				사진 첨부가 없을 경우를 위한 미리보기용 이미지 출력되게 함
-				<img src="/first/resources/photoFiles/${ requestScope.user.photoFileName }" id="photo" 
-				style="width:150px;height:160px;border:1px solid navy;display:block;margin:0;padding:0;" 
-				alt="사진을 드래그 드롭하세요.">
+			<td><%-- <img src="${ requestScope.user.userProfile }"><input type="submit" value="사진변경">  --%>
+			<c:if test="${ !empty requestScope.user.userProfile }">
+			<div id="myphoto1">
+				<img src="${ requestScope.user.userProfile }" id="photo1">
 			</div> <br>
 			${ requestScope.ofile } <br>
 			변경할 사진 선택 : <input type="file" id="photofile" name="photofile">			
 		 </c:if>
-		 <c:if test="${ empty requestScope.user.photoFileName }">
-			<div id="myphoto" style="margin:0; width:150px; height:160px; padding:0; border:1px solid navy;">
-				사진 첨부가 없을 경우를 위한 미리보기용 이미지 출력되게 함
-				<img src="/first/resources/images/photo1.jpg" id="photo" 
-			style="width:150px;height:160px;border:1px solid navy;display:block;margin:0;padding:0;" 
-			alt="사진을 드래그 드롭하세요.">
-			</div> <br>			
-			사진 선택 : <input type="file" id="photofile" name="photofile">			
-		 </c:if> --%></td>
+		 <c:if test="${ empty requestScope.user.userProfile }">
+			<div id="myphoto2">
+				<img src="${ requestScope.user.userProfile }" id="photo2">
+			</div> <br>
+			<input type="file" id="photofile" name="photofile">			
+		 </c:if></td>
 		</tr>
 		<br>
 		<br>
@@ -97,7 +93,7 @@ table #infoDetail>th {
 				<input type="submit" value="수정하기"> &nbsp;</td>
 			<br>
 		</tr>
-	</div>
+	</form>
 	<br>
 
 	<table id="infoDetail" align="center" border="1px" width="1000"
@@ -139,8 +135,6 @@ table #infoDetail>th {
 		<%-- <tr><th colspan="2">
 		<input type="submit" value="수정하기"> &nbsp; 
 		<input type="reset" value="수정취소"> &nbsp;
-		
-		
 		<a href="mdelete.do?userId=${ requestScope.member.userId }">탈퇴하기</a>
 	</th></tr>	 --%>
 	</table>
@@ -148,6 +142,7 @@ table #infoDetail>th {
 		<c:param name="userId" value="${ requestScope.user.userId }"></c:param>
 	</c:url>
 	<a href="${ mdel }" style="left: 55%">탈퇴하기</a>
+	<a href="${pageContext.request.contextPath}/user/logout.do" style="right: 55%">로그아웃</a>
 
 	<c:import url="/WEB-INF/views/common/footer.jsp" />
 </body>

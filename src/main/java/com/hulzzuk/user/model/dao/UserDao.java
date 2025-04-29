@@ -12,6 +12,7 @@ public class UserDao {
 	@Autowired
 	private SqlSessionTemplate sqlSessionTemplate;
 	
+	// 내 정보 보기
 	public UserVO selectUser(String userId) {
 		return sqlSessionTemplate.selectOne("userMapper.selectUser", userId);
 	}
