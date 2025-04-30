@@ -35,7 +35,7 @@ margin: 0 auto;
 	</div>
 	<br>
 	<div id="loginForm">
-		<form action="login.do" method="post">
+		<form action="${pageContext.request.contextPath}/user/login.do" method="post">
 			<label>아이디: <input type="text" id="userid" name="userId" class="pos"></label> <br>
 			<label>암 호 : <input type="password" id="userpwd" name="userPwd" class="pos"></label> <br>
 			<input type="submit" value="로그인">

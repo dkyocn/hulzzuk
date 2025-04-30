@@ -2,12 +2,13 @@ package com.hulzzuk.plan.controller;
 
 import com.hulzzuk.plan.model.service.PlanService;
 import com.hulzzuk.plan.model.vo.PlanVO;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.lang.reflect.Method;
 
 @Controller
 @RequestMapping("plan")
@@ -18,19 +19,17 @@ public class PlanController {
 
     /**
      * plan 페이지를 조회하는 메서드
-     * @param mv
-     * @param keyword
-     * @param page
-     * @param limit
-     * @return
+     * @param mv ModelAndView
+     * @param page 조회 페이지
+     * @param limit 한페이지 조회할 개수
+     * @return ModelAndView
      */
     @RequestMapping("page.do")
-    public ModelAndView getPlanPage(ModelAndView mv,
-                                    @RequestParam(name = "keyword", required = false) String keyword,
+    public ModelAndView getPlanPage(ModelAndView mv, HttpServletRequest request,
                                     @RequestParam(name = "page", required = false) String page,
                                     @RequestParam(name = "limit", required = false) String limit) {
 
-        return planService.getPlanPage(keyword,page,limit,mv);
+        return planService.getPlanPage(request,page,limit,mv);
     }
 
     @RequestMapping("select.do")
@@ -62,12 +61,16 @@ public class PlanController {
 
     @RequestMapping("moveCreate.do")
     public String moveCreatePage() {
-        return "plan/createPlan";
+        return "plan/createPlanFirst";
     }
 
-    @RequestMapping("create.do")
-    public void createPlan() {
+    @RequestMapping(value = "create.do", method = RequestMethod.POST)
+    public ModelAndView createPlan(ModelAndView mv, HttpServletRequest request,
+                                   @RequestParam(name = "planName") String title,
+                                   @RequestParam(name = "selectedDates") String selectedDates,
+                                   @RequestParam(name = "selectedLocations") String selectedLocations) {
 
+        return planService.createPlan(mv, request, title, selectedDates, selectedLocations);
     }
 
     @RequestMapping("moveDelete.do")
@@ -92,7 +95,7 @@ public class PlanController {
     @ResponseBody
     public String deletePlan(@RequestParam(name = "planId") long planId) {
         // 삭제 로직
-//        planService.deletePlan(planId);
+        planService.deletePlan(planId);
         // 삭제 후 목록 페이지로 리다이렉트
         return "success";
     }

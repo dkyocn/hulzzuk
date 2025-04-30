@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="planUserMapper">
+
+    <resultMap type="PlanUser" id="resultVO">
+        <result property="planId" column="PLAN_ID" />
+        <result property="userId" column="USER_ID" />
+    </resultMap>
+
+    <insert id="insertPlanUser" parameterType="PlanUser">
+        insert into TB_USER_PL(USER_ID,PLAN_ID) values (#{userId},#{planId})
+    </insert>
+
+</mapper>

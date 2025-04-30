@@ -17,6 +17,14 @@ public class PlanVO implements Serializable {
     public PlanVO() {
     }
 
+    public PlanVO( String planTitle, String planPlace, Date planStartDate, Date planEndDate) {
+        this.planId = planId;
+        this.planTitle = planTitle;
+        this.planPlace = planPlace;
+        this.planStartDate = planStartDate;
+        this.planEndDate = planEndDate;
+    }
+
     public PlanVO(long planId, String planTitle, String planPlace, Date planStartDate, Date planEndDate) {
         this.planId = planId;
         this.planTitle = planTitle;

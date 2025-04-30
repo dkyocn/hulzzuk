@@ -1,22 +1,35 @@
 package com.hulzzuk.plan.model.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hulzzuk.common.enumeration.ErrorCode;
 import com.hulzzuk.common.vo.Paging;
 import com.hulzzuk.plan.model.dao.PlanDao;
+import com.hulzzuk.plan.model.vo.PlanUserVO;
 import com.hulzzuk.plan.model.vo.PlanVO;
+import com.hulzzuk.user.model.vo.UserVO;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.List;
 
 @Service("planService")
 public class PlanServiceImpl implements PlanService {
 
+    private static final Logger log = LoggerFactory.getLogger(PlanServiceImpl.class);
+
     @Autowired
     private PlanDao planDao;
 
     @Override
-    public ModelAndView getPlanPage(String keyword, String page, String slimit, ModelAndView mv) {
+    public ModelAndView getPlanPage(HttpServletRequest request, String page, String slimit, ModelAndView mv) {
 
         // 페이징 처리
         int currentPage = 1;
@@ -30,26 +43,91 @@ public class PlanServiceImpl implements PlanService {
             limit = Integer.parseInt(slimit);
         }
 
-        // 검색결과가 적용된 총 목록 갯수 조회해서, 총 페이지 수 계산함
-        int listCount = planDao.countPlan(keyword);
-        // 페이지 관련 항목들 계산 처리
-        Paging paging = new Paging(keyword, listCount, limit, currentPage, "page.do");
-        paging.calculate();
+        UserVO loginUser = (UserVO) request.getSession().getAttribute("loginUser");
 
-        // 마이바티스 매퍼에서 사용되는 메소드는 Object 1개만 전달할 수 있음
+        if (loginUser != null) {
+            // 검색결과가 적용된 총 목록 갯수 조회해서, 총 페이지 수 계산함
+            int listCount = planDao.countPlan(loginUser.getUserId());
+            // 페이지 관련 항목들 계산 처리
+            Paging paging = new Paging(null,listCount, limit, currentPage, "page.do");
+            paging.calculate();
 
-        // 서비스 모델로 페이징 적용된 목록 조회 요청하고 결과받기
-        List<PlanVO> planPage = planDao.getPlanPage(keyword, paging);
+            // 마이바티스 매퍼에서 사용되는 메소드는 Object 1개만 전달할 수 있음
 
-        if (planPage != null && planPage.size() > 0) { // 조회 성공시
-            // ModelAndView : Model + View
-            mv.addObject("list", planPage); // request.setAttribute("list", list) 와 같음
-            mv.addObject("paging", paging);
-            mv.addObject("keyword", keyword);
+            // 서비스 모델로 페이징 적용된 목록 조회 요청하고 결과받기
+            List<PlanVO> planPage = planDao.getPlanPage(loginUser.getUserId(),paging);
 
-            mv.setViewName("plan/planPage");
+            if (planPage != null && !planPage.isEmpty()) { // 조회 성공시
+                // ModelAndView : Model + View
+                mv.addObject("list", planPage); // request.setAttribute("list", list) 와 같음
+                mv.addObject("paging", paging);
+
+                mv.setViewName("plan/planPage");
+            }
+        } else {
+            // 로그인 요청
+            mv.addObject("fail", "N");
+            mv.setViewName("user/loginPage");
         }
 
+
         return mv;
+    }
+
+    @Override
+    public ModelAndView createPlan(ModelAndView modelAndView, HttpServletRequest request, String title, String selectedDate, String selectedLocations) {
+
+        String userID = "";
+        long planId = 0;
+        PlanVO planVO = new PlanVO();
+
+        // selectedDate sql.Date로 변경
+        String[] selectDates = selectedDate.split(",");
+
+        // request에서 현재 로그인된 사용자 찾기
+        UserVO loginUser = (UserVO) request.getSession().getAttribute("loginUser");
+        if (loginUser != null) {
+            userID = loginUser.getUserId();
+
+            planVO = switch (selectDates.length) {
+                case 1 ->
+                        new PlanVO(title, selectedLocations, Date.valueOf(selectDates[0]), Date.valueOf(selectDates[0]));
+                case 2 ->
+                        new PlanVO(title, selectedLocations, Date.valueOf(selectDates[0]), Date.valueOf(selectDates[1]));
+                default -> throw new IllegalArgumentException(ErrorCode.PLAN_OUT_OF_BOUNDS.getMessage());
+            };
+
+
+            // Plan 저장
+            planDao.insertPlan(planVO);
+            planId = planVO.getPlanId();
+            if(planId == 0) {
+                throw new IllegalArgumentException(ErrorCode.PLAN_INSERT_ERROR.getMessage());
+            }
+
+            // TB_PL_USER 저장
+            if(planDao.insertPlanUser(new PlanUserVO(userID,planId)) == 0) {
+                throw new IllegalArgumentException(ErrorCode.PL_USER_INSERT_ERROR.getMessage());
+            }
+
+            modelAndView.addObject("planId", planId);
+            modelAndView.setViewName("plan/createPlanSecond");
+
+        } else {
+            // 재로그인 요청
+            modelAndView.addObject("fail", "N");
+            modelAndView.setViewName("user/loginPage");
+        }
+
+        return modelAndView;
+    }
+
+    @Override
+    public void deletePlan(long planId) {
+        int successYN = planDao.deletePlan(planId);
+
+        if (successYN == 0) {
+            throw new IllegalArgumentException(ErrorCode.PLAN_DELETE_ERROR.getMessage());
+        }
     }
 }
