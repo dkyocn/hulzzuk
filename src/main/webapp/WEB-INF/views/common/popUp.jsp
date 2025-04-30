@@ -24,7 +24,6 @@
                     if (data === 'success') {
                         if (window.opener) window.opener.location.reload();
                         window.close();
-                        alert('삭제가 완료되었습니다.')
                     }
                 })
                 .catch(error => {
@@ -55,7 +54,7 @@
         </div>
         <div class="popup-buttons">
             <button class="btn-confirm" onclick="confirmAction()">확인</button>
-            <button class="btn-cancel" onclick="cancelAction()">취소</button>
+         <!--    <button class="btn-cancel" onclick="cancelAction()">취소</button> -->
         </div>
     </div>
 </div>
