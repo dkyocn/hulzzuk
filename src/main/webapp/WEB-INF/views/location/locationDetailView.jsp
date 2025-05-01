@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -10,67 +12,120 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="location-container">
+<c:import url="/WEB-INF/views/common/header.jsp" />
+
+<%-- <div class="container">
     <div class="title-section">
-        <h2>${location.placeName}</h2>
-       <%--  <div class="rating-likes">
-            <span class="star">★ ${location.starAvg}</span>
-            <span class="like">♥ ${location.loveCount}</span>
-        </div> --%>
+        <h1>${location.placeName}</h1>
+        <div class="rating">
+            <span>★ 4.8/5</span> <span>❤️ 20</span>
+        </div>
     </div>
 
- 
+    <div class="main-image">
+         <img src="${pageContext.request.contextPath}/resources/images/logo1.png"  alt="메인 이미지">
+    </div>
 
-    <div class="info-icons">
-        <span>찜하기</span>
-        <span>일정추가</span>
-        <span>리뷰</span>
-        <span>공유하기</span>
+    <div class="button-group">
+        <button>찜하기</button>
+        <button>일정추가</button>
+        <button onclick="#">리뷰</button>
+        <button>공유하기</button>
     </div>
 
     <div class="basic-info">
-        <h3>기본 정보</h3>
-       <%--  <div class="info-content">
-            <img src="${location.subImage}" alt="서브 이미지" /> --%>
-            <div class="text-info">
-                <p>주소: ${location.roadAddressName}</p>
-                <p>전화번호: ${location.phone}</p>
-                <button class="reserve-btn">예약하기</button>
-            </div>
+	    <div class="title-section-info">
+	        <h1>기본 정보</h1>
+	    </div>
+        <img src="${pageContext.request.contextPath}/resources/images/plan/busan.jpeg"  alt="지도 이미지">
+        <div class="info-text">
+            <p>주소: ${location.roadAddressName}</p>
+            <p>전화번호: ${location.phone}</p>
+            <button class="reserve-btn">예약하기</button>
         </div>
     </div>
 
-    <%-- <div class="review-section">
-        <h3>리뷰 (${location.reviewList.size()})</h3>
-        <c:forEach var="review" items="${location.reviewList}">
-            <div class="review-item">
-                <p class="writer">${review.writer} 작성일: ${review.date}</p>
-                <p class="stars">평점: ${review.star}</p>
-                <p class="content">${review.content}</p>
-                <div class="review-images">
-                    <c:forEach var="img" items="${review.images}">
-                        <img src="${img}" alt="리뷰 이미지" />
-                    </c:forEach>
-                </div>
-            </div>
-        </c:forEach>
-        <button class="more-btn">더보기</button>
-    </div> --%>
-
-    <%-- <div class="log-section">
-        <h3>로그 (${location.logList.size()})</h3>
-        <div class="log-slider">
-            <c:forEach var="log" items="${location.logList}">
-                <div class="log-item">
-                    <img src="${log.image}" alt="로그 이미지" />
-                    <p>${log.title}</p>
-                </div>
-            </c:forEach>
+    <div class="review-section">
+    
+        <c:import url="/WEB-INF/views/review/reviewListView.jsp" />
+       
+        <div class="more-button-container">
+            <a href="reviewList?locId=${location.locId}" class="more-button">더보기</a>
         </div>
-        <button class="more-btn">더보기</button>
     </div>
+
 </div> --%>
 
+<div class="container">
 
+    <!-- 제목 + 별점 + 찜 수 -->
+    <div class="title-section">
+        <h1>${location.placeName}</h1>
+        <div class="rating">
+            ★ 4.8/5 &nbsp;&nbsp; ❤️ 20
+        </div>
+    </div>
+
+    <!-- 메인 이미지 -->
+    <div class="main-image">
+        <img src="${pageContext.request.contextPath}/resources/images/logo1.png" alt="메인 이미지">
+    </div>
+
+    <!-- 버튼 그룹 -->
+    <div class="button-group">
+        <button>찜하기</button>
+        <button>일정추가</button>
+        <button>리뷰</button>
+        <button>공유하기</button>
+    </div>
+
+    <!-- 기본 정보 + 예약 버튼 -->
+    <div class="basic-info">
+    <h2 class="section-title">기본 정보</h2>
+        <img src="${pageContext.request.contextPath}/resources/images/plan/busan.jpeg" alt="지도 이미지">
+        <div class="info-text">
+            <p>주소: ${location.roadAddressName}</p>
+            <p>전화번호: ${location.phone}</p>
+            <button class="reserve-btn">예약하기</button>
+        </div>
+    </div>
+
+    <!-- 리뷰 영역 -->
+    <div class="review-section">
+        <h2>리뷰 (15)</h2>
+
+        <div class="review-container">
+    <div class="review-header">
+        <h2>리뷰</h2>
+	<c:import url="/WEB-INF/views/review/reviewListView.jsp" />
+
+        <!-- 더보기 버튼 -->
+        <div class="more-button-container">
+            <a href="reviewList?locId=${location.locId}" class="more-button">더보기</a>
+        </div>
+    </div>
+
+    <!-- 로그 영역 -->
+    <div class="log-section">
+        <h2>로그 (10)</h2>
+        <%-- <div class="log-grid">
+            <img src="${pageContext.request.contextPath}/resources/images/log1.jpg" alt="로그1">
+            <img src="${pageContext.request.contextPath}/resources/images/log2.jpg" alt="로그2">
+            <img src="${pageContext.request.contextPath}/resources/images/log3.jpg" alt="로그3">
+        </div> --%>
+
+        <div class="more-button-container">
+            <a href="logList?locId=${location.locId}" class="more-button">더보기</a>
+        </div>
+    </div>
+
+</div>
+</div>
+
+<hr>
+
+
+<hr>
+<c:import url="/WEB-INF/views/common/footer.jsp" />
 </body>
 </html>

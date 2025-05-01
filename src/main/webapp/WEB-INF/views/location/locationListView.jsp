@@ -15,13 +15,14 @@
 <head>
 <meta charset="UTF-8">
 <title>Location List</title>
-    
+
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/location/locationListView.css">
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
 
 </head>
 <body>
+
 <c:import url="/WEB-INF/views/common/header.jsp" />
 
 <div class="inner">
@@ -34,31 +35,34 @@
         </select> 
         <input class="search-txt" type="text" name="keyword" placeholder="검색어를 입력하세요.">
         <button class="search-btn" type="submit">
-            <img src="${pageContext.request.contextPath}/resources/images/search.png" style="border:none;">
+            <img src="${pageContext.request.contextPath}/resources/images/search.png" alt="검색" style="border:none;">
         </button>
     </form>
 </div>
 
-
 <c:choose>
-		<c:when test="${ locationEnum == 'ACCO' }">
-			<H1 class="custom-title">숙소</H1>
-		</c:when>
-		<c:when test="${ locationEnum == 'REST' }">
-			<H1 class="custom-title">맛집</H1>
-		</c:when>
-		<c:when test="${ locationEnum == 'ATTR' }">
-			<H1 class="custom-title">즐길거리</H1>
-		</c:when>
+	<c:when test="${ locationEnum == 'ACCO' }">
+		<h1 class="custom-title">
+				<a href="${pageContext.request.contextPath}/loc/page.do?locationEnum=ACCO&page=1">숙소</a>
+		</h1>
+	</c:when>
+	<c:when test="${ locationEnum == 'REST' }">
+		<h1 class="custom-title">
+				<a href="${pageContext.request.contextPath}/loc/page.do?locationEnum=REST&page=1">맛집</a>
+		</h1>
+	</c:when>
+	<c:when test="${ locationEnum == 'ATTR' }">
+		<h1 class="custom-title">
+				<a href="${pageContext.request.contextPath}/loc/page.do?locationEnum=ATTR&page=1">즐길거리</a>
+		</h1>
+	</c:when>
 </c:choose>
 
-
-<div style="text-align: center;">
+<div class="sort-box">
     <form method="get" action="page.do">
         <input type="hidden" name="locationEnum" value="${param.locationEnum}" />
         <input type="hidden" name="keyword" value="${param.keyword}" />
         <input type="hidden" name="page" value="${param.page}" />
-
         <select name="sortEnum" onchange="this.form.submit()">
             <option value="LOVEDESC" ${param.sortEnum == 'LOVEDESC' ? 'selected' : ''}>찜 많은 순</option>
             <option value="REVIEWDESC" ${param.sortEnum == 'REVIEWDESC' ? 'selected' : ''}>리뷰 많은 순</option>
@@ -68,27 +72,42 @@
     </form>
 </div>
 
+<div id="logGallery">
+<div class="location-grid">
+    <c:forEach items="${ requestScope.list }" var="location">
+        <div class="location-card">
+	            <div class="location-image">
+	            	<a href="${pageContext.request.contextPath}/loc/select.do?locationEnum=${locationEnum }&locId=${location.locId}">
+	                	<img src="${pageContext.request.contextPath}/resources/images/search.png" alt="검색" style="border:none;">
+	                 </a>
+	            </div>
+            <div class="location-info">
+                <h3>${ location.placeName }</h3>
+                <p>❤️</p>
+                <p>${ location.roadAddressName }</p>
+            </div>
+        </div>
+    </c:forEach>
+</div>
+</div>
 
-<center>
-	<button onclick="location.href='${ pageContext.servletContext.contextPath }/loc/page.do?locationEnum=ACCO&page=1&sortEnum=LOVEDESC';">목록</button>
-	&nbsp; &nbsp;
-</center>
-<br>
+ 
+<!-- <div id="logGallery"> -->
+<%--     <div class="galleryGrid">
+        <c:forEach var="log" items="${logs}">
+            <div class="galleryItem">
+                <img src="${pageContext.request.contextPath}/resources/images/search.png" alt="검색" style="border:none;">
+                <div class="overlay">
+                    <h3><c:out value="${location.placeName}"/></h3>
+                    <p>❤️</p>
+                    <p>${ location.roadAddressName }</p>
+                </div>
+            </div>
+        </c:forEach>
+    </div> --%>
+<!-- </div> -->
 
-<%-- 조회된 공지사항 목록 출력 --%>
-<table align="center" width="500" border="1" cellspacing="0" cellpadding="0">
-	<tr>
-		<th>장소명</th>
-		<th>장소 주소</th>
-	</tr>
-	<c:forEach items="${ requestScope.list }" var="location">
-		<tr align="center">
-			<td>${ location.placeName }</td>
-			<td>${ location.roadAddressName }</td>
-		</tr>
-	</c:forEach>
-</table>
-<br>
+
 
 <c:import url="/WEB-INF/views/common/pagination.jsp" />
 <hr>

@@ -1,3 +1,4 @@
+
 <%--
   Created by IntelliJ IDEA.
   User: jeongdongju
@@ -55,7 +56,7 @@
         </div>
         <div class="popup-buttons">
             <button class="btn-confirm" onclick="confirmAction()">확인</button>
-            <button class="btn-cancel" onclick="cancelAction()">취소</button>
+            <!-- <button class="btn-cancel" onclick="cancelAction()">취소</button> -->
         </div>
     </div>
 </div>

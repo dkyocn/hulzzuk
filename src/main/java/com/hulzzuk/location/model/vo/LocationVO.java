@@ -11,12 +11,14 @@ public class LocationVO {
 	private Double y;
 	private String placeUrl;
 	private String restMenu;
-	
+	private String imgPath;
+	private String mapPath;
+
 	// constructor
 	public LocationVO() {}
 	
 	public LocationVO(String locId, String placeName, String phone, String addressName, String roadAddressName,
-			Double x, Double y, String placeUrl, String restMenu) {
+			Double x, Double y, String placeUrl, String restMenu, String imgPath, String mapPath) {
 		super();
 		this.locId = locId;
 		this.placeName = placeName;
@@ -27,8 +29,10 @@ public class LocationVO {
 		this.y = y;
 		this.placeUrl = placeUrl;
 		this.restMenu = restMenu;
+		this.imgPath = imgPath;
+		this.mapPath = mapPath;
 	}
-	
+
 	// getters and setters
 	public String getLocId() {
 		return locId;
@@ -102,7 +106,21 @@ public class LocationVO {
 		this.restMenu = restMenu;
 	}
 	
-	
+	public String getImgPath() {
+		return imgPath;
+	}
+
+	public void setImgPath(String imgPath) {
+		this.imgPath = imgPath;
+	}
+
+	public String getMapPath() {
+		return mapPath;
+	}
+
+	public void setMapPath(String mapPath) {
+		this.mapPath = mapPath;
+	}
 	
 	
 }

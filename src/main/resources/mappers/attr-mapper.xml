@@ -12,7 +12,8 @@
 	<result property="roadAddressName" column="ATTR_ROAD_ADDRESSNAME" />
 	<result property="x" column="ATTR_X" />
 	<result property="y" column="ATTR_Y" />
-	<result property="locationEnum" column="BOARD_LEV" />
+	 <result property="imgPath" column="IMAGE_PATH"/>
+	  <result property="mapPath" column="MAP_PATH"/>
 	</resultMap>
 	
 	<!-- 총 갯수 -->
@@ -85,7 +86,7 @@
   <!-- 상세 조회 -->
   <select id="getAttrById" parameterType="string" resultMap="resultList">
     SELECT *
-    FROM TB_ATTR
+    FROM tb_attr
     WHERE ATTR_ID = #{attrId}
   </select>
 	

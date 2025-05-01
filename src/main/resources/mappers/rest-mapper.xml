@@ -12,6 +12,8 @@
 	<result property="roadAddressName" column="REST_ROAD_ADDRESSNAME" />
 	<result property="x" column="REST_X" />
 	<result property="y" column="REST_Y" />
+	 <result property="imgPath" column="IMAGE_PATH"/>
+	  <result property="mapPath" column="MAP_PATH"/>
 	<result property="restMenu" column="REST_MENU" />
 	</resultMap>
 	

@@ -2,6 +2,8 @@ package com.hulzzuk.review.model.vo;
 
 import java.sql.Date;
 
+import com.hulzzuk.user.model.vo.UserVO;
+
 public class ReviewVO {
 	private long reviewId;
 	private double userRev;
@@ -13,6 +15,7 @@ public class ReviewVO {
 	private Date updateAt;
 	private String userId;
 	
+
 	//Constructor
 	public ReviewVO() {}
 
@@ -101,8 +104,5 @@ public class ReviewVO {
 	public void setUserReviewText(String userReviewText) {
 		this.userReviewText = userReviewText;
 	}
-	
-	
-	
-	
+
 }

@@ -45,23 +45,23 @@
     </div>
 
     <ul class="menu-section">
-     <c:url var="location" value="loc/page.do">
+     <c:url var="location" value="loc/select.do">
             <c:param name="locationEnum" value="ACCO"></c:param>
-            <c:param name="sortEnum" value="NAMEDESC"></c:param>
+            <c:param name="locId" value="13" />
         </c:url>
         <li><a href="${location }">숙소</a></li>
         
         <c:url var="location" value="loc/select.do">
-            <c:param name="locId" value="1" />
+            <c:param name="locId" value="16" />
             <c:param name="locationEnum" value="REST"></c:param>
         </c:url>
-        <li><a href="${location }"">맛집</a></li>
+        <li><a href="${location }">맛집</a></li>
         
         <c:url var="location" value="loc/select.do">
-            <c:param name="locId" value="1" />
+            <c:param name="locId" value="30" />
             <c:param name="locationEnum" value="ATTR"></c:param>
         </c:url>
-        <li><a href="${location }"">즐길거리</a></li>
+        <li><a href="${location }">즐길거리</a></li>
         <li><a href="#">여행로그</a></li>
     </ul>
 
@@ -79,7 +79,11 @@
         <li class="mymenu"><a href="#">My 여행로그</a></li>
         <li class="mymenu"><a href="${ pageContext.servletContext.contextPath }/plan/page.do?page=1">My 일정</a></li>
         <li class="mymenu"><a href="#">My 찜</a></li>
-        <li class="mymenu"><a href="#">My 리뷰</a></li>
+        
+        <c:url var="myrev" value="review/select.do">
+            <c:param name="userId" value="jungdongju99@gmail.com" />
+        </c:url>
+        <li class="mymenu"><a href="${ myrev }">My 리뷰</a></li>
     </ul>
 </div>
 

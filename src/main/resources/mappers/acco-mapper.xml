@@ -13,6 +13,8 @@
     <result property="roadAddressName" column="ACCO_ROAD_ADDRESSNAME"/>
     <result property="x" column="ACCO_X"/>
     <result property="y" column="ACCO_Y"/>
+     <result property="imgPath" column="IMAGE_PATH"/>
+	  <result property="mapPath" column="MAP_PATH"/>
     <result property="placeUrl" column="ACCO_RESER"/>
   </resultMap>
   
