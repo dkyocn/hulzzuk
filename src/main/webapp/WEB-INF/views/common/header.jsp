@@ -28,9 +28,14 @@
 
     <div class="rmenu">
         <a href="#">My 찜</a>
-        <a href="#">여행로그</a>
+        <a href="${pageContext.request.contextPath}/log/page.do?page=1">여행로그</a>
         <a href="${ pageContext.servletContext.contextPath }/plan/page.do?page=1">일정</a>
-        <a href="${pageContext.request.contextPath}/user/select.do?userId=admin@gmail.com">프로필</a>
+        <c:if test="${empty loginUser }">
+      	 	<a href="${pageContext.request.contextPath}/user/login.do">로그인</a>
+        </c:if>
+        <c:if test="${!empty loginUser}">
+         	<a href="${pageContext.request.contextPath}/user/select.do?userId=${loginUser.userId}">프로필</a>
+        </c:if>
     </div>
 </nav>
 
@@ -45,6 +50,7 @@
     </div>
 
     <ul class="menu-section">
+
      <c:url var="location" value="loc/select.do">
             <c:param name="locationEnum" value="ACCO"></c:param>
             <c:param name="locId" value="13" />
@@ -62,9 +68,9 @@
             <c:param name="locationEnum" value="ATTR"></c:param>
         </c:url>
         <li><a href="${location }">즐길거리</a></li>
-        <li><a href="#">여행로그</a></li>
+        <li><a href="${ pageContext.servletContext.contextPath }log/page.do?page=1">여행로그</a></li>
     </ul>
-
+s
     <ul class="menu-section">
         <c:url var="noti" value="notice/select.do">
             <c:param name="noticeId" value="1" />
