@@ -2,6 +2,9 @@ package com.hulzzuk.common.vo;
 
 import java.io.Serializable;
 
+import com.hulzzuk.common.enumeration.SortEnum;
+import com.hulzzuk.location.model.enumeration.LocationEnum;
+
 public class Paging implements Serializable {
 
 	private String keyword;
@@ -12,14 +15,14 @@ public class Paging implements Serializable {
 	private int currentPage;		//출력할 현재 페이지 (뷰페이지에서 사용)
 	private int maxPage;		//총 페이지수 (마지막 페이지) (뷰페이지에서 사용)
 	private int startPage;		//현재 페이지가 속한 페이지 그룹의 시작값 (뷰페이지에서 사용)
-	private int endPage;		//현재 페이지가 속한 페이지 그룹의 끝값 (뷰페이지에서 사용)
+	private int endPage;//현재 페이지가 속한 페이지 그룹의 끝값 (뷰페이지에서 사용)
 	private String urlMapping;  //페이지 숫자 클릭시 요청할 url 저장용 (여러 서비스에서 함께 사용하기 위함) (뷰페이지에서 사용)
 
 	public Paging() {
 
 	}
 
-	//매개변수 4개 있는 생성자만 사용함
+	//매개변수 5개 있는 생성자만 사용함
 	public Paging(String keyword, int listCount, int limit, int currentPage, String urlMapping) {
 		super();
 		this.keyword = keyword;
@@ -129,6 +132,13 @@ public class Paging implements Serializable {
 		this.urlMapping = urlMapping;
 	}
 
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
 
 
 }

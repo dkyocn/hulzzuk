@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="attrMapper">
+
+<resultMap type="location" id="resultList">
+	<result property="locId" column="ATTR_ID" />
+	<result property="placeName" column="ATTR_PLACENAME" />
+	<result property="phone" column="ATTR_PHONE" />
+	<result property="addressName" column="ATTR_ADDRESSNAME" />
+	<result property="roadAddressName" column="ATTR_ROAD_ADDRESSNAME" />
+	<result property="x" column="ATTR_X" />
+	<result property="y" column="ATTR_Y" />
+	 <result property="imgPath" column="IMAGE_PATH"/>
+	  <result property="mapPath" column="MAP_PATH"/>
+	</resultMap>
+	
+	<!-- 총 갯수 -->
+  <select id="getAttrListCount" resultType="_int" parameterType="string">
+    SELECT COUNT(*)
+    FROM TB_ATTR
+    <where>
+      <if test="keyword != null and keyword != ''">
+        (ATTR_PLACENAME LIKE '%' || #{keyword} || '%' OR ATTR_ROAD_ADDRESSNAME LIKE '%' || #{keyword} || '%')
+      </if>
+    </where>
+  </select>
+  
+	<!-- 숙소 리스트 조회: keyword 검색 + 정렬 -->
+  <!-- <select id="getAttrList" parameterType="hashMap" resultMap="resultList">
+    SELECT A.ATTR_PLACENAME, A.ATTR_ROAD_ADDRESSNAME
+    FROM TB_ATTR A
+    <where>
+      <if test="keyword != null and keyword != ''">
+        (ATTR_PLACENAME LIKE '%' || #{keyword} || '%' OR ATTR_ROAD_ADDRESSNAME LIKE '%' || #{keyword} || '%')
+      </if>
+    </where>
+    <choose>
+      <when test="sortEnum == 'LOVEDESC'">
+        ORDER BY (SELECT COUNT(*) FROM TB_LOVE L WHERE L.ATTR_ID = A.ATTR_ID) DESC
+      </when>
+      <when test="sortEnum == 'REVIEWDESC'">
+        ORDER BY (SELECT COUNT(*) FROM TB_REVIEW R WHERE R.ATTR_ID = A.ATTR_ID) DESC
+      </when>
+      <when test="sortEnum == 'NAMEDESC'">
+        ORDER BY ATTR_PLACENAME DESC
+      </when>
+      <otherwise>
+        ORDER BY ATTR_PLACENAME ASC
+      </otherwise>
+    </choose>
+     WHERE RNUM BETWEEN #{ paging.startRow } AND #{ paging.endRow }
+  </select> -->
+  
+  <!-- 숙소 리스트 조회: keyword 검색 + 정렬 -->
+  <select id="getAttrList" parameterType="hashMap" resultMap="resultList">
+  SELECT * FROM ( SELECT ROWNUM AS RNUM, A.*
+    								FROM ( SELECT A.ATTR_ID, A.ATTR_PLACENAME, A.ATTR_ROAD_ADDRESSNAME
+      												FROM TB_ATTR A
+												      <where>
+												        <if test="keyword != null and keyword != ''">
+												          (ATTR_PLACENAME LIKE '%' || #{keyword} || '%' OR ATTR_ROAD_ADDRESSNAME LIKE '%' || #{keyword} || '%')
+												        </if>
+												      </where>
+												      <choose>
+												        <when test="sortEnum == 'LOVEDESC'">
+												          ORDER BY (SELECT COUNT(*) FROM TB_LOVE L WHERE L.ATTR_ID = A.ATTR_ID) DESC
+												        </when>
+												        <when test="sortEnum == 'REVIEWDESC'">
+												          ORDER BY (SELECT COUNT(*) FROM TB_REVIEW R WHERE R.ATTR_ID = A.ATTR_ID) DESC
+												        </when>
+												        <when test="sortEnum == 'NAMEDESC'">
+												          ORDER BY ATTR_PLACENAME DESC
+												        </when>
+												        <otherwise>
+												          ORDER BY ATTR_PLACENAME ASC
+												        </otherwise>
+												      </choose>
+												    ) A
+										)
+  WHERE RNUM BETWEEN #{paging.startRow} AND #{paging.endRow}
+</select>
+  
+
+  <!-- 상세 조회 -->
+  <select id="getAttrById" parameterType="string" resultMap="resultList">
+    SELECT *
+    FROM tb_attr
+    WHERE ATTR_ID = #{attrId}
+  </select>
+	
+	</mapper>
