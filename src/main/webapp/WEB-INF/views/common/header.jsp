@@ -28,7 +28,7 @@
 
     <div class="rmenu">
         <a href="#">My 찜</a>
-        <a href="#">여행로그</a>
+        <a href="${pageContext.request.contextPath}/log/page.do?page=1">여행로그</a>
         <a href="${ pageContext.servletContext.contextPath }/plan/page.do?page=1">일정</a>
         <c:if test="${empty loginUser }">
       	 	<a href="${pageContext.request.contextPath}/user/login.do">로그인</a>
@@ -53,14 +53,13 @@
         <li><a href="#">숙소</a></li>
         <li><a href="#">맛집</a></li>
         <li><a href="#">즐길거리</a></li>
-        <li><a href="#">여행로그</a></li>
+        <li><a href="${ pageContext.servletContext.contextPath }log/page.do?page=1">여행로그</a></li>
     </ul>
-
+s
     <ul class="menu-section">
         <c:url var="noti" value="notice/select.do">
             <c:param name="noticeId" value="1" />
         </c:url>
-        <a href="${noti}">1</a>
         <li><a href="${noti}">공지사항</a></li>
         <li><a href="#">FAQ</a></li>
         <li><a href="#">고객의 소리</a></li>
