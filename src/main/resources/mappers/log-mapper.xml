@@ -6,7 +6,7 @@
 
 
     <!-- 로그 resultMap -->
-    <resultMap id="logResultMap" type="log">
+    <resultMap id="logResultMap" type="com.hulzzuk.log.model.vo.LogVO">
         <id property="logId" column="LOG_ID"/>
         <result property="imagePath" column="IMAGE_PATH"/>
         <result property="logTitle" column="LOG_TITLE"/>
@@ -17,7 +17,15 @@
         <result property="createdAt" column="CREATED_AT"/>
         <result property="updatedAt" column="UPDATED_AT"/>
     </resultMap>
-	
+
+	<resultMap id="planResultMap" type="com.hulzzuk.plan.model.vo.PlanVO">
+	    <id property="planId" column="PLAN_ID"/>
+	    <result property="planTitle" column="PLAN_TITLE"/>
+	    <result property="planPlace" column="PLAN_PLACE"/>
+	    <result property="planStartDate" column="PLAN_START_DATE"/>
+	    <result property="planEndDate" column="PLAN_END_DATE"/>
+	</resultMap>
+
 
     <!-- 전체 로그 리스트 조회 -->
     <select id="getLogList" resultMap="logResultMap" >
@@ -54,5 +62,54 @@
 </select>
     
 
+	<insert id="createLog" parameterType="com.hulzzuk.log.model.vo.LogVO">
+	    <selectKey keyProperty="logId" resultType="long" order="BEFORE">
+	     <!-- logId를 insert 전에 시퀀스로 미리 채움 -->
+	        SELECT TB_LOG_SEQ.NEXTVAL FROM DUAL
+	    </selectKey>
+	    
+	    INSERT INTO TB_LOG (
+	        LOG_ID, IMAGE_PATH, LOG_TITLE, LOG_START_DATE, LOG_END_DATE, PLAN_DAY, USER_ID, CREATED_AT, UPDATED_AT
+	    ) VALUES (
+	        #{logId}, #{imagePath}, #{logTitle}, #{logStartDate}, #{logEndDate}, #{planDay}, #{userId}, SYSDATE, SYSDATE
+	    )
+	</insert>
 
+
+	<select id="selectPlanIdList" resultMap="planResultMap">
+		SELECT 
+		    P.PLAN_ID,
+		    P.PLAN_TITLE,
+		    P.PLAN_PLACE,
+		    P.PLAN_START_DATE,
+		    P.PLAN_END_DATE
+		FROM TB_PLAN P
+		JOIN TB_USER_PL UP ON P.PLAN_ID = UP.PLAN_ID
+		WHERE UP.USER_ID = #{userId} 
+		ORDER BY PLAN_START_DATE DESC
+	</select>
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 </mapper>

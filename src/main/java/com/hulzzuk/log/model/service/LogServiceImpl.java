@@ -8,34 +8,41 @@ import org.springframework.stereotype.Service;
 import com.hulzzuk.common.vo.Paging;
 import com.hulzzuk.log.model.dao.LogDao;
 import com.hulzzuk.log.model.vo.LogVO;
+import com.hulzzuk.plan.model.dao.PlanDao;
+import com.hulzzuk.plan.model.vo.PlanVO;
 
 
 @Service("logService")
 public class LogServiceImpl implements LogService {
 
     @Autowired
-    private LogDao LogDao;
+    private LogDao logDao;
 
     @Override
     public List<LogVO> getLogList(Paging paging) {
-        return LogDao.getLogList(paging);
+        return logDao.getLogList(paging);
     }
 
     @Override
     public int getLogCount() {
-        return LogDao.getLogCount();
+        return logDao.getLogCount();
     }
 
     @Override
     public LogVO getLogById(long id) {
-        return LogDao.getLogById(id);
+        return logDao.getLogById(id);
     }
 
     @Override
+    public List<PlanVO> selectPlanIdList(String userId) {
+        return logDao.selectPlanIdList(userId);
+    }
+    @Override
     public void createLog(LogVO logVo) {
-    	LogDao.createLog(logVo);
+    	logDao.createLog(logVo);
     }
 
+  
 //    @Override
 //    public void createLogPlace(LogPlaceVO logPlaceVo) {
 //        LogDao.createLogPlace(logPlaceVo);
@@ -43,7 +50,7 @@ public class LogServiceImpl implements LogService {
 
     @Override
     public void updateLog(LogVO logVo) {
-    	LogDao.updateLog(logVo);
+    	logDao.updateLog(logVo);
     }
 
 //    @Override
@@ -53,10 +60,10 @@ public class LogServiceImpl implements LogService {
 
     @Override
     public void deleteLog(long id) {
-    	LogDao.deleteLog(id);
+    	logDao.deleteLog(id);
     }
     @Override
     public List<LogVO> getLogPage(int start, int amount) {
-        return LogDao.getLogPage(start, amount);
+        return logDao.getLogPage(start, amount);
     }
 }
