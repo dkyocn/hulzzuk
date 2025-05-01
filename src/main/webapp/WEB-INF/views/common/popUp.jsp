@@ -25,7 +25,6 @@
                     if (data === 'success') {
                         if (window.opener) window.opener.location.reload();
                         window.close();
-                        alert('삭제가 완료되었습니다.')
                     }
                 })
                 .catch(error => {

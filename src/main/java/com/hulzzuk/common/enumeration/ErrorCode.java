@@ -8,6 +8,7 @@ public enum ErrorCode {
 	USER_NOT_FOUND(419, "해당 ID의 회원 정보가 존재하지 않습니다."),
 	
 	REVIEW_NOT_FOUND(420, "해당 ID의 리뷰가 존재하지 않습니다.");
+	MAIL_SEND_FAIL(421, "메일 발송이 실패했습니다.");
 
     private int code;
     private String message;

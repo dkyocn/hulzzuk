@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="logMapper">
+
+
+    <!-- 로그 resultMap -->
+    <resultMap id="logResultMap" type="com.hulzzuk.log.model.vo.LogVO">
+        <id property="logId" column="LOG_ID"/>
+        <result property="imagePath" column="IMAGE_PATH"/>
+        <result property="logTitle" column="LOG_TITLE"/>
+        <result property="logStartDate" column="LOG_START_DATE"/>
+        <result property="logEndDate" column="LOG_END_DATE"/>
+        <result property="planDay" column="PLAN_DAY"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="createdAt" column="CREATED_AT"/>
+        <result property="updatedAt" column="UPDATED_AT"/>
+    </resultMap>
+
+	<resultMap id="planResultMap" type="com.hulzzuk.plan.model.vo.PlanVO">
+	    <id property="planId" column="PLAN_ID"/>
+	    <result property="planTitle" column="PLAN_TITLE"/>
+	    <result property="planPlace" column="PLAN_PLACE"/>
+	    <result property="planStartDate" column="PLAN_START_DATE"/>
+	    <result property="planEndDate" column="PLAN_END_DATE"/>
+	</resultMap>
+
+
+    <!-- 전체 로그 리스트 조회 -->
+    <select id="getLogList" resultMap="logResultMap" >
+        SELECT * FROM TB_LOG
+        ORDER BY LOG_START_DATE DESC
+        OFFSET #{start} ROWS FETCH NEXT #{amount} ROWS ONLY
+    </select>
+    
+      <select id="getLogCount" resultType="int">
+        SELECT COUNT(*) FROM TB_LOG
+    </select>
+    
+    <select id="selectLogList" resultType="com.hulzzuk.log.model.vo.LogVO">
+    SELECT 
+        l.LOG_ID,
+        l.IMAGE_PATH,
+        l.LOG_TITLE,
+        l.LOG_START_DATE,
+        l.LOG_END_DATE,
+        l.PLAN_DAY,
+        l.USER_ID,
+        l.CREATED_AT,
+        l.UPDATED_AT,
+        NVL(COUNT(lv.LOVE_ID), 0) AS LOVE_COUNT
+    FROM 
+        TB_LOG l
+    LEFT JOIN 
+        TB_LOVE lv ON l.LOG_ID = lv.LOG_ID
+    GROUP BY 
+        l.LOG_ID, l.IMAGE_PATH, l.LOG_TITLE, l.LOG_START_DATE, l.LOG_END_DATE, l.PLAN_DAY, l.USER_ID, l.CREATED_AT, l.UPDATED_AT
+    ORDER BY 
+        l.LOG_START_DATE DESC
+    OFFSET #{start} ROWS FETCH NEXT #{amount} ROWS ONLY
+</select>
+    
+
+	<insert id="createLog" parameterType="com.hulzzuk.log.model.vo.LogVO">
+	    <selectKey keyProperty="logId" resultType="long" order="BEFORE">
+	     <!-- logId를 insert 전에 시퀀스로 미리 채움 -->
+	        SELECT TB_LOG_SEQ.NEXTVAL FROM DUAL
+	    </selectKey>
+	    
+	    INSERT INTO TB_LOG (
+	        LOG_ID, IMAGE_PATH, LOG_TITLE, LOG_START_DATE, LOG_END_DATE, PLAN_DAY, USER_ID, CREATED_AT, UPDATED_AT
+	    ) VALUES (
+	        #{logId}, #{imagePath}, #{logTitle}, #{logStartDate}, #{logEndDate}, #{planDay}, #{userId}, SYSDATE, SYSDATE
+	    )
+	</insert>
+
+
+	<select id="selectPlanIdList" resultMap="planResultMap">
+		SELECT 
+		    P.PLAN_ID,
+		    P.PLAN_TITLE,
+		    P.PLAN_PLACE,
+		    P.PLAN_START_DATE,
+		    P.PLAN_END_DATE
+		FROM TB_PLAN P
+		JOIN TB_USER_PL UP ON P.PLAN_ID = UP.PLAN_ID
+		WHERE UP.USER_ID = #{userId} 
+		ORDER BY PLAN_START_DATE DESC
+	</select>
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>

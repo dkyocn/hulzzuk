@@ -1,0 +1,68 @@
+
+body {
+    font-family: 'Noto Sans', sans-serif;
+    margin: 20px;
+    background-color: #feffff;
+    color: #333;
+}
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+.scroll-box {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.plan-item {
+    margin-bottom: 16px;
+    font-size: 18px;
+   
+}
+.plan-item input[type="radio"] {
+    transform: scale(1.4);
+    margin-right: 10px;
+}
+button {
+    display: block;
+    width: 100%;
+    height: 60px;
+    margin-top: 30px;
+    font-size: 20px;
+    /*background-color: #ff6f00; /* 오렌지색 */
+   /* background-color: #ffb74d; /* 연한 오렌지 */
+   /* background-color: #81c784; /* 연한 녹색 / #aed581; /* 연한 라임계열 */
+    background-color: #E96A18; /* 연한 라임계열 */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+button:hover {
+    /*background-color: #e65c00;*/
+       /* background-color: #9ccc65;/* 연한 라임계열 */
+        background-color: #E77A00; 
+       /* background-color: #ffa726; /* 연한오렌지 살짝 진한 톤 #d99847 /* 연녹 진해짐 */
+}
+@media screen and (max-width: 480px) {
+    .scroll-box {
+        max-height: 250px;
+    }
+    .plan-item {
+        font-size: 16px;
+    }
+    button {
+        font-size: 18px;
+        height: 50px;
+    }
+}
