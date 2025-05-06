@@ -3,7 +3,9 @@ package com.hulzzuk.plan.model.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hulzzuk.common.enumeration.ErrorCode;
 import com.hulzzuk.common.vo.Paging;
+import com.hulzzuk.location.model.enumeration.LocationEnum;
 import com.hulzzuk.plan.model.dao.PlanDao;
+import com.hulzzuk.plan.model.vo.PlanLocVO;
 import com.hulzzuk.plan.model.vo.PlanUserVO;
 import com.hulzzuk.plan.model.vo.PlanVO;
 import com.hulzzuk.user.model.vo.UserVO;
@@ -18,7 +20,11 @@ import org.springframework.web.servlet.ModelAndView;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.hulzzuk.location.model.enumeration.LocationEnum.ACCO;
 
 @Service("planService")
 public class PlanServiceImpl implements PlanService {
@@ -110,16 +116,74 @@ public class PlanServiceImpl implements PlanService {
                 throw new IllegalArgumentException(ErrorCode.PL_USER_INSERT_ERROR.getMessage());
             }
 
-            modelAndView.addObject("planId", planId);
+            modelAndView.addObject("plan", planVO);
             modelAndView.setViewName("plan/createPlanSecond");
 
         } else {
             // 재로그인 요청
-            modelAndView.addObject("fail", "N");
+            modelAndView.addObject("fail", "Y");
             modelAndView.setViewName("user/loginPage");
         }
 
         return modelAndView;
+    }
+
+    @Override
+    public ModelAndView createPlanSecond(ModelAndView mv, HttpServletRequest request, long planId, String day1Locations, String day2Locations) {
+
+        log.info("planId  : {}", planId);
+        log.info("day1Locations : {}", day1Locations);
+        log.info("day2Locations : {}", day2Locations);
+        try {
+            // JSON 파싱
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<Map<String, Object>> day1 = objectMapper.readValue(day1Locations, List.class);
+            for(int i = 0; i < day1.size(); i++) {
+                Map<String, Object> map = day1.get(i);
+                log.info("locEnum : {}", map.get("locEnum"));
+                switch ((String)map.get("locEnum")){
+                    case "ACCO":
+                        planDao.insertPlanLoc(new PlanLocVO(planId, (String) map.get("id"),null,null,i+1,1));
+                        break;
+                    case "REST":
+                        planDao.insertPlanLoc(new PlanLocVO(planId,null, null, (String) map.get("id"),i+1,1));
+                        break;
+                    case "ATTR":
+                        planDao.insertPlanLoc(new PlanLocVO(planId, null, (String) map.get("id"),null,i+1,1));
+                        break;
+                        default:
+                            throw new IllegalArgumentException(ErrorCode.PL_TRIP_INSERT_ERROR.getMessage());
+
+                }
+
+            }
+            if(!day1Locations.isEmpty()) {
+                List<Map<String, Object>> day2 = objectMapper.readValue(day2Locations, List.class);
+                for(int i = 0; i < day2.size(); i++) {
+                    Map<String, Object> map = day2.get(i);
+                    log.info("locEnum : {}", map.get("locEnum"));
+                    log.info("day2 : {}", map.get("day"));
+                    switch ((String)map.get("locEnum")){
+                        case "ACCO":
+                            planDao.insertPlanLoc(new PlanLocVO(planId, (String) map.get("id"),null,null,i+1,2));
+                            break;
+                        case "REST":
+                            planDao.insertPlanLoc(new PlanLocVO(planId,null, null, (String) map.get("id"),i+1,2));
+                            break;
+                        case "ATTR":
+                            planDao.insertPlanLoc(new PlanLocVO(planId, null, (String) map.get("id"),null,i+1,2));
+                            break;
+                        default:
+                            throw new IllegalArgumentException(ErrorCode.PL_TRIP_INSERT_ERROR.getMessage());
+
+                    }
+                }
+            }
+
+           return getPlanPage(request,null,null,mv);
+        } catch (Exception e) {
+            throw new RuntimeException(ErrorCode.PLAN_INSERT_ERROR.getMessage());
+        }
     }
 
     @Override

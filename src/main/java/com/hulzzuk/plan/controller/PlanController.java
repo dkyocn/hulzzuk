@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.List;
 
 @Controller
 @RequestMapping("plan")
@@ -59,11 +61,24 @@ public class PlanController {
         return mv;
     }
 
+    /**
+     * 생성 페이지 이동 메서드
+     * @return 생성 시퀀스 1 페이지
+     */
     @RequestMapping("moveCreate.do")
     public String moveCreatePage() {
         return "plan/createPlanFirst";
     }
 
+    /**
+     * 시퀀스 1 생성 메서드
+     * @param mv
+     * @param request
+     * @param title
+     * @param selectedDates
+     * @param selectedLocations
+     * @return
+     */
     @RequestMapping(value = "create.do", method = RequestMethod.POST)
     public ModelAndView createPlan(ModelAndView mv, HttpServletRequest request,
                                    @RequestParam(name = "planName") String title,
@@ -71,6 +86,14 @@ public class PlanController {
                                    @RequestParam(name = "selectedLocations") String selectedLocations) {
 
         return planService.createPlan(mv, request, title, selectedDates, selectedLocations);
+    }
+
+    @RequestMapping(value = "createPlanSecond.do", method = RequestMethod.POST)
+    public ModelAndView createPlanSecond(ModelAndView mv, HttpServletRequest request,
+                                         @RequestParam(name = "planId")  long planId,
+                                         @RequestParam(name = "day1Locations") String day1LocationsJson,
+                                         @RequestParam(name = "day2Locations", required = false) String day2LocationsJson) {
+        return planService.createPlanSecond(mv, request, planId, day1LocationsJson, day2LocationsJson);
     }
 
     @RequestMapping("moveDelete.do")

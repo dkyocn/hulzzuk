@@ -30,7 +30,7 @@ public class LocationDao {
 		return sqlSessionTemplate.selectOne("attrMapper.getAttrById", locId);
 	}
 	
-	public List<LocationVO> getLocationList(LocationEnum locationEnum, String keyword, Paging paging, SortEnum sortEnum) {
+	public List<LocationVO> getLocationPage(LocationEnum locationEnum, String keyword, Paging paging, SortEnum sortEnum) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("locationEnum", locationEnum);
         map.put("keyword", keyword);
@@ -40,11 +40,11 @@ public class LocationDao {
         // 각 LocationEnum에 맞는 조회 쿼리 실행
         switch (locationEnum) {
             case ACCO:
-                return sqlSessionTemplate.selectList("accoMapper.getAccoList", map);
+                return sqlSessionTemplate.selectList("accoMapper.getAccoPage", map);
             case REST:
-                return sqlSessionTemplate.selectList("restMapper.getRestList", map);
+                return sqlSessionTemplate.selectList("restMapper.getRestPage", map);
             case ATTR:
-                return sqlSessionTemplate.selectList("attrMapper.getAttrList", map);
+                return sqlSessionTemplate.selectList("attrMapper.getAttrPage", map);
             default:
                 return null;
         }
@@ -69,5 +69,18 @@ public class LocationDao {
         }
     }
 
+    public List<LocationVO> getLocationList(LocationEnum locationEnum, String keyword) {
 
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("keyword", keyword);
+        map.put("locationEnum", locationEnum);
+
+        // 각 LocationEnum에 맞는 조회 쿼리 실행
+        return switch (locationEnum) {
+            case ACCO -> sqlSessionTemplate.selectList("accoMapper.getAccoList", map);
+            case REST -> sqlSessionTemplate.selectList("restMapper.getRestList", map);
+            case ATTR -> sqlSessionTemplate.selectList("attrMapper.getAttrList", map);
+            default -> sqlSessionTemplate.selectList("attrMapper.getAttrList", map);
+        };
+    }
 }

@@ -1,6 +1,7 @@
 package com.hulzzuk.plan.model.dao;
 
 import com.hulzzuk.common.vo.Paging;
+import com.hulzzuk.plan.model.vo.PlanLocVO;
 import com.hulzzuk.plan.model.vo.PlanUserVO;
 import com.hulzzuk.plan.model.vo.PlanVO;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -32,6 +33,11 @@ public class PlanDao {
     // 일정 생성 - 시퀀스 1
     public void insertPlan(PlanVO planVO) {
         sqlSessionTemplate.insert("planMapper.insertPlan", planVO);
+    }
+
+    // 일정 생성 - 시퀀스 2
+    public void insertPlanLoc(PlanLocVO planLocVO) {
+        sqlSessionTemplate.insert("planLocMapper.insertPlanLoc", planLocVO);
     }
 
     // 일정 사용자 데이터 저장

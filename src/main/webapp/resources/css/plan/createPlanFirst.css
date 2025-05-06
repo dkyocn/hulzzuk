@@ -232,7 +232,6 @@ hr.planTitleHr {
 }
 
 .btnDiv {
-    cursor: pointer;
     display: flex;
     height: 60px;
     padding-right: 2%;
@@ -241,6 +240,7 @@ hr.planTitleHr {
 }
 
 .nextBtn {
+    cursor: pointer;
     width: 60px;
     height: 30px;
     border: 1px solid;

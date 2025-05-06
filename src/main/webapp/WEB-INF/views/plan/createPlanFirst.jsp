@@ -310,15 +310,15 @@
         <div class="location">
             <p>여행 지역 선택</p>
             <div class="planLocation">
-                <div class="seoul"><div class="clickSeoul" onclick="clickLoc('서울')"></div><p class="locName">서울</p></div>
-                <div class="gyeonggi"><div class="clickGyeonggi" onclick="clickLoc('경기')"></div><p class="locName">경기</p></div>
-                <div class="busan"><div class="clickBusan" onclick="clickLoc('부산')"></div><p class="locName">부산</p></div>
-                <div class="incheon"><div class="clickIncheon" onclick="clickLoc('인천')"></div><p class="locName">인천</p></div>
-                <div class="jeju"><div class="clickJeju" onclick="clickLoc('제주')"></div><p class="locName">제주</p></div>
-                <div class="gangwon"><div class="clickGangwon" onclick="clickLoc('강원')"></div><p class="locName">강원</p></div>
-                <div class="jeolla"><div class="clickJeolla" onclick="clickLoc('전라')"></div><p class="locName">전라</p></div>
-                <div class="gyeongsang"><div class="clickGyeongsang" onclick="clickLoc('경상')"></div><p class="locName">경상</p></div>
-                <div class="chungcheong"><div class="clickChungcheong" onclick="clickLoc('충청')"></div><p class="locName">충청</p></div>
+                <div class="seoul" onclick="clickLoc('서울')"><div class="clickSeoul"></div><p class="locName">서울</p></div>
+                <div class="gyeonggi" onclick="clickLoc('경기')"><div class="clickGyeonggi"></div><p class="locName">경기</p></div>
+                <div class="busan" onclick="clickLoc('부산')"><div class="clickBusan"></div><p class="locName">부산</p></div>
+                <div class="incheon" onclick="clickLoc('인천')"><div class="clickIncheon"></div><p class="locName">인천</p></div>
+                <div class="jeju" onclick="clickLoc('제주')"><div class="clickJeju"></div><p class="locName">제주</p></div>
+                <div class="gangwon" onclick="clickLoc('강원')"><div class="clickGangwon"></div><p class="locName">강원</p></div>
+                <div class="jeolla" onclick="clickLoc('전라')"><div class="clickJeolla"></div><p class="locName">전라</p></div>
+                <div class="gyeongsang" onclick="clickLoc('경상')"><div class="clickGyeongsang"></div><p class="locName">경상</p></div>
+                <div class="chungcheong" onclick="clickLoc('충청')"><div class="clickChungcheong"></div><p class="locName">충청</p></div>
             </div>
         </div>
     </div>
