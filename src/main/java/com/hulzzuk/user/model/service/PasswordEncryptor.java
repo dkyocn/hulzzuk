@@ -1,5 +1,6 @@
 package com.hulzzuk.user.model.service;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -10,7 +11,7 @@ public class PasswordEncryptor {
     public static String encryptSHA256(String plainText) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hashedBytes = md.digest(plainText.getBytes());
+            byte[] hashedBytes = md.digest(plainText.getBytes(StandardCharsets.UTF_8));
 
             StringBuilder sb = new StringBuilder();
             for (byte b : hashedBytes) {
@@ -27,6 +28,6 @@ public class PasswordEncryptor {
     // 입력 비밀번호와 저장된 비밀번호를 SHA-256 방식으로 비교하는 메소드
     public static boolean isPasswordMatch(String rawPassword, String encodedPassword) {
         String hashedRawPassword = encryptSHA256(rawPassword);
-        return encodedPassword.equals(StringUtils.upperCase(hashedRawPassword));
+        return encodedPassword.trim().equals(StringUtils.upperCase(hashedRawPassword));
     }
 }
