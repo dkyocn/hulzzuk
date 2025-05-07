@@ -62,7 +62,7 @@ padding: 0;
 text-align: center;
 }
 
-input#submitId{
+input.submitId{
 width: 440px;
 height: 43px;
 background-color: lightgray;
@@ -139,7 +139,7 @@ line-height: 1.5;
 		</c:if>
 		<br>
 		
-		<input type="submit" value="로그인" id="submitId">
+		<input type="submit" value="로그인" class="submitId">
 		<br><br>
 		<div id="loginOptions">
 		<table><tr>
