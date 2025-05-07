@@ -22,6 +22,9 @@
 		<typeAlias type="com.hulzzuk.location.model.vo.LocationVO" alias="Location" />	
 		<typeAlias type="com.hulzzuk.review.model.vo.ReviewVO" alias="Review" />				
 		<typeAlias type="com.hulzzuk.plan.model.vo.PlanVO" alias="Plan" />
+		<typeAlias type="com.hulzzuk.plan.model.vo.PlanUserVO" alias="PlanUser"/>
+		<typeAlias type="com.hulzzuk.plan.model.vo.PlanLocVO" alias="PlanLoc"/>
+		<typeAlias type="com.hulzzuk.common.vo.Paging" alias="Paging"/>
 	</typeAliases>
 	
 	<mappers>
@@ -34,5 +37,7 @@
 		<mapper resource="mappers/notice-mapper.xml" />
 		<mapper resource="mappers/user-mapper.xml"/>
 		<mapper resource="mappers/plan-mapper.xml" />
+		<mapper resource="mappers/planUser-mapper.xml"/>
+		<mapper resource="mappers/planLoc-mapper.xml"/>
 	</mappers>
 </configuration>

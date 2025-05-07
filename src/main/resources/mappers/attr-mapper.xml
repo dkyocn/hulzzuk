@@ -12,8 +12,7 @@
 	<result property="roadAddressName" column="ATTR_ROAD_ADDRESSNAME" />
 	<result property="x" column="ATTR_X" />
 	<result property="y" column="ATTR_Y" />
-	 <result property="imgPath" column="IMAGE_PATH"/>
-	  <result property="mapPath" column="MAP_PATH"/>
+	<result property="imgPath" column="ATTR_IMAGE"/>
 	</resultMap>
 	
 	<!-- 총 갯수 -->
@@ -54,7 +53,7 @@
   </select> -->
   
   <!-- 숙소 리스트 조회: keyword 검색 + 정렬 -->
-  <select id="getAttrList" parameterType="hashMap" resultMap="resultList">
+  <select id="getAttrPage" parameterType="hashMap" resultMap="resultList">
   SELECT * FROM ( SELECT ROWNUM AS RNUM, A.*
     								FROM ( SELECT A.ATTR_ID, A.ATTR_PLACENAME, A.ATTR_ROAD_ADDRESSNAME
       												FROM TB_ATTR A
@@ -89,5 +88,15 @@
     FROM tb_attr
     WHERE ATTR_ID = #{attrId}
   </select>
+
+	<select id="getAttrList" parameterType="hashMap" resultMap="resultList">
+		select * from TB_ATTR
+		<where>
+			<if test="keyword != null and keyword != ''">
+				(ATTR_PLACENAME LIKE '%' || #{keyword} || '%' OR ATTR_ROAD_ADDRESSNAME LIKE '%' || #{keyword} || '%')
+			</if>
+		</where>
+		order by ATTR_PLACENAME
+	</select>
 	
 	</mapper>

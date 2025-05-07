@@ -1,8 +1,5 @@
 package com.hulzzuk.plan.model.vo;
 
-
-
-
 import java.io.Serializable;
 import java.sql.Date;
 
@@ -15,6 +12,13 @@ public class PlanVO implements Serializable {
     private Date planEndDate;
 
     public PlanVO() {
+    }
+
+    public PlanVO( String planTitle, String planPlace, Date planStartDate, Date planEndDate) {
+        this.planTitle = planTitle;
+        this.planPlace = planPlace;
+        this.planStartDate = planStartDate;
+        this.planEndDate = planEndDate;
     }
 
     public PlanVO(long planId, String planTitle, String planPlace, Date planStartDate, Date planEndDate) {
