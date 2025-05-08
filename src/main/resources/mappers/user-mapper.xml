@@ -33,7 +33,11 @@
 	</select>
 	
 	<!-- 비밀번호 재설정용 쿼리 -->
-	
+	<update id="updatePwd" parameterType="hashMap">
+		update tb_user
+		set user_pwd = #{ userPwd }
+		where user_id = #{ userId }
+	</update>
 	
 
 </mapper>

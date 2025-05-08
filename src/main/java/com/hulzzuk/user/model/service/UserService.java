@@ -1,8 +1,5 @@
 package com.hulzzuk.user.model.service;
 
-import java.net.http.HttpRequest;
-
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -21,12 +18,23 @@ public interface UserService {
 	// 로그아웃
 	ModelAndView logoutMethod(ModelAndView mv, HttpSession session, SessionStatus status);
 
-	// 이메일 인증
+	// 이메일 인증번호 발송
 	ModelAndView sendMailMethod(ModelAndView mv, HttpSession session, HttpServletRequest request,
 			String userId, int width, int height);
 	
 	// 인증번호 검증
 	ModelAndView verifyCode(String inputCode, String userId,
             ModelAndView mv, HttpSession session);
+	
+	// 비밀번호 유효성 검사
+	ModelAndView pwdValidateMethod(ModelAndView mv, String newPwd);
+	
+	// 비밀번호 일치 확인
+	ModelAndView pwdConfirmMethod(ModelAndView mv, HttpSession session, HttpServletRequest request, 
+			String newPwd, String pwdConfirm);
+	
+	// 비밀번호 업데이트
+	ModelAndView pwdUpdateMethod(ModelAndView mv, HttpSession session, 
+			HttpServletRequest request, String newPwd);
 	
 }

@@ -1,0 +1,314 @@
+div.planPageTitle {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-left: 4%;
+    padding-right: 3%;
+}
+
+h1.planTitle {
+    margin-bottom: 0;
+}
+
+hr.planTitleHr {
+    border-width: 2px 0 0 0;
+    border-color: black;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-bottom: 1.5%;
+}
+
+.planNameDiv {
+    text-align: center;
+    margin-left: 3%;
+    display: flex;
+    align-items: center;
+    font-size: 28px;
+    justify-content: flex-start;
+}
+
+.planModified {
+    height: 20px;
+    width: 43px;
+    background-color: white;
+    text-align: center;
+    border: 1px solid;
+    margin-left: 1%;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.planModified:hover {
+    border: 1px solid #E96A18;
+    color: #E96A18;
+}
+
+.map {
+    height: 500px;
+    width: 96%;
+    display: block;
+    margin-left: 2%;
+    margin-bottom: 1.5%;
+}
+
+.planDay {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.planDateTitle {
+    display: flex;
+    align-items: flex-end;
+    margin-left: 2%;
+}
+
+.day1, .day2 {
+    height: 32px;
+    width: 91px;
+    border: 1px solid;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    background-color: #FFD599;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.active {
+    height: 55px;
+}
+
+.planDate {
+    font-size: xx-small;
+    margin-left: 5px;
+}
+
+.checklistBtn {
+    border: 1px solid;
+    border-radius: 8px;
+    margin-left: 8px;
+    margin-bottom: 5px;
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    cursor: pointer;
+    width: 100px;
+    height: 25px;
+}
+
+.checklistBtn:hover {
+    border: 1px solid #E96A18;
+}
+
+.checklistBtn > img {
+    margin-left: 6px;
+}
+
+.shareBtn {
+    width: 32px;
+    height: 32px;
+    background-image: url("../../images/common/share-button-black.png");
+    background-size: cover;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.shareBtn:hover {
+    background-image: url("../../images/common/share-button-orange.png");
+}
+
+.deleteBtn {
+    width: 32px;
+    height: 32px;
+    background-image: url("../../images/common/delete.png");
+    background-size: cover;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.deleteBtn:hover {
+    background-image: url("../../images/common/delete-orange.png");
+}
+
+.editBtn {
+    width: 32px;
+    height: 32px;
+    background-image: url("../../images/common/edit.png");
+    background-size: cover;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.modifiedBtn {
+    width: 32px;
+    height: 32px;
+    margin-right: 5px;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 5px;
+    position: relative;
+    background-size: cover;
+}
+
+.planLocList {
+    margin-left: 2%;
+    margin-right: 2%;
+    border: 1px solid;
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.planLocList > * {
+    width: 100%;
+}
+
+.p1 {
+    font-size: x-large;
+    margin-bottom: 0;
+}
+
+.p2 {
+    font-size: small;
+    margin-top: 5px;
+}
+
+.subDiv {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.addLocBtn {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    border: none;
+    background-color: white;
+    font-size: larger;
+    cursor: pointer;
+}
+
+.addLocBtn > img {
+    margin-right: 6px;
+}
+
+.addedLocation {
+    width: 97%;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 1%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 15px;
+}
+
+.locationNumber {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: #ccc;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.innerDiv {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.addLocTextDiv {
+    margin-left: 15px;
+}
+
+.p1 {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: x-large;
+}
+
+.p2 {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: smaller;
+}
+
+.distanceItem {
+    text-align: center;
+    color: #666;
+    font-size: 12px;
+    padding: 5px 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    width: 80%;
+    margin: 5px 0 5px 10%;
+}
+
+.btnDiv {
+    display: flex;
+    margin-right: 2%;
+}
+
+.removeBtn {
+    background-color: #ffffff;
+    border: 1px solid;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    display: none;
+    margin-left: 10px;
+}
+
+.removeBtn:hover {
+    color: #E96A18;
+    border-color: #E96A18;
+}
+
+.addedLocation.dragging {
+    opacity: 0.5;
+    border: 2px dashed #ccc;
+}
+
+.location-checkbox {
+    margin-right: 10px;
+    width: 24px;
+    height: 24px;
+}
+
+.saveDiv {
+    margin-right: 2%;
+    display: flex;
+    text-align: center;
+    margin-bottom: 20px;
+    justify-content: flex-end;
+}
+
+.saveBtn {
+    width: 60px;
+    height: 30px;
+    border: 1px solid;
+    border-radius: 8px;
+    background-color: #E96A18;
+    color: white;
+    cursor: pointer;
+}

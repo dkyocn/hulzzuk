@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="planLocMapper">
+    <resultMap type="PlanLoc" id="resultVO">
+        <result property="planId" column="PLAN_ID" />
+        <result property="accoId" column="ACCO_ID" />
+        <result property="attrId" column="ATTR_ID" />
+        <result property="restId" column="REST_ID" />
+        <result property="seq" column="SEQ"/>
+        <result property="planDay" column="PLAN_DAY"/>
+    </resultMap>
+
+    <insert id="insertPlanLoc" parameterType="PlanLoc">
+        insert into TB_TRIP_PL(PLAN_ID, ACCO_ID, ATTR_ID, REST_ID, SEQ, PLAN_DAY) values (#{planId}, #{accoId}, #{attrId}, #{restId}, #{seq}, #{planDay})
+    </insert>
+</mapper>

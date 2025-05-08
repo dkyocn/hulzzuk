@@ -27,8 +27,8 @@
             const planCreateText = planCreateBtn.querySelector(".planCreateText");
 
             // 기본 상태 설정
-            const defaultImgSrc = "${pageContext.request.contextPath}/resources/images/plan/add-button-black.png";
-            const hoverImgSrc = "${pageContext.request.contextPath}/resources/images/plan/add-button-orange.png";
+            const defaultImgSrc = "${pageContext.request.contextPath}/resources/images/common/add-button-black.png";
+            const hoverImgSrc = "${pageContext.request.contextPath}/resources/images/common/add-button-orange.png";
             const defaultTextColor = "#000000";
             const hoverTextColor = "#E96A18";
 
@@ -75,7 +75,7 @@
     <div class="planPageTitle">
         <h1 class="planTitle">여행 일정</h1>
         <button class="planCreateBtn" onclick="location.href='${ pageContext.servletContext.contextPath }/plan/moveCreate.do';">
-            <img class="planCreateImg" src="${pageContext.request.contextPath}/resources/images/plan/add-button-black.png">
+            <img class="planCreateImg" src="${pageContext.request.contextPath}/resources/images/common/add-button-black.png">
             <span class="planCreateText">새로운 일정</span> </button>
     </div>
     <hr class="planTitleHr">

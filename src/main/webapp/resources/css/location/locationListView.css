@@ -1,0 +1,178 @@
+@charset "UTF-8";
+
+body {
+    font-family: 'Noto Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* .inner {
+    text-align: center;
+    margin: 20px 0;
+} */
+
+.inner {
+    display: flex;
+    justify-content: center;  /* 수평 가운데 정렬 */
+    align-items: center;
+    margin: 20px 0;
+}
+
+
+/* 검색 박스 스타일 - 이미지와 동일한 형태 */
+.search-box {
+	display: flex;
+	align-items: center;
+	height: 50px;
+	width: 450px;
+	padding: 0 10px;
+	box-sizing: border-box;
+	background: #fff;
+	border: 1px solid #E96A18;
+	border-radius: 40px;
+	margin-bottom: 0;
+	overflow: auto;
+}
+
+
+/* 드롭다운 (전체) */
+.search-box select {
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    color: #888;
+    outline: none;
+    appearance: none; /* 기본 화살표 제거 */
+    padding-right: 20px;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23888" height="16" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: 12px;
+    margin-right: 10px;
+}
+
+/* 검색 입력 */
+.search-box input[type="text"] {
+    border: none;
+    outline: none;
+    flex-grow: 1;
+    font-size: 14px;
+    color: #666;
+}
+
+/* 돋보기 버튼 */
+.search-box button {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-btn>img {
+	width: 30px;
+	height: 30px;
+	color: #E96A18;
+	border: none;
+}
+/* .custom-title {
+    text-align: center;
+    font-size: 32px;
+    margin: 30px 0;
+} */
+
+.custom-title {
+    text-align: center;
+    font-size: 40px;   /* 기존보다 크게 */
+    font-weight: bold;
+    margin: 30px 0;
+}
+
+/* .sort-box {
+    text-align: center;
+    margin: 20px 0;
+} */
+
+.sort-box {
+    display: flex;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    width: 90%;
+    margin: 20px auto;
+}
+
+
+#logGallery {
+    width: 900px;  /*폭 제한.  1200px가 이거를 계속 줄여봐요.900까지  */
+    margin: 0 auto; /*가운데 정렬*/
+    padding: 20px 270px;  /*여백*/
+}
+
+
+.location-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);		/* 3개씩 가로 정렬 */
+    gap: 30px;
+    justify-content: center;
+}
+
+.location-card {
+    position: relative;
+    overflow: hidden;
+    background: #f9f9f9;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    aspect-ratio: 1/1; /* 정사각형 비율 */
+    transition: transform 0.2s;
+}
+
+.location-card:hover {
+    transform: translateY(-5px);
+}
+
+.location-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.location-info {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);  /*반투명 검정 배경*/
+    color: #fff;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.location-info h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.location-info p {
+    margin: 5px 0 0;
+    font-size: 13px;
+}
+
+/* 반응형 디자인 */
+@media screen and (max-width: 768px) {
+    .location-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .location-grid {
+        grid-template-columns: 1fr;
+    }
+} 
+
+
+
+
