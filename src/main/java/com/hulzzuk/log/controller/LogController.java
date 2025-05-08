@@ -48,6 +48,9 @@ public class LogController {
         mav.addObject("amount", amount);
         return mav;
     }
+    
+    // 장소 로그 조회하기
+    
 
 
     // GET 요청으로 작성 여행선택 페이지 띄우기

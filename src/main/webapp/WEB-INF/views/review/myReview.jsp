@@ -81,26 +81,32 @@ function goToDelete() {
     <div class="review-header">
         <h2>My 리뷰</h2>
         <hr><hr>
-        <button type="button" class="select-all-btn" id="selectAllBtn">전체선택</button>
+        <div class="review-actions">
+		        <button type="button" class="select-all-btn" id="selectAllBtn">전체선택</button>
+		        <button type="button" class="delete-btn" onclick="goToDelete()">삭제</button>
+        </div>
     </div>
 <form id="reviewForm" action="${pageContext.request.contextPath}/review/moveDelete.do" method="get">
 <input type="hidden" name="reviewIds"  id="selectReviewIds">
 <input type="hidden" name="message" id="message">
 <input type="hidden" name="height" id="height">
 <input type="hidden"  name="width" id="width"> 
-    <c:forEach var="review" items="${reviewList}">
+
+<c:forEach var="review" items="${reviewList}">
     <div class="review-item">
-        <input type="checkbox"  name="selectedReviews" value="${review.reviewId}" class="review-checkbox"  onclick="clickReview(${review.reviewId})">
         <div class="review-info">
             <span>작성자: <c:out value="${user.userNick}" /></span>
-            <span class="review-date">작성일: <c:out value="${review.createAt}" /></span>
+            <div class="review-meta">
+		            <span class="review-date">작성일: <c:out value="${review.createAt}" /></span>
+		            <input type="checkbox" name="selectedReviews" value="${review.reviewId}" class="review-checkbox" onclick="clickReview(${review.reviewId})">
+       		 </div>
         </div>
         <div class="review-content">
+        	<span class="location-name">장소명 : <c:out value="${locName[review.reviewId]}" /></span>
             <p><c:out value="${review.userReviewText}" /></p>
         </div>
     </div>
 </c:forEach>
-<button type="button" class="delete-btn" onclick="goToDelete()">삭제</button>
 </form>
 </div>
 

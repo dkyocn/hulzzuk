@@ -10,51 +10,129 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/location/locationDetailView.css">
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+<%-- jQuery js 파일 로드 선언 --%>
+<script type="text/javascript" src="${ pageContext.servletContext.contextPath }/resources/js/jquery-3.7.1.min.js"></script>
+<!-- Kakao Maps API (JavaScript 키는 본인 것으로 교체하세요) -->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d9ed74efa0b6e99b6f0e99ac22f40a71"></script>
+<script type="text/javascript">
+// 찜하기 버튼
+document.addEventListener("DOMContentLoaded", function () {
+    const locLoveBtn = document.querySelector(".locLoveBtn");
+    const locLoveImg = locLoveBtn.querySelector(".locLoveImg");
+    const locLoveText = locLoveBtn.querySelector(".locLoveText");
+
+    // 기본 상태 설정
+    const loveDefaultImgSrc = "${pageContext.request.contextPath}/resources/images/loc/loc-love-black.png";
+    const loveHoverImgSrc = "${pageContext.request.contextPath}/resources/images/loc/loc-love-orange.png";
+
+    // 마우스를 올렸을 때
+    locLoveBtn.addEventListener("mouseover", function () {
+    	locLoveImg.src = loveHoverImgSrc;
+    	locLoveText.style.color = "#E96A18";
+    });
+
+    // 마우스가 떠났을 때
+    locLoveBtn.addEventListener("mouseout", function () {
+    	locLoveImg.src = loveDefaultImgSrc;
+    	locLoveText.style.color = "#000000";
+    });
+
+// 일정추가 버튼
+    const locPlanBtn = document.querySelector(".locPlanBtn");
+    const locPlanImg = locPlanBtn.querySelector(".locPlanImg");
+    const locPlanText = locPlanBtn.querySelector(".locPlanText");
+
+    // 기본 상태 설정
+    const planDefaultImgSrc = "${pageContext.request.contextPath}/resources/images/loc/loc-plan-black.png";
+    const planHoverImgSrc = "${pageContext.request.contextPath}/resources/images/loc/loc-plan-orange.png";
+
+    // 마우스를 올렸을 때
+    locPlanBtn.addEventListener("mouseover", function () {
+    	locPlanImg.src = planHoverImgSrc;
+    	locPlanText.style.color = "#E96A18";
+    });
+
+    // 마우스가 떠났을 때
+    locPlanBtn.addEventListener("mouseout", function () {
+    	locPlanImg.src = planDefaultImgSrc;
+    	locPlanText.style.color = "#000000";
+    });
+
+// 리뷰작성 버튼
+    const locReviewBtn = document.querySelector(".locReviewBtn");
+    const locReviewImg = locReviewBtn.querySelector(".locReviewImg");
+    const locReviewText = locReviewBtn.querySelector(".locReviewText");
+
+    // 기본 상태 설정
+    const reviewDefaultImgSrc = "${pageContext.request.contextPath}/resources/images/loc/loc-review-black.png";
+    const reviewHoverImgSrc = "${pageContext.request.contextPath}/resources/images/loc/loc-review-orange.png";
+
+    // 마우스를 올렸을 때
+    locReviewBtn.addEventListener("mouseover", function () {
+    	locReviewImg.src = reviewHoverImgSrc;
+    	locReviewText.style.color = "#E96A18";
+    });
+
+    // 마우스가 떠났을 때
+    locReviewBtn.addEventListener("mouseout", function () {
+    	locReviewImg.src = reviewDefaultImgSrc;
+    	locReviewText.style.color = "#000000";
+    });
+    
+// 공유하기 버튼
+    const locShareBtn = document.querySelector(".locShareBtn");
+    const locShareImg = locShareBtn.querySelector(".locShareImg");
+    const locShareText = locShareBtn.querySelector(".locShareText");
+
+    // 기본 상태 설정
+    const shareDefaultImgSrc = "${pageContext.request.contextPath}/resources/images/loc/loc-share-black.png";
+    const shareHoverImgSrc = "${pageContext.request.contextPath}/resources/images/loc/loc-share-orange.png";
+
+    // 마우스를 올렸을 때
+    locShareBtn.addEventListener("mouseover", function () {
+    	locShareImg.src = shareHoverImgSrc;
+    	locShareText.style.color = "#E96A18";
+    });
+
+    // 마우스가 떠났을 때
+    locShareBtn.addEventListener("mouseout", function () {
+    	locShareImg.src = shareDefaultImgSrc;
+    	locShareText.style.color = "#000000";
+    });
+});
+
+navigator.geolocation.getCurrentPosition(function(position) {
+    const lat = ${location.y};
+    const lng = ${location.x};
+
+    const latElem = document.getElementById('lat');
+    const lngElem = document.getElementById('lng');
+    
+    if (latElem) latElem.textContent = lat;
+    if (lngElem) lngElem.textContent = lng;
+    
+    const container = document.getElementById('map');
+    const options = {
+        center: new kakao.maps.LatLng(lat, lng),
+        level: 3
+    };
+
+    const map = new kakao.maps.Map(container, options);
+
+    const markerPosition = new kakao.maps.LatLng(lat, lng);
+    const marker = new kakao.maps.Marker({
+        position: markerPosition
+    });
+    
+    marker.setDraggable(true)
+
+    marker.setMap(map);
+});
+</script>
 </head>
+
 <body>
 <c:import url="/WEB-INF/views/common/header.jsp" />
-
-<%-- <div class="container">
-    <div class="title-section">
-        <h1>${location.placeName}</h1>
-        <div class="rating">
-            <span>★ 4.8/5</span> <span>❤️ 20</span>
-        </div>
-    </div>
-
-    <div class="main-image">
-         <img src="${pageContext.request.contextPath}/resources/images/logo1.png"  alt="메인 이미지">
-    </div>
-
-    <div class="button-group">
-        <button>찜하기</button>
-        <button>일정추가</button>
-        <button onclick="#">리뷰</button>
-        <button>공유하기</button>
-    </div>
-
-    <div class="basic-info">
-	    <div class="title-section-info">
-	        <h1>기본 정보</h1>
-	    </div>
-        <img src="${pageContext.request.contextPath}/resources/images/plan/busan.jpeg"  alt="지도 이미지">
-        <div class="info-text">
-            <p>주소: ${location.roadAddressName}</p>
-            <p>전화번호: ${location.phone}</p>
-            <button class="reserve-btn">예약하기</button>
-        </div>
-    </div>
-
-    <div class="review-section">
-    
-        <c:import url="/WEB-INF/views/review/reviewListView.jsp" />
-       
-        <div class="more-button-container">
-            <a href="reviewList?locId=${location.locId}" class="more-button">더보기</a>
-        </div>
-    </div>
-
-</div> --%>
 
 <div class="container">
 
@@ -68,41 +146,58 @@
 
     <!-- 메인 이미지 -->
     <div class="main-image">
-        <img src="${pageContext.request.contextPath}/resources/images/logo1.png" alt="메인 이미지">
+        <img src="${ location.imgPath }" alt="메인 이미지" style="border:none;">
     </div>
 
     <!-- 버튼 그룹 -->
     <div class="button-group">
-        <button>찜하기</button>
-        <button>일정추가</button>
-        <button>리뷰</button>
-        <button>공유하기</button>
+        <button class="locLoveBtn" onclick="location.href='${ pageContext.servletContext.contextPath }/plan/moveCreate.do';">
+			<img class="locLoveImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-love-black.png">
+            <span class="locLoveText">찜하기</span> </button>
+        <button class="locPlanBtn" onclick="location.href='${ pageContext.servletContext.contextPath }/plan/moveCreate.do';">
+			<img class="locPlanImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-plan-black.png">
+            <span class="locPlanText">일정추가</span> </button>
+        <button class="locReviewBtn" onclick="location.href='${ pageContext.servletContext.contextPath }/plan/moveCreate.do';">
+			<img class="locReviewImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-review-black.png">
+            <span class="locReviewText">리뷰작성</span> </button>
+        <button class="locShareBtn" onclick="location.href='${ pageContext.servletContext.contextPath }/plan/moveCreate.do';">
+			<img class="locShareImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-share-black.png">
+            <span class="locShareText">공유하기</span> </button>
     </div>
 
     <!-- 기본 정보 + 예약 버튼 -->
+   <h2 class="section-title">기본 정보</h2>
     <div class="basic-info">
-    <h2 class="section-title">기본 정보</h2>
-        <img src="${pageContext.request.contextPath}/resources/images/plan/busan.jpeg" alt="지도 이미지">
+    <div id="map" style="width:600px;height:500px;"></div>
+	<!-- <p>위도: <span id="lat"></span>, 경도: <span id="lng"></span></p> -->
         <div class="info-text">
-            <p>주소: ${location.roadAddressName}</p>
+            <p>주소: ${location.addressName}</p>
             <p>전화번호: ${location.phone}</p>
-            <button class="reserve-btn">예약하기</button>
+            <c:choose>
+				    <c:when test="${ locationEnum == 'ACCO' }">
+				      <button class="reserve-btn" onclick="window.location.href='${location.placeUrl}'">예약하기</button>
+				    </c:when>
+				    <c:when test="${locationEnum eq 'REST'}">
+				      <button class="reserve-btn" onclick="window.location.href='${location.restMenu}'">메뉴보기</button>
+				    </c:when>
+				  </c:choose>
         </div>
     </div>
 
+
+
     <!-- 리뷰 영역 -->
     <div class="review-section">
-        <h2>리뷰 (15)</h2>
+        <h2>리뷰 (${ reviewCount })</h2>
 
         <div class="review-container">
-    <div class="review-header">
-        <h2>리뷰</h2>
+        
 	<c:import url="/WEB-INF/views/review/reviewListView.jsp" />
 
         <!-- 더보기 버튼 -->
-        <div class="more-button-container">
+        <%-- <div class="more-button-container">
             <a href="reviewList?locId=${location.locId}" class="more-button">더보기</a>
-        </div>
+        </div> --%>
     </div>
 
     <!-- 로그 영역 -->
@@ -114,15 +209,15 @@
             <img src="${pageContext.request.contextPath}/resources/images/log3.jpg" alt="로그3">
         </div> --%>
 
-        <div class="more-button-container">
+		<!-- 더보기 버튼 -->
+        <%-- <div class="more-button-container">
             <a href="logList?locId=${location.locId}" class="more-button">더보기</a>
-        </div>
+        </div> --%>
     </div>
 
 </div>
 </div>
 
-<hr>
 
 
 <hr>

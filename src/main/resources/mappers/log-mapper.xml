@@ -89,32 +89,49 @@
 		ORDER BY PLAN_START_DATE DESC
 	</select>
 	
+	 <!--  장소별 로그 갯수 조회용 쿼리 -->
+ <select id="logCount" resultType="_int" parameterType="Long">
+ 	SELECT COUNT(*) 
+    FROM TB_LOG l
+    <choose>
+        <when test="locationEnum == 'ACCO'">
+            WHERE l.ACCO_ID = #{locId}
+        </when>
+        <when test="locationEnum == 'REST'">
+            WHERE r.REST_ID = #{locId}
+        </when>
+        <when test="locationEnum == 'ATTR'">
+            WHERE r.ATTR_ID = #{locId}
+        </when>
+        <otherwise>
+            WHERE 1 = 0  <!-- 유효하지 않은 locationEnum일 경우 0건 -->
+        </otherwise>
+    </choose>
+</select>
 
-	<select id="getPlanById" parameterType="long" resultMap="planResultMap">
-    SELECT PLAN_ID, PLAN_TITLE, PLAN_PLACE, PLAN_START_DATE, PLAN_END_DATE
-    FROM TB_PLAN
-    WHERE PLAN_ID = #{planId}
-	</select>
-	
-	
-	    <!-- 로그 상세 조회 -->
-    <select id="selectLogById" parameterType="long" resultMap="logResultMap">
-        SELECT 
-            LOG_ID,
-            IMAGE_PATH,
-            LOG_TITLE,
-            LOG_START_DATE,
-            LOG_END_DATE,
-            PLAN_DAY,
-            USER_ID,
-            CREATED_AT,
-            UPDATED_AT,
-            0 AS LOVE_COUNT
-        FROM TB_LOG
-        WHERE LOG_ID = #{logId}
-    </select>
+<!-- 로그 조회 리스트 -->
+<select id="getReviewList" parameterType="HashMap" resultMap="resultList">
+    SELECT r.REVIEW_ID, r.USER_REV, r.ACCO_ID, r.REST_ID, r.ATTR_ID, r.USER_REVIEW_TEXT, 
+           r.CREATED_AT, r.USER_ID, 
+           u.USER_NICK  <!-- UserVO 정보 추가 -->
+    FROM TB_REVIEW r
+    JOIN TB_USER u ON r.USER_ID = u.USER_ID <!-- USER_ID로 JOIN -->
+    <choose>
+        <when test="locationEnum == 'ACCO'">
+            WHERE r.ACCO_ID = #{locId}
+        </when>
+        <when test="locationEnum == 'REST'">
+            WHERE r.REST_ID = #{locId}
+        </when>
+        <when test="locationEnum == 'ATTR'">
+            WHERE r.ATTR_ID = #{locId}
+        </when>
+    </choose>
+    <choose>
+        <when test="sortEnum == 'DATEDESC'">
+            ORDER BY r.CREATED_AT DESC
+        </when>
+    </choose>
+</select>
 
-	
-	
-	
 </mapper>
