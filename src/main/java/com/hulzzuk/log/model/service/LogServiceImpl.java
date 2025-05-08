@@ -9,6 +9,8 @@ import com.hulzzuk.common.enumeration.SortEnum;
 import com.hulzzuk.common.vo.Paging;
 import com.hulzzuk.location.model.enumeration.LocationEnum;
 import com.hulzzuk.log.model.dao.LogDao;
+import com.hulzzuk.log.model.vo.LogPlaceVO;
+import com.hulzzuk.log.model.vo.LogReviewVO;
 import com.hulzzuk.log.model.vo.LogVO;
 import com.hulzzuk.plan.model.dao.PlanDao;
 import com.hulzzuk.plan.model.vo.PlanVO;
@@ -89,4 +91,31 @@ public class LogServiceImpl implements LogService {
 	public PlanVO getPlanById(Long planId) {
 		return logDao.getPlanById(planId);
 	}
+	//************LogReviewServiceImple merged
+	@Override
+	public int insertLogReview(LogReviewVO review) {
+	     return logDao.insertLogReveiw(review);
+	}
+	
+	
+	//************LogPlaceServiceImple merged
+	
+	@Override
+	public PlanVO fetchPlanById(long planId) {
+		return logDao.fetchPlanById(planId);
+	}
+
+
+	@Override
+	public PlanVO getPlanById(int planId) {
+		return logDao.fetchPlanById(planId);
+	}
+
+
+	@Override
+	public List<LogPlaceVO> getPlacesByPlanDay(int planId, int planDay) {
+		return logDao.selectByPlanDay(planId,planDay);
+	}
+	
+	
 }
