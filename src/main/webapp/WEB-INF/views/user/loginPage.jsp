@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
 <script>
   window.onload = function() {
-    document.getElementById('userid').focus();
+    document.getElementById('userId').focus();
   };
 </script>
 <style>
@@ -125,7 +125,7 @@ line-height: 1.5;
 		<table id="loginText">
 			<tr><th>아이디(이메일)</th>
 				<td><input type="text" id="userid" name="userId" class="pos"></td></tr>
-			<tr><th>암&nbsp;        호</th>
+			<tr><th>암&nbsp; &nbsp; &nbsp;호</th>
 				<td><input type="password" id="userpwd" name="userPwd" class="pos"></td></tr>
 		</table>
 		<br>

@@ -82,7 +82,8 @@ line-height: 1.5;
 	 const userId = document.querySelector('input[name="userId"]').value;
 	 
 	 const url = '${pageContext.request.contextPath}/user/sendMail.do'
-			+ '?userId=' + encodeURIComponent(userId)
+			+ '?mode=resetSend'
+			+ '&userId=' + encodeURIComponent(userId)
 		 	+ '&width=350&height=300';
 	 
     // 팝업 창 열기 (가로 400px, 세로 300px)
@@ -114,14 +115,15 @@ line-height: 1.5;
 비밀번호 재설정 할 때 입력했던 아이디 값을 파라미터로 같이 넘겨줘야 함 -->
 <div id="mailForm">
 	<table class="mail">
-		<tr><th>아이디(이메일)</th>
-			<td>
+		<tr><th>아이디(이메일)</th><td>
+		<!-- 인증번호 전송 용도(페이지) 구분용 -->
+		<input type="hidden" name="mode" value="resetSend">
 		<!-- 아이디 -->
 		<c:if test="${empty userId}">
-			<input type="text" name="userId" class="pos">
+			<input type="email" name="userId" class="pos">
 		</c:if>
 		<c:if test="${!empty userId}">
-			<input type="text" name="userId" class="pos" value="<%=userId %>">
+			<input type="email" name="userId" class="pos" value="<%=userId %>">
 		</c:if>
 		<button class="mailButton" onclick="openMailPopUp()">전송</button></td></tr>
 	</table>
@@ -129,7 +131,9 @@ line-height: 1.5;
 	<form action="${pageContext.request.contextPath}/user/verifyCode.do" method="post">
         <table class="mail">		
 			<tr><th>인 증 번 호</th>
-			<td><input type="password" name="inputCode" class="pos">
+			<td><!-- 인증번호 검증 용도(페이지) 구분용 -->
+				<input type="hidden" name="mode" value="resetVerify">
+				<input type="password" name="inputCode" class="pos">
                 <input type="hidden" name="userId" value="${userId}">
 				<button type="submit" class="mailButton">확인</button></td></tr>
 		</table>

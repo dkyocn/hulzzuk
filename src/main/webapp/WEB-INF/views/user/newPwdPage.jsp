@@ -23,7 +23,7 @@ text-align: center;
 margin: 0 auto;
 }
 
-div#pwdForm input#newPwd{
+div#pwdForm input#userPwd{
 border: none;
 outline: none;
 width: 93%; 
@@ -77,7 +77,7 @@ font-size: 16px;
 cursor: pointer;
 }
 
-input.submitId{
+button.submitId{
 width: 440px;
 height: 43px;
 background-color: lightgray;
@@ -110,7 +110,7 @@ let isPwdConfirmed = false;  // 비밀번호 확인 여부 저장
 // 비밀번호 유효성 검사
 $(document).ready(function () {
     function validatePassword() {
-        const pw = $("#newPwd").val();
+        const pw = $("#userPwd").val();
         let msg = "";
         let color = "red";
 
@@ -151,7 +151,7 @@ $(document).ready(function () {
     }
 
     // 입력 시 실시간 검사
-    $("#newPwd").on("input", validatePassword);
+    $("#userPwd").on("input", validatePassword);
 
     // 페이지 로드 직후 한 번 실행
     validatePassword();
@@ -160,11 +160,11 @@ $(document).ready(function () {
 
 // 비밀번호 일치 확인
 function validate(){
-	var pwdValue = $('#newPwd').val();
+	var pwdValue = $('#userPwd').val();
 	var pwdValueConfirm = $('#pwdConfirm').val();
 	
 	if(!pwdValue || !pwdValueConfirm || pwdValue !== pwdValueConfirm){
-		$('#newPwd').val('');
+		$('#userPwd').val('');
 	    $('#pwdConfirm').val('');  // 이 부분도 통일
 	    $('#pwdConfirm').focus();  //입력커서 지정함
 		return false;  //전송 취소함
@@ -174,18 +174,12 @@ function validate(){
 
 // 비밀번호 일치 확인 팝업
 function openPwdConfirmPopUp() {
-	const pwd = document.getElementById("newPwd").value;
+	const pwd = document.getElementById("userPwd").value;
 	const confirm = document.getElementById("pwdConfirm").value;
 
 	// 비어있거나 불일치한 경우 처리
 	if (!pwd || !confirm) {
 	    alert("비밀번호와 확인란을 모두 입력해주세요.");
-	    isPwdConfirmed = false;
-	    return;
-	}
-
-	if (pwd !== confirm) {
-	    alert("비밀번호가 일치하지 않습니다.");
 	    isPwdConfirmed = false;
 	    return;
 	}
@@ -220,15 +214,15 @@ function validateBeforeUpdate() {
 function openPwdUpdatePopUp() {
    // 비밀번호 확인 여부 검사
    if(!validateBeforeUpdate()){
-		retrun;
+		return;
    }
    
    // 팝업 창 열기 (가로 400px, 세로 300px)
    window.open("", 'pwdUpdatePopUp', 'width=350,height=250');
    
    // 사용자 입력값을 hidden 필드에 복사
-   const typedPassword = document.getElementById('newPwd').value;
-   document.getElementById('hiddenNewPwd').value = typedPassword;
+   const typedPassword = document.getElementById('userPwd').value;
+   document.getElementById('hiddenUserPwd').value = typedPassword;
 	   
    const pwdChangeSave = document.pwdChangeSave;
    pwdChangeSave.target = 'pwdUpdatePopUp';
@@ -255,11 +249,13 @@ function openPwdUpdatePopUp() {
 		<table id="rePwd">
 			<tr><th>비밀번호</th>
 				<td>
-					<input type="password" id="newPwd" name="newPwd" class="pos">
+					<input type="password" id="userPwd" name="userPwd" class="pos">
 					<span style="color:${color}">${msg}</span>
-				</div></td></tr>
+				</td></tr>
 			<tr><th>비밀번호 확인</th>
-				<td><input type="password" id="pwdConfirm" name="pwdConfirm" class="pos">
+				<td><!-- 비밀번호 확인 용도(페이지) 구분용 -->
+				<input type="hidden" name="mode" value="reset">
+				<input type="password" id="pwdConfirm" name="pwdConfirm" class="pos">
 				<button type="button" onclick="openPwdConfirmPopUp()" class="pwdButton">확인</button></td></tr>
 		</table>
 		<br>
@@ -269,7 +265,7 @@ function openPwdUpdatePopUp() {
     <form name="pwdChangeSave" id="pwdChangeSave" action="${pageContext.request.contextPath}/user/pwdUpdate.do" 
 				method="post" onsubmit="return validateBeforeUpdate();">
         <input type="hidden" name="userId" value="${userId}" />
-        <input type="hidden" name="newPwd" id="hiddenNewPwd" />
+        <input type="hidden" name="userPwd" id="hiddenUserPwd" />
         <button type="button" onclick="openPwdUpdatePopUp()" class="submitId">재설정</button>
         <br><br>
     </form>
