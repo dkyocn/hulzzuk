@@ -80,7 +80,6 @@ public class LocationServiceImpl implements LocationService{
         	accoPaging.calculate();
         	List<LocationVO> accoList = locationDao.getLocationPage(locationEnum.ACCO, keyword, accoPaging, sortEnum);
 
-<<<<<<< HEAD
             mv.addObject("accoList", accoList);
             mv.addObject("accoPaging", accoPaging);
             
@@ -89,9 +88,6 @@ public class LocationServiceImpl implements LocationService{
         	Paging restPaging = new Paging(keyword, restListCount, pageLimit, currentPage, "page.do");
         	restPaging.calculate();
         	List<LocationVO> restList = locationDao.getLocationPage(locationEnum.REST, keyword, restPaging, sortEnum);
-=======
-        List<LocationVO> locationList = locationDao.getLocationPage(locationEnum, keyword, paging, sortEnum);
->>>>>>> 1efd3d1c217c70ee61e1e9e19cbbee3fb98f8cc9
 
             mv.addObject("restList", restList);
             mv.addObject("restPaging", restPaging);
@@ -119,13 +115,8 @@ public class LocationServiceImpl implements LocationService{
             mv.addObject("locationEnum", locationEnum);
         	mv.setViewName("location/locationListView");
         }
-<<<<<<< HEAD
         mv.addObject("keyword",keyword);
         mv.addObject("sortEnum", sortEnum);
-=======
-
-        
->>>>>>> 1efd3d1c217c70ee61e1e9e19cbbee3fb98f8cc9
         return mv;
 	}
 

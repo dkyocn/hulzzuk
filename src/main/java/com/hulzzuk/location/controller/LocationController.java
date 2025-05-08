@@ -45,9 +45,6 @@ public class LocationController {
 	        return locationService.getLocationPage(locationEnum, keyword, page, limit, sortEnum, mv);
 	    }
 
-<<<<<<< HEAD
-	  
-=======
 		// location list 조회
 		@RequestMapping("list.do")
 		public ModelAndView getLocationList(ModelAndView mv,
@@ -55,7 +52,6 @@ public class LocationController {
 											@RequestParam(name = "locationEnum") LocationEnum locationEnum) {
 			return locationService.getLocationList(keyword, locationEnum, mv);
 		}
->>>>>>> 1efd3d1c217c70ee61e1e9e19cbbee3fb98f8cc9
 
 		// location 단일 조회 ( Map return)
 		@RequestMapping("getLocation.do")
