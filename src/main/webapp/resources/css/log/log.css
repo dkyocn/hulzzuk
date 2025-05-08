@@ -1,3 +1,10 @@
+body {
+    font-family: 'Noto Sans', sans-serif;
+    margin: 0;
+    padding: 0 40px; /* 좌우 여백 추가 */
+    box-sizing: border-box;
+}
+
 /* --- 헤더 스타일 --- */
 .logHeader {
     display: flex;
@@ -14,7 +21,7 @@
 
 .btn-create {
     padding: 8px 16px;
-    background-color: #007bff;
+    background-color: #E96A18;
     color: white;
     text-decoration: none;
     border-radius: 6px;
@@ -22,7 +29,7 @@
 }
 
 .btn-create:hover {
-    background-color: #0056b3;
+    background-color: #E88A00;
 }
 
 #logFilter {
@@ -34,12 +41,15 @@
 
 /* --- 갤러리 스타일 --- */
 #logGallery {
-    width: 100%;
-    padding: 20px;
+    width: 900px;  /*폭 제한.  1200px가 이거를 계속 줄여봐요.900까지  */
+    margin: 0 auto; /*가운데 정렬*/
+    padding: 20px;  /*여백*/
 }
 
 .galleryGrid {
-    display: grid;
+    display :grid;  /*grid대신 flex로changed */
+    flex-wrap:wrap;
+   /* 한줄로보임  grid-template-columns : reapeat(auto-fill, minmax(360px,1fr));  /*반응형*/
     grid-template-columns: repeat(3, 1fr); /* 3개씩 가로 정렬 */
     gap: 20px;
     justify-content: center;
@@ -47,20 +57,27 @@
 
 /* 카드 스타일 */
 .galleryItem {
+	/*width: calc((100%-40px)/3); /*3개 +gap 보정(20px *2 ) */
     position: relative;
     overflow: hidden;
     background-color: #e0e0e0;
     border-radius: 10px;
-    width: 100%;
+  /* 	width : 100%;
+    width: 400px;
+  	height: 400px;*/
+  	margin:0;  /*개별카드도중앙 */
     aspect-ratio: 1/1; /* 정사각형 비율 */
+    display: block; /* inline 요소 특유의 여백(whitespace gap)** 제거 */
+    overflow: hidden;
     transition: transform 0.4s ease;
 }
 
 .galleryItem img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: cover; /* or cover / contain/ fill / none / scale-down */
     transition: transform 0.4s ease; /* 부드러운 확대 */
+    display: block; /* inline 요소 특유의 여백(whitespace gap)** 제거 */
 }
 
 /* 오버레이 스타일 */

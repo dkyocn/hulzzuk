@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="logReviewMapper">
+
+    <insert id="insertLogReview" parameterType="com.hulzzuk.log.model.vo.LogReviewVO">
+        INSERT INTO TB_TRIP_LOG (
+            LOG_ID,
+            ACCO_ID,
+            REST_ID,
+            ATTR_ID,
+            LOG_CONTENT,
+            PLAN_DAY,
+            CREATED_AT,
+            UPDATED_AT
+        ) VALUES (
+            #{logId},
+            #{accoId},
+            #{restId},
+            #{attrId},
+            #{logContent},
+            #{planDay},
+            SYSDATE,
+            SYSDATE
+        )
+    </insert>
+    
+    <!-- 선택적: 특정 로그의 후기 조회 -->
+    <select id="selectLogReviewList" parameterType="long" resultType="com.hulzzuk.log.model.vo.LogReviewVO">
+        SELECT 
+            LOG_ID,
+            ACCO_ID,
+            REST_ID,
+            ATTR_ID,
+            LOG_CONTENT,
+            PLAN_DAY
+        FROM TB_TRIP_LOG
+        WHERE LOG_ID = #{logId}
+        ORDER BY PLAN_DAY, ACCO_ID, ATTR_ID, REST_ID
+    </select>
+    
+
+</mapper>

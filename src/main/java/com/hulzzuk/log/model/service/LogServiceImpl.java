@@ -84,4 +84,9 @@ public class LogServiceImpl implements LogService {
   
          return logList;
  	}
+
+	@Override
+	public PlanVO getPlanById(Long planId) {
+		return logDao.getPlanById(planId);
+	}
 }

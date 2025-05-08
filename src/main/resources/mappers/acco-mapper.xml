@@ -69,5 +69,15 @@
     FROM TB_ACCO
     WHERE ACCO_ID = #{accoId}
   </select>
+
+    <select id="getAccoList" parameterType="hashMap" resultMap="resultList">
+        select * from TB_ACCO
+        <where>
+            <if test="keyword != null and keyword != ''">
+                (ACCO_PLACENAME LIKE '%' || #{keyword} || '%' OR ACCO_ROAD_ADDRESSNAME LIKE '%' || #{keyword} || '%')
+            </if>
+        </where>
+        order by ACCO_PLACENAME
+    </select>
 </mapper>
 	

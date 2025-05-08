@@ -4,9 +4,7 @@ package com.hulzzuk.user.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,7 +33,7 @@ public class UserController {
 	}
 	
 	// 로그인 페이지 이동
-	@RequestMapping(value = "login.do") 
+	@RequestMapping(value = "login.do", method = RequestMethod.GET) 
 	public ModelAndView moveLoginPage(ModelAndView mv) {
 		
 		mv.setViewName("user/loginPage");
@@ -66,11 +64,10 @@ public class UserController {
 		return mv;
 	}
 
-	// 이메일 팝업 이동
+	// 이메일 팝업 확인버튼 동작
 	@RequestMapping(value = "mailPopUp.do")
 	@ResponseBody
 	public String mailPopUpMethod() {
-			
 		return "success";
 	}
 	
@@ -93,6 +90,46 @@ public class UserController {
 		
 		return userService.verifyCode(inputCode, userId, mv, session);
 	}
+	
+	
+	 // 비밀번호 유효성 검사
+	 @RequestMapping(value = "pwdValidate.do", method = RequestMethod.POST) 
+	 public ModelAndView pwdValidateMethod(ModelAndView mv, @RequestParam("newPwd") String newPwd) {
+		 return mv;
+	}
+ 
+	
+	// 비밀번호 일치 확인 메소드
+	@RequestMapping(value = "pwdConfirm.do", method = RequestMethod.POST)
+	public ModelAndView pwdConfirmMethod(ModelAndView mv, HttpSession session, HttpServletRequest request, 
+			@RequestParam("newPwd") String newPwd,
+			@RequestParam("pwdConfirm") String pwdConfirm) {
+		return userService.pwdConfirmMethod(mv, session, request, newPwd, pwdConfirm);
+	}
+	
+	// 비밀번호 일치 확인 팝업 확인버튼 동작 (확인 누르면 postPopUp.jsp의 함수에 success값 전달하여 window.close() 실행됨)
+	@RequestMapping(value = "pwdConfirmPopUp.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String pwdConfirmPopUpMethod() {
+		return "success";
+	}
+	
+	// 비밀번호 재설정
+	@RequestMapping(value = "pwdUpdate.do", method = RequestMethod.POST)
+	public ModelAndView pwdUpdateMethod(ModelAndView mv, HttpSession session, HttpServletRequest request, 
+			@RequestParam("newPwd") String newPwd) {
+		return userService.pwdUpdateMethod(mv, session, request, newPwd);
+	}
+	
+	// 비밀번호 재설정 팝업 확인버튼 동작
+	@RequestMapping(value = "pwdUpdatePopUp.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String pwdUpdatePopUpMethod(HttpServletRequest request) {
+		String contextPath = request.getContextPath();
+		return "success|" + contextPath + "/user/login.do";
+	}
+		
+	
 	
 }
 

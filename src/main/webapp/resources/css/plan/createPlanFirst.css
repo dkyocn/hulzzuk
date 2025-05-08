@@ -1,0 +1,250 @@
+div.planPageTitle {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-left: 4%;
+    padding-right: 3%;
+}
+
+h1.planTitle {
+    margin-bottom: 0;
+}
+
+hr.planTitleHr {
+    border-width: 2px 0 0 0;
+    border-color: black;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-bottom: 1.5%;
+}
+
+.nameLocation {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+}
+
+.nameLocation > .name {
+    width: 43%;
+    display: flex;
+    flex-direction: column;
+}
+
+.nameLocation > .name > input {
+    padding-left: 10px;
+    width: 50%;
+    height: 35px;
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
+.nameLocation > .name > .location {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.nameLocation > .name > .location > p {
+    font-size: x-large;
+}
+
+.planLocation {
+    display: flex;
+    flex-wrap: wrap;
+    width: 80%;
+}
+
+.seoul, .gyeonggi, .busan, .incheon, .jeju, .gangwon, .jeolla, .gyeongsang, .chungcheong, .clickSeoul, .clickBusan, .clickChungcheong, .clickGangwon, .clickGyeonggi, .clickGyeongsang, .clickIncheon, .clickJeju, .clickJeolla {
+    width: 117px;
+    height: 117px;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 100px;
+    position: relative;
+    background-size: 100% 100%;
+    margin-bottom: 15px;
+    margin-right: 15px;
+}
+
+.clickSeoul, .clickBusan, .clickChungcheong, .clickGangwon, .clickGyeonggi, .clickGyeongsang, .clickIncheon, .clickJeju, .clickJeolla {
+    background-color: rgb(200 200 200 / 76%);
+}
+
+.seoul {
+    background-image: url("../../images/plan/seoul.jpg");
+}
+
+.gyeonggi {
+    background-image: url("../../images/plan/gangwon.jpeg");
+}
+
+.busan {
+    background-image: url("../../images/plan/busan.jpeg");
+}
+
+.incheon {
+    background-image: url("../../images/plan/incheon.jpeg");
+}
+
+.jeju {
+    background-image: url("../../images/plan/jeju.jpeg");
+}
+
+.gangwon {
+    background-image: url("../../images/plan/gangwon.jpeg");
+}
+
+.jeolla {
+    background-image: url("../../images/plan/jeolla.jpeg");
+}
+
+.gyeongsang {
+    background-image: url("../../images/plan/gyeongsang.jpeg");
+}
+
+.chungcheong {
+    background-image: url("../../images/plan/chungcheong.jpeg");
+}
+
+.locName {
+    color: white;
+    font-size: x-large;
+    position: absolute;
+    top: 17%;
+    left: 31%;
+}
+
+/* 달력 컨테이너 스타일 */
+.calendar-container {
+    width: 50%; /* .name과 동일한 너비로 설정 */
+    height: 600px; /* 고정 높이 설정 */
+    display: flex;
+    gap: 20px; /* 두 달력 사이 간격 */
+    margin-bottom: 25px;
+    background-color: lightgray;
+    padding: 15px; /* 내부 패딩 추가 */
+    box-sizing: border-box; /* 패딩이 크기에 포함되도록 */
+}
+
+/* 개별 달력 스타일 */
+#calendar1, #calendar2 {
+    width: 50%; /* 컨테이너 내부에서 균등 분할 */
+    height: 100%; /* 컨테이너 높이에 맞춤 */
+    background-color: white;
+    margin: 0; /* 불필요한 마진 제거 */
+    overflow: hidden; /* 넘치는 콘텐츠 숨기기 */
+}
+
+/* FullCalendar 전체 크기 조정 */
+.fc {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* 날짜 셀 크기 조정 (크기 축소) */
+.fc-daygrid-day {
+    height: 50px !important; /* 날짜 셀 높이 축소 */
+    width: 50px !important; /* 날짜 셀 높이 축소 */
+}
+
+/* 날짜 숫자 스타일 (크기 축소) */
+.fc-daygrid-day-number {
+    font-size: 14px !important; /* 날짜 숫자 크기 축소 */
+    padding: 4px !important; /* 패딩 축소 */
+}
+
+/* 비활성화된 날짜 스타일 */
+.fc-daygrid-day.fc-day-other {
+    background-color: #f5f5f5; /* 비활성화된 날짜 배경색 */
+    color: transparent; /* 숫자 숨기기 */
+}
+
+/* 선택된 날짜 스타일 */
+.fc-daygrid-day.fc-day-selected {
+    background-color: rgba(233, 106, 24, 0.63) !important;
+    /*border-radius: 50%;*/
+}
+
+.fc .fc-highlight {
+    background: none;
+}
+
+/* 요일 헤더 스타일 (크기 축소) */
+.fc-col-header-cell {
+    font-size: 15px !important; /* 요일 텍스트 크기 축소 */
+    padding: 5px !important; /* 패딩 축소 */
+}
+
+/* 헤더 툴바 스타일 (크기 축소) */
+.fc-header-toolbar {
+    display: flex;
+    justify-content: space-between !important;
+    align-items: center;
+    padding: 5px !important; /* 패딩 축소 */
+}
+
+/* 툴바 버튼 스타일 */
+.fc-customPrev-button, .fc-customNext-button {
+    border: none;
+    background-color: white;
+    font-size: 16px; /* 버튼 텍스트 크기 축소 */
+    margin-left: 5px; /* 마진 축소 */
+    margin-right: 5px;
+    padding: 2px 5px; /* 패딩 축소 */
+    cursor: pointer;
+    position: relative;
+}
+
+/* 배경 이미지 추가 */
+.fc-customPrev-button::before, .fc-customNext-button::before {
+    content: '';
+    width: 16px; /* 이미지 크기 축소 */
+    height: 16px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+
+/* 버튼 텍스트 위치 조정 */
+.fc-customPrev-button, .fc-customNext-button {
+    padding-left: 20px; /* 배경 이미지와 텍스트 간격 조정 (축소) */
+}
+
+/* 툴바 제목 스타일 (크기 축소) */
+.fc-toolbar-title {
+    font-size: 14px !important; /* 제목 크기 축소 */
+    font-weight: bold;
+}
+
+.fc-view-harness {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90% !important;
+}
+
+.btnDiv {
+    display: flex;
+    height: 60px;
+    padding-right: 2%;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.nextBtn {
+    cursor: pointer;
+    width: 60px;
+    height: 30px;
+    border: 1px solid;
+    border-radius: 8px;
+    background-color: #E96A18;
+    color: white;
+}

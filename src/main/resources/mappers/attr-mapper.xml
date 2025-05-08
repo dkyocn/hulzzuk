@@ -11,8 +11,7 @@
 	<result property="addressName" column="ATTR_ADDRESSNAME" />
 	<result property="x" column="ATTR_X" />
 	<result property="y" column="ATTR_Y" />
-	 <result property="imgPath" column="ATTR_IMAGE"/>
-	  <result property="mapPath" column="MAP_PATH"/>
+	<result property="imgPath" column="ATTR_IMAGE"/>
 	</resultMap>
 	
 	<!-- 총 갯수 -->
@@ -95,5 +94,15 @@
     FROM TB_ATTR
     WHERE ATTR_ID = #{attrId}
   </select>
+
+	<select id="getAttrList" parameterType="hashMap" resultMap="resultList">
+		select * from TB_ATTR
+		<where>
+			<if test="keyword != null and keyword != ''">
+				(ATTR_PLACENAME LIKE '%' || #{keyword} || '%' OR ATTR_ROAD_ADDRESSNAME LIKE '%' || #{keyword} || '%')
+			</if>
+		</where>
+		order by ATTR_PLACENAME
+	</select>
 	
 	</mapper>

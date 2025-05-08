@@ -65,6 +65,7 @@ button.mailButton{
 width: 50px;
 height: 35px;
 font-size: 16px;
+cursor: pointer;
 }
 
 div.errorMsg{
@@ -129,7 +130,7 @@ line-height: 1.5;
         <table class="mail">		
 			<tr><th>인 증 번 호</th>
 			<td><input type="password" name="inputCode" class="pos">
-                    <input type="hidden" name="userId" value="${userId}">
+                <input type="hidden" name="userId" value="${userId}">
 				<button type="submit" class="mailButton">확인</button></td></tr>
 		</table>
 	</form>

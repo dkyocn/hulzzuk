@@ -95,4 +95,14 @@
     FROM TB_REST
     WHERE REST_ID = #{restId}
   </select>
+
+	<select id="getRestList" parameterType="hashMap" resultMap="resultList">
+		select * from TB_REST
+		<where>
+			<if test="keyword != null and keyword != ''">
+				(REST_PLACENAME LIKE '%' || #{keyword} || '%' OR REST_ROAD_ADDRESSNAME LIKE '%' || #{keyword} || '%')
+			</if>
+		</where>
+		order by REST_PLACENAME
+	</select>
   </mapper>

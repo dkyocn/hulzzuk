@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -83,13 +84,13 @@ public class LogController {
     // GET 요청으로 작성 폼 띄우기
     @GetMapping("/create.do")
     public ModelAndView showCreateLogPage(@RequestParam(name="planId", required=false) Long planId){
-    	 ModelAndView mav = new ModelAndView("logs/logCreate"); // /WEB-INF/views/logs/logCreate.jsp
+    	 ModelAndView mav = new ModelAndView("logs/logInsert"); // /WEB-INF/views/logs/logInsert.jsp
   
-    	 //if (planId != null) {
-    	 //       List<PlaceVO> placeList = logService.getPlaceListByPlanId(planId);
-    	  //      mav.addObject("placeList", placeList);
-    	 //   }
-    	 
+    	 if (planId != null) {
+    	        // planId로 해당 여행일 조회
+    	        PlanVO plan = logService.getPlanById(planId); // getPlanById :service 추가함 
+    	        mav.addObject("plan", plan); // JSP에서 ${plan.planTitle} 로 쓰기 
+    	    }
     	return mav;
     }
 
@@ -141,4 +142,6 @@ public class LogController {
         mav.addObject("log", log);
         return mav;
     }
+  
+    
 } 

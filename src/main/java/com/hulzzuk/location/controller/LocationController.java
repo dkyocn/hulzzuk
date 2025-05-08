@@ -1,13 +1,14 @@
 package com.hulzzuk.location.controller;
 
 import java.util.ArrayList;
+import java.util.Map;
 
+import com.hulzzuk.location.model.vo.LocationVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.hulzzuk.location.model.enumeration.LocationEnum;
@@ -44,6 +45,29 @@ public class LocationController {
 	        return locationService.getLocationPage(locationEnum, keyword, page, limit, sortEnum, mv);
 	    }
 
+<<<<<<< HEAD
 	  
+=======
+		// location list 조회
+		@RequestMapping("list.do")
+		public ModelAndView getLocationList(ModelAndView mv,
+											@RequestParam(name = "keyword", required = false) String keyword,
+											@RequestParam(name = "locationEnum") LocationEnum locationEnum) {
+			return locationService.getLocationList(keyword, locationEnum, mv);
+		}
+>>>>>>> 1efd3d1c217c70ee61e1e9e19cbbee3fb98f8cc9
 
+		// location 단일 조회 ( Map return)
+		@RequestMapping("getLocation.do")
+		@ResponseBody
+		public Map<String, Object> getLocationById(@RequestParam(name ="locId") String locId, @RequestParam(name = "locationEnum") LocationEnum locationEnum) {
+		  return locationService.getLocation(locationEnum, locId);
+		}
+
+		// 두 장소의 거리 계산
+		@RequestMapping(value = "getDistance.do", method = RequestMethod.POST)
+		@ResponseBody
+		public Map<String, Double> getDistance(@RequestBody Map<String, String> locationMap) {
+			return locationService.getDistance(locationMap);
+		}
 }
