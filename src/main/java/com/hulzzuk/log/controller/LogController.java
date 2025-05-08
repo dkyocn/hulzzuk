@@ -1,4 +1,4 @@
-package com.hulzzuk.log.model.controller;
+package com.hulzzuk.log.controller;
 
 import java.util.List;
 
@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.hulzzuk.common.vo.FileNameChange;
 import com.hulzzuk.log.model.service.LogService;
+import com.hulzzuk.log.model.vo.LogPlaceVO;
 import com.hulzzuk.log.model.vo.LogVO;
 import com.hulzzuk.user.model.vo.UserVO;
 import com.hulzzuk.plan.model.vo.PlanVO;
@@ -140,5 +141,17 @@ public class LogController {
         return mav;
     }
   
-    
+    //로그작성을 위한 planID세부사항 불러오
+    @RequestMapping("insertPage.do")
+    public String showLogInsertPage(@RequestParam("planId") int planId, Model model) {
+        List<LogPlaceVO> day1Places = logService.getPlacesByPlanDay(planId, 1);  // day1 리스트 조회
+        List<LogPlaceVO> day2Places = logService.getPlacesByPlanDay(planId, 2);  // day2 리스트 조회
+        PlanVO plan = logService.fetchPlanById(planId); // 플랜 정보 조회
+
+        model.addAttribute("plan", plan);
+        model.addAttribute("day1PlaceList", day1Places);
+        model.addAttribute("day2PlaceList", day2Places);
+
+        return "logs/logInsert";  //logs/logInsert.jsp
+    }
 } 

@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.hulzzuk.common.vo.Paging;
+import com.hulzzuk.log.model.vo.LogPlaceVO;
+import com.hulzzuk.log.model.vo.LogReviewVO;
 import com.hulzzuk.log.model.vo.LogVO;
 import com.hulzzuk.plan.model.vo.PlanVO;
 
@@ -66,5 +68,22 @@ public class LogDao {
     public PlanVO getPlanById(Long planId) {
         return sqlSession.selectOne("logMapper.getPlanById", planId);
     }
+    
+    //*****************************LogPlaceDao 로부터 병함
+    public PlanVO fetchPlanById(long planId) {
+    return sqlSession.selectOne("logMapper.getPlanById", planId);
+}
+
+    public List<LogPlaceVO> selectByPlanDay(int planId, int planDay) {
+    Map<String, Object> params = new HashMap<>();
+    params.put("planId", planId);
+    params.put("planDay", planDay);
+    
+    return sqlSession.selectList("logPlaceMapper.selectPlacesByPlanDay", params);
+}
+  //*****************************LogResolvedDao 로부터 병함
+    public int insertLogReveiw(LogReviewVO review) {
+		return sqlSession.insert("logReviewMapper.insertLogReview", review);
+	}
     
 }
