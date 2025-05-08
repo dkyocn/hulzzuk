@@ -12,13 +12,19 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/review/reviewListView.css">
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+<script type="text/javascript">
+	const raw = document.getElementById("rawText").innerHTML;
+	const tempDiv = document.createElement("div");
+	tempDiv.innerHTML = raw;
+	document.getElementById("cleanText").textContent = tempDiv.textContent;
+</script>
 </head>
 
 <body>
 
 <div class="review-container">
     <div class="review-header">
-        <button class="write-review-btn" onclick="location.href='#'">리뷰 작성하기</button>
+        <button class="write-review-btn" onclick="location.href='${pageContext.servletContext.contextPath}/review/moveCreate.do?locationEnum=${ locationEnum }&locId=${ location.locId }'">리뷰 작성하기</button>
     </div>
 
     <c:forEach var="review" items="${reviewList}">
@@ -36,15 +42,11 @@
                 <span class="review-date">작성일: <c:out value="${review.createAt}" /></span>
             </div>
             <div class="review-content">
-                <p><c:out value="${review.userReviewText}" /></p>
-            </div>
-        </div>
+			    ${review.userReviewText}
+			</div>
+		</div>
     </c:forEach>
 
 </div>
-
-
-
-
 </body>
 </html>

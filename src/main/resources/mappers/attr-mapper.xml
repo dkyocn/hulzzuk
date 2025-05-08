@@ -9,10 +9,9 @@
 	<result property="placeName" column="ATTR_PLACENAME" />
 	<result property="phone" column="ATTR_PHONE" />
 	<result property="addressName" column="ATTR_ADDRESSNAME" />
-	<result property="roadAddressName" column="ATTR_ROAD_ADDRESSNAME" />
 	<result property="x" column="ATTR_X" />
 	<result property="y" column="ATTR_Y" />
-	 <result property="imgPath" column="IMAGE_PATH"/>
+	 <result property="imgPath" column="ATTR_IMAGE"/>
 	  <result property="mapPath" column="MAP_PATH"/>
 	</resultMap>
 	
@@ -22,7 +21,7 @@
     FROM TB_ATTR
     <where>
       <if test="keyword != null and keyword != ''">
-        (ATTR_PLACENAME LIKE '%' || #{keyword} || '%' OR ATTR_ROAD_ADDRESSNAME LIKE '%' || #{keyword} || '%')
+        (ATTR_PLACENAME LIKE '%' || #{keyword} || '%' OR ATTR_ADDRESSNAME LIKE '%' || #{keyword} || '%')
       </if>
     </where>
   </select>
@@ -54,13 +53,13 @@
   </select> -->
   
   <!-- 숙소 리스트 조회: keyword 검색 + 정렬 -->
-  <select id="getAttrList" parameterType="hashMap" resultMap="resultList">
+  <select id="getAttrPage" parameterType="hashMap" resultMap="resultList">
   SELECT * FROM ( SELECT ROWNUM AS RNUM, A.*
-    								FROM ( SELECT A.ATTR_ID, A.ATTR_PLACENAME, A.ATTR_ROAD_ADDRESSNAME
+    								FROM ( SELECT A.ATTR_ID, A.ATTR_PLACENAME, A.ATTR_ADDRESSNAME, ATTR_IMAGE
       												FROM TB_ATTR A
 												      <where>
 												        <if test="keyword != null and keyword != ''">
-												          (ATTR_PLACENAME LIKE '%' || #{keyword} || '%' OR ATTR_ROAD_ADDRESSNAME LIKE '%' || #{keyword} || '%')
+												          (ATTR_PLACENAME LIKE '%' || #{keyword} || '%' OR ATTR_ADDRESSNAME LIKE '%' || #{keyword} || '%')
 												        </if>
 												      </where>
 												      <choose>
@@ -87,6 +86,13 @@
   <select id="getAttrById" parameterType="string" resultMap="resultList">
     SELECT *
     FROM tb_attr
+    WHERE ATTR_ID = #{attrId}
+  </select>
+  
+   <!--  즐길거리명 조회 -->
+ <select id="getAttrName" parameterType="string" resultType="string">
+    SELECT ATTR_PLACENAME
+    FROM TB_ATTR
     WHERE ATTR_ID = #{attrId}
   </select>
 	

@@ -79,16 +79,41 @@ body {
 }
 /* .custom-title {
     text-align: center;
-    font-size: 32px;
+    font-size: 40px;   기존보다 크게
+    font-weight: bold;
     margin: 30px 0;
 } */
 
-.custom-title {
-    text-align: center;
-    font-size: 40px;   /* 기존보다 크게 */
-    font-weight: bold;
-    margin: 30px 0;
+/* 공통 제목 스타일 */
+.section-title {
+    position: relative;
+    text-align: left;
+    margin-top: 40px;
+    margin-left: 500px;
+    z-index: 10;
 }
+
+.section-title h1 {
+    font-size: 36px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.section-title .underline {
+    width: 100px;
+    height: 4px;
+    background-color: orange;
+    margin: 0;
+    border-radius: 2px;
+}
+
+/* 링크 밑줄 제거 */
+.section-title h1 a {
+    text-decoration: none;
+    color: inherit;
+}
+
 
 /* .sort-box {
     text-align: center;
@@ -99,7 +124,7 @@ body {
     display: flex;
     justify-content: flex-end; /* 오른쪽 정렬 */
     width: 90%;
-    margin: 20px auto;
+    margin: 20px 0 30px -320px;
 }
 
 

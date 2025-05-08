@@ -34,15 +34,16 @@ public class LocationController {
 	
 	// 검색페이지(페이징 처리)
 	  @RequestMapping("page.do")
-	    public ModelAndView getLocationList(ModelAndView mv,
+	    public ModelAndView getLocationPage(ModelAndView mv,
 	                                        @RequestParam(name = "keyword", required = false) String keyword,
 	                                        @RequestParam(name = "locationEnum") LocationEnum locationEnum,
 	                                        @RequestParam(name = "sortEnum", required = false) SortEnum sortEnum,
 	                                        @RequestParam(name = "page", required = false) String  page,
 	                                        @RequestParam(name = "limit", required = false) String limit) {
 
-	        return locationService.getLocationList(locationEnum, keyword, page, limit, sortEnum, mv);
+	        return locationService.getLocationPage(locationEnum, keyword, page, limit, sortEnum, mv);
 	    }
 
+	  
 
 }

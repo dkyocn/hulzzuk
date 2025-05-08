@@ -20,16 +20,7 @@ body {
     margin-bottom: 10px; /* 제목과 리스트 사이 여백 */
 }
 
-.select-all-btn {
-    padding: 6px 14px;
-    font-size: 14px;
-    background-color: #4CAF50;		/*초록*/
-    /* background-color: #E96A18; */		/* 주황 */
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
+
 
 .review-item {
     border-top: 1px solid #ddd;
@@ -37,29 +28,48 @@ body {
 }
 
 .review-info {
+	font-size: 15px;  
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 5px;
+    margin-bottom: 15px;
 }
 
-.review-info span {
-    font-size: 14px;
-}
 
 /* 작성일 스타일 */
+.review-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .review-date {
-    margin-left: auto;
-    text-align: right;
-    color: gray; /* 추가하면 글자색도 살짝 부드럽게 */
+	font-size: 15px;  
+    color: gray;
+    white-space: nowrap;
+}
+
+.review-checkbox {
+    transform: scale(1.2);
+    cursor: pointer;
 }
 
 .review-rating {
     color: #f5a623;
 }
 
+/* 장소명 스타일 추가 */
+.review-content .location-name {
+    font-size: 17px;        /* 리뷰 내용보다 약간 크게 */
+    font-weight: bold;      /* 굵게 */
+    margin-bottom: 8px;     /* 아래 여백 */
+    display: block;
+    border-bottom: 1px solid #ccc; /* 구분선 추가 */
+    padding-bottom: 5px;    /* 구분선과의 간격 */
+}
+
 .review-content p {
-    font-size: 16px;
+    font-size: 15px;
     color: #333;
     line-height: 1.6;
     margin-left: 7px;
@@ -84,22 +94,36 @@ body {
     background: #eee;
 }
 
+/* 버튼 */
+.review-actions {
+    display: flex;
+    gap: 10px;
+}
+
 .delete-btn {
-    background-color: red;
+    background-color: #dc3545;
     color: white;
     border: none;
-    padding: 10px;
-    font-size: 16px;
+    padding: 6px 14px;
+    font-size: 14px;
+    border-radius: 5px;
     cursor: pointer;
-    display: block;
-    margin: 20px auto;
-    width: 100px;
 }
 
 .delete-btn:hover {
     background-color: darkred;
 }
 
+.select-all-btn {
+    padding: 6px 14px;
+    font-size: 14px;
+    background-color: #4CAF50;		/*초록*/
+    /* background-color: #E96A18; */		/* 주황 */
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
 
 .select-all-btn:hover {
     background-color: #218838;
