@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -37,35 +38,15 @@ public class UserServiceImpl implements UserService {
 	// 패스워드 암호화 처리
 	private static final PasswordEncryptor passwordEncryptor = new PasswordEncryptor();
 
-	// 마이페이지
-	@Override
-	public ModelAndView selectUser(ModelAndView mv, String userId) {
-
-		UserVO user = userDao.selectUser(userId);
-
-		if (user != null) {
-			mv.setViewName("user/infoPage"); 
-			mv.addObject("user", user); 
-		}else {
-        	throw new IllegalArgumentException(ErrorCode.USER_NOT_FOUND.getMessage());
-		}
-		
-		return mv;
-	}
-
 	// 로그인
 	@Override
 	public ModelAndView loginMethod(ModelAndView mv, UserVO user, HttpSession session, SessionStatus status) {
 		
 		UserVO loginUser = userDao.selectUser(user.getUserId());
 		
-		logger.info("입력 비밀번호(평문) : "+ user.getUserPwd());
-		logger.info("입력 비밀번호(암호화) : " + PasswordEncryptor.encryptSHA256(user.getUserPwd()).toUpperCase());
-		logger.info("DB 비밀번호 : " + loginUser.getUserPwd());
-		logger.info("비교결과 : " + PasswordEncryptor.isPasswordMatch(user.getUserPwd(), loginUser.getUserPwd()));
-		
 		if (loginUser != null && PasswordEncryptor.isPasswordMatch(user.getUserPwd(), loginUser.getUserPwd())) {
 			session.setAttribute("loginUser", loginUser);
+			session.setAttribute("authUserId", loginUser.getUserId());
 			status.setComplete(); // 로그인 성공 결과를 보냄
 			mv.setViewName("redirect:/main.do");	// common/main.jsp로 이동
 			session.setMaxInactiveInterval(30 * 60);
@@ -98,13 +79,17 @@ public class UserServiceImpl implements UserService {
 	// 이메일 인증번호
 	@Override
 	public ModelAndView sendMailMethod(ModelAndView mv, HttpSession session, HttpServletRequest request, 
-			String userId, int width, int height) {
+			String mode, String userId, int width, int height) {
 		
-		logger.info("userId : "+userId);
-//		logger.info("UserVO : " + userDao.selectUser(userId).toString());
-		// 아이디가 있으면 이메일 전송, 아이디가 없으면 회원가입 페이지로
+		logger.info("userId : "+ userId);
+		logger.info("mode : " + mode);
+		
+		boolean userExits = (userDao.selectUser(userId) != null);
+		
+		// 비밀번호 재설정 페이지(mode : reset)에서 아이디가 있으면 이메일 전송, 아이디가 없으면 회원가입 페이지로
+		// 회원가입 페이지(mode : join)에서 아이디가 있으면 로그인 페이지로, 아이디 없으면 이메일 전송
 		// 비밀번호 재설정 할 때 입력했던 아이디 값을 파라미터로 같이 넘겨줘야 함
-		if (userDao.selectUser(userId) != null) {
+		if (("resetSend".equals(mode) && userExits) || "joinSend".equals(mode) && !userExits) {
 			try {
 				
 				// 인증번호 생성
@@ -145,25 +130,29 @@ public class UserServiceImpl implements UserService {
 
 				// 메일 보내기
 				Transport.send(msg);
-			    mv.addObject("message", "인증번호가 전송되었습니다.");
-		        mv.addObject("actionUrl", request.getContextPath() + "/user/mailPopUp.do");
-		        mv.addObject("width", width);
-		        mv.addObject("height", height);
+			     // 성공: 팝업 메시지 + 닫기만
+	            mv.addObject("message", "인증번호가 전송되었습니다.");
+	            mv.addObject("action", "close");  // 팝업에서 닫기만
+	        } catch (Exception e) {
+	            throw new IllegalArgumentException(ErrorCode.MAIL_SEND_FAIL.getMessage());
+	        }
+	    } else {
+	    	if("resetSend".equals(mode)) {
+		        // 실패: 팝업 메시지 + 회원가입 페이지로 이동
+		        mv.addObject("message", "입력하신 아이디가 잘못되었습니다.<br>회원가입 페이지로 이동하시겠습니까?");
+		        mv.addObject("action", "redirect");  // 팝업에서 부모창 이동
+		        mv.addObject("moveUrl", request.getContextPath() + "/user/moveJoin.do");
+	    	} else if("joinSend".equals(mode)){
+	    		mv.addObject("message", "이미 존재하는 아이디입니다.<br>로그인 페이지로 이동하시겠습니까?");
+	    		mv.addObject("action", "redirect");
+	    		mv.addObject("moveUrl", request.getContextPath() + "/user/login.do");
+	    	}
+	    }
 
-				mv.setViewName("common/popUp");
-			} catch (Exception e) {				
-				throw new IllegalArgumentException(ErrorCode.MAIL_SEND_FAIL.getMessage());
-			}
-			
-		}else {
-	        mv.addObject("message", "입력하신 아이디가 잘못되었습니다.<br> 회원가입 페이지로 이동하시겠습니까?");
-	        mv.addObject("actionUrl", "${pageContext.servletContext.contextPath}/user/moveJoin.do");
-	        mv.addObject("width", width);
-	        mv.addObject("height", height);
-
-			mv.setViewName("common/popUp");
-		}
-		return mv;
+	    mv.addObject("width", width);
+	    mv.addObject("height", height);
+	    mv.setViewName("common/popUp");
+	    return mv;
 	}
 
 	// 인증번호 생성 메소드
@@ -175,67 +164,88 @@ public class UserServiceImpl implements UserService {
 	
 	// 인증번호 검증 메소드
 	@Override
-	public ModelAndView verifyCode(String inputCode, String userId,
-            ModelAndView mv, HttpSession session) {
+	public ModelAndView verifyCode(String mode, String inputCode, String userId,
+            ModelAndView mv, HttpSession session, HttpServletRequest request) {
+		
+		logger.info("userId : "+ userId);
+		logger.info("mode : " + mode);
 		
 		String authCode = (String) session.getAttribute("authCode");
 		String authUserId = (String) session.getAttribute("authUserId");
 		
-		if (authCode != null && authCode.equals(inputCode)) {
+		boolean isVerified = (authCode != null && authCode.equals(inputCode));
+		
+		if(isVerified) {
 			mv.addObject("userId", authUserId);
-			mv.setViewName("user/newPwdPage");
-		}else {
+			
+			if("resetVerify".equals(mode)) {
+				mv.setViewName("user/userPwdPage");
+			}else if("joinVerify".equals(mode)) {
+				mv.addObject("message", "인증이 완료되었습니다.");
+		        mv.addObject("action", "close"); 
+		        mv.addObject("actionUrl", request.getContextPath() + "/user/verifyPopUp.do");
+		        mv.setViewName("common/postPopUp");
+			}
+		}else{
 			mv.addObject("mailFalse", "N");
 			mv.addObject("userId", userId);
+			
+			if("resetVerify".equals(mode)) {
 			mv.setViewName("user/mail");
+			}else if("joinVerify".equals(mode)) {
+				mv.addObject("message", "인증번호가 일치하지 않습니다.");
+				mv.addObject("action", "close");
+				mv.addObject("actionUrl", request.getContextPath() + "/user/verifyPopUp.do");
+				mv.setViewName("common/postPopUp");
+			}
 		}
 		return mv;
 	}
 	
 	// 비밀번호 유효성 검사 메소드
 	@Override
-	public ModelAndView pwdValidateMethod(ModelAndView mv, String newPwd) {
+	public ModelAndView pwdValidateMethod(ModelAndView mv, String userPwd) {
 	    String message = "";
 	    String color = "red";
 
-	    if (newPwd == null || newPwd.trim().isEmpty()) {
-	        message = "8~16자의 영문, 숫자, 특수문자만 가능합니다. (사용 가능한 특수문자 : ~ ! @ # $)";
+	    if (userPwd == null || userPwd.trim().isEmpty()) {
+	        message = "비밀번호는 8~16자의 영문, 숫자, 특수문자만 가능합니다. (사용 가능한 특수문자 : ~ ! @ # $)";
 	        color = "gray";
 	    }
 
-	    if (newPwd != null && (newPwd.length() < 8 || newPwd.length() > 16)) {
+	    if (userPwd != null && (userPwd.length() < 8 || userPwd.length() > 16)) {
 	        message = "! 8~16자 사이여야 합니다.";
 	    }
 
-	    if (newPwd != null && newPwd.contains(" ")) {
+	    if (userPwd != null && userPwd.contains(" ")) {
 	        message = "! 공백은 사용할 수 없습니다.";
 	    }
 
-	    if (newPwd != null && !newPwd.matches("^[A-Za-z0-9~!@#$]*$")) {
+	    if (userPwd != null && !userPwd.matches("^[A-Za-z0-9~!@#$]*$")) {
 	        message = "! 허용되지 않은 특수문자가 포함되었습니다.";
 	    }
 
-	    if (newPwd != null &&
-	        (!newPwd.matches(".*[A-Za-z].*") || 
-	         !newPwd.matches(".*[0-9].*") || 
-	         !newPwd.matches(".*[~!@#$].*"))) {
+	    if (userPwd != null &&
+	        (!userPwd.matches(".*[A-Za-z].*") || 
+	         !userPwd.matches(".*[0-9].*") || 
+	         !userPwd.matches(".*[~!@#$].*"))) {
 	        message = "! 영문, 숫자, 특수문자(~!@#$)를 모두 포함해야 합니다.";
 	    }
 
-	    if (newPwd != null &&
-	        newPwd.length() >= 8 && newPwd.length() <= 16 &&
-	        !newPwd.contains(" ") &&
-	        newPwd.matches("^[A-Za-z0-9~!@#$]*$") &&
-	        newPwd.matches(".*[A-Za-z].*") &&
-	        newPwd.matches(".*[0-9].*") &&
-	        newPwd.matches(".*[~!@#$].*")) {
+	    if (userPwd != null &&
+	        userPwd.length() >= 8 && userPwd.length() <= 16 &&
+	        !userPwd.contains(" ") &&
+	        userPwd.matches("^[A-Za-z0-9~!@#$]*$") &&
+	        userPwd.matches(".*[A-Za-z].*") &&
+	        userPwd.matches(".*[0-9].*") &&
+	        userPwd.matches(".*[~!@#$].*")) {
 	        message = "사용 가능한 비밀번호입니다.";
 	        color = "green";
 	    }
 
 	    mv.addObject("msg", message);
 	    mv.addObject("color", color);
-	    mv.setViewName("user/newPwdPage"); // 비밀번호 입력 페이지로 이동
+	    mv.setViewName("user/userPwdPage"); // 비밀번호 입력 페이지로 이동
 	    return mv;
 	}
 
@@ -243,38 +253,56 @@ public class UserServiceImpl implements UserService {
 	// 비밀번호 일치 확인 메소드
 	@Override
 	public ModelAndView pwdConfirmMethod(ModelAndView mv, HttpSession session, HttpServletRequest request, 
-			String newPwd, String pwdConfirm) {
-		//logger.info(newPwd);
+			String userPwd, String pwdConfirm) {
+		//logger.info(userPwd);
 		//logger.info(pwdConfirm);
-		// 8~16자의 영문 대소문자, 숫자, 특수문자만 가능합니다. (사용 가능한 특수문자 : ~ ! @ # $)
-		if (StringUtils.isBlank(newPwd) || StringUtils.isBlank(pwdConfirm) || !newPwd.equals(pwdConfirm)) {	// 비밀번호 불일치
+
+		// 유효성 검사 조건
+	    boolean isValid = userPwd != null &&
+	                      userPwd.length() >= 8 && userPwd.length() <= 16 &&
+	                      !userPwd.contains(" ") &&
+	                      userPwd.matches("^[A-Za-z0-9~!@#$]*$") &&
+	                      userPwd.matches(".*[A-Za-z].*") &&
+	                      userPwd.matches(".*[0-9].*") &&
+	                      userPwd.matches(".*[~!@#$].*");
+
+	    // 1. 유효성 검사 먼저 실패 시
+	    if (!isValid) {
+	        mv.addObject("message", "유효하지 않은 비밀번호입니다.<br>조건을 다시 확인해주세요.");
+	        mv.addObject("actionUrl", request.getContextPath() + "/user/pwdConfirmPopUp.do");
+	        mv.addObject("width", 350);
+	        mv.addObject("height", 300);
+	        mv.setViewName("common/postPopUp");
+	        return mv;
+	    }
+	  
+	    // 2. 비밀번호 일치 검사 - 비밀번호 불일치
+		if (StringUtils.isBlank(userPwd) || StringUtils.isBlank(pwdConfirm) || !userPwd.equals(pwdConfirm)) {	
 			 session.setAttribute("mismatch", true);
 			
 			 mv.addObject("message", "비밀번호가 일치하지 않습니다.");
 	         mv.addObject("actionUrl", request.getContextPath() + "/user/pwdConfirmPopUp.do");
 	         mv.addObject("width", 350);
 	         mv.addObject("height", 300);
-	         
 	         mv.setViewName("common/postPopUp");
 	        return mv;
-	    }else {	// 비밀번호 일치
-			 mv.addObject("message", "비밀번호가 일치합니다.");
-	         mv.addObject("actionUrl", request.getContextPath() + "/user/pwdConfirmPopUp.do");
-	         mv.addObject("width", 350);
-	         mv.addObject("height", 300);
-	         
-	         mv.setViewName("common/postPopUp"); // 팝업 띄울 페이지
 	    }
-	    return mv;
-	    	
+		
+		// 3. 유효성 + 비밀번호 일치 둘 다 통과 시
+		 mv.addObject("message", "비밀번호가 일치합니다.");
+         mv.addObject("actionUrl", request.getContextPath() + "/user/pwdConfirmPopUp.do");
+         mv.addObject("width", 350);
+         mv.addObject("height", 300);
+         mv.setViewName("common/postPopUp"); // 팝업 띄울 페이지
+         return mv;
 	}
 	
 	// 비밀번호 변경 메소드
 	@Override
 	public ModelAndView pwdUpdateMethod(ModelAndView mv, HttpSession session, 
-			HttpServletRequest request, String newPwd) {
+			HttpServletRequest request, String userPwd) {
 		 // 비밀번호 암호화
-        String encryptedPwd = passwordEncryptor.encryptSHA256(newPwd).toUpperCase();
+        String encryptedPwd = passwordEncryptor.encryptSHA256(userPwd).toUpperCase();
 
         // 세션에서 ID 불러오기
         String authUserId = (String)session.getAttribute("authUserId");
@@ -282,6 +310,7 @@ public class UserServiceImpl implements UserService {
         if(StringUtils.isBlank(authUserId)) {
         	throw new IllegalArgumentException(ErrorCode.USER_NOT_FOUND.getMessage());
         }else {
+        	
             // DAO를 통한 DB 업데이트 (성공 시 1 반환 가정)
             int result = userDao.pwdUpdateMethod(authUserId, encryptedPwd);
 
@@ -293,18 +322,114 @@ public class UserServiceImpl implements UserService {
                 mv.addObject("height", 300);
                 
                 mv.setViewName("common/postPopUp"); // 팝업 띄울 페이지
-            } else {
+            } else if(result <= 0) {
                 // 실패 시 다시 입력 페이지로 이동
                 mv.addObject("fail", "Y");  // <c:if test="${fail eq 'Y'}"> 조건 등에서 사용
                 mv.addObject("userId", authUserId);
-                mv.setViewName("user/newPwdPage");
+                mv.setViewName("user/userPwdPage");
             }
             
     		return mv;
         }
-        
-
 	}
+	
+	// 마이페이지
+	@Override
+	public ModelAndView selectUser(ModelAndView mv, String userId) {
+
+		UserVO user = userDao.selectUser(userId);
+
+		if (user != null) {
+			mv.setViewName("user/infoPage"); 
+			mv.addObject("user", user); 
+		}else {
+        	throw new IllegalArgumentException(ErrorCode.USER_NOT_FOUND.getMessage());
+		}
+		
+		return mv;
+	}
+		
+	// 회원 가입
+	@Override
+	public ModelAndView insertUser(ModelAndView mv, HttpServletRequest request, UserVO user) {
+		// 필수값 유효성 검사
+		if (StringUtils.isBlank(user.getUserId()) || StringUtils.isBlank(user.getUserPwd())
+			|| user.getUserAge() == null || StringUtils.isBlank(user.getGender())) {
+			request.getSession().setAttribute("joinSuccess", false);
+			mv.addObject("message", "모든 항목을 입력해주세요.");
+			mv.addObject("action", "close");
+			mv.addObject("actionUrl", request.getContextPath() + "/user/userJoinPopUp.do");
+			mv.addObject("width", 350);
+            mv.addObject("height", 300);
+            mv.addObject("user", user);
+            
+            mv.setViewName("common/postPopUp");
+            
+            return mv;
+		}
+		
+		// 비밀번호 암호화
+		String encryptedPwd = passwordEncryptor.encryptSHA256(user.getUserPwd()).toUpperCase();
+		user.setUserPwd(encryptedPwd);
+		
+		// 닉네임 생성 (이메일 앞부분)
+		user.setUserNick(user.getUserId().substring(0, user.getUserId().indexOf("@")));
+		
+		// 기본값 설정
+	    user.setUserKey(null);                 // null 처리
+	    user.setUserPath("NOMAL");             // 고정값
+	    user.setUserRefreshCode(null);         // null 처리
+	    user.setAdminYN("N");                  // 일반 사용자
+
+	    // 4. DB 저장
+	    int result = userDao.insertUser(user);
+		
+	    if (result > 0) {
+	    	request.getSession().setAttribute("joinSuccess", true);
+	        mv.addObject("message", "회원가입이 완료되었습니다.<br>로그인 페이지로 이동하시겠습니까?");
+	        mv.addObject("actionUrl", request.getContextPath() + "/user/userJoinPopUp.do");
+	    } else {
+	    	request.getSession().setAttribute("joinSuccess", false);
+	        mv.addObject("message", "회원가입에 실패했습니다.<br>다시 시도해주세요.");
+	        mv.addObject("action", "close");
+	        mv.addObject("actionUrl", request.getContextPath() + "/user/userJoinPopUp.do");
+	    }
+
+	    mv.addObject("width", 350);
+	    mv.addObject("height", 300);
+	    mv.setViewName("common/postPopUp");
+	    return mv;
+	}
+	
+	// 회원 탈퇴
+	@Override
+	public ModelAndView deleteUser(ModelAndView mv, HttpServletRequest request, HttpSession session, @RequestParam("userId") String userId) {
+
+		String sessionUserId = (String) session.getAttribute("authUserId");
+		
+		logger.info("sessionUserId : " + sessionUserId);
+		logger.info("userId : " + userId);
+		
+		if (sessionUserId == null || !sessionUserId.equals(userId)) {
+			request.getSession().setAttribute("deleteSuccess", false);
+	        mv.addObject("message", "로그인 세션이 존재하지 않거나 사용자 정보가 일치하지 않습니다.");
+	        mv.addObject("actionUrl", request.getContextPath() + "/user/deleteConfirmPopUp.do");
+	    } else if(userDao.deleteUser(userId) > 0) {
+			request.getSession().setAttribute("deleteSuccess", true);
+			mv.addObject("message", "정말 탈퇴하시겠습니까?");
+			mv.addObject("actionUrl", request.getContextPath() + "/user/deleteConfirmPopUp.do");
+		}else {
+			request.getSession().setAttribute("deleteSuccess", false);
+			mv.addObject("message", "로그인 세션이 존재하지 않습니다.");
+			mv.addObject("actionUrl", request.getContextPath() + "/user/deleteConfirmPopUp.do");
+		}
+		
+		mv.addObject("width", 350);
+	    mv.addObject("height", 300);
+	    mv.setViewName("common/postPopUp");
+		return mv;
+	}
+		
 }
 
 

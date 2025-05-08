@@ -11,6 +11,39 @@
 <script type="text/javascript" src="${ pageContext.servletContext.contextPath }/resources/js/jquery-3.7.1.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
 <style type="text/css">
+/* 기존 스타일 유지 + 아래 스타일 추가 */
+
+#myphoto1, #myphoto2 {
+    position: relative;
+    display: inline-block;
+}
+
+#photo1, #photoDefault {
+    width: 250px;
+    height: 250px;
+    border: 1px solid #585858;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* 겹쳐진 버튼 */
+#profileEditBtn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+#profileEditBtn img {
+    width: 100%;
+    height: 100%;
+}
+
+
 form#info {
 	width: 1000px;
 	text-align: center;
@@ -73,29 +106,6 @@ window.onload = function(){
         reader.readAsDataURL(file);
     });
 };
-
-// 탈퇴하기 팝업
-function deleteConfirmPopUp(){
-	const popup = window.open('', 'deleteConfirmPopUp', 'width=350,height=250');
-    if (popup) popup.focus();
-
-    const form = document.createElement('form');
-    form.method = 'post';
-    form.action = '${pageContext.request.contextPath}/user/delete.do';
-    form.target = 'deleteConfirmPopUp';
-
-    const input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = 'userId';
-    
-    const userIdInput = document.querySelector('input[name="userId"]');
-    input.value = userIdInput ? userIdInput.value : '';
-    form.appendChild(input);
-
-    document.body.appendChild(form);
-    form.submit();
-    document.body.removeChild(form);
-};
 </script>
 </head>
 <body>
@@ -106,22 +116,29 @@ function deleteConfirmPopUp(){
 			<c:if test="${ !empty requestScope.user.userProfile }">
 				<div id="myphoto1">
 					<img src="${ requestScope.user.userProfile }" id="photo1">
+					<button id="profileEditBtn" type="button" onclick="document.getElementById('photoFile').click();">
+						<img src="/hulzzuk/resources/images/common/edit.png" alt="변경"></button>
 				</div>		
 			</c:if>
 			
 			<c:if test="${ empty requestScope.user.userProfile }">
 				<div id="myphoto2">
-					<img src="${pageContext.request.contextPath}/resources/images/logo2.png" id="photoDefault">
+					<img src="/hulzzuk/resources/images/logo2.png" id="photoDefault">
+					<button id="profileEditBtn" type="button" onclick="document.getElementById('photoFile').click();">
+						<img src="/hulzzuk/resources/images/common/edit.png" alt="변경"></button>
 				</div>
 			</c:if><br>
 			${ requestScope.ofile }<br>
+			<!-- 숨김 파일 선택 input (공통) -->
+			<input type="file" id="photofile" name="photofile" style="display: none;" accept="image/*">
 			</td>
 		</tr>
 		<br><br>
 		<tr>
 			<td id="nickname"><input text-align="center" type="text"
 				name="userNick" id="userNick"
-				value="${ requestScope.user.userNick }" readonly></td><br>
+				value="${ requestScope.user.userNick }" readonly>
+				<input type="submit" value="수정하기"> &nbsp;</td><br>
 		</tr>
 	</form>
 	<br>
@@ -129,35 +146,41 @@ function deleteConfirmPopUp(){
 	<table id="infoDetail" align="center" border="1px" width="1000"
 		cellspacing="5" cellpadding="0">
 		<br>
-		<tr><th width="120">아이디(이메일)</th>
-		<%-- input 태그의 name 속성의 이름은 member.dto.Member 클래스의 property 명과 같게 함 --%>
+		<tr>
+			<th width="120">아이디(이메일)</th>
+			<%-- input 태그의 name 속성의 이름은 member.dto.Member 클래스의 property 명과 같게 함 --%>
 			<td><input type="email" name="userId" id="userId" class="datailInput"
-				value="${ requestScope.user.userId }" readonly></td></tr>
-		<tr><th>비밀번호</th>
-			<td>****</td></tr>
-		<tr><th>성별</th>
+				value="${ requestScope.user.userId }" readonly></td>
+		</tr>
+		<tr>
+			<th>비밀번호</th>
+			<td>&nbsp; 버튼을 누르면 비밀번호 재설정 페이지로 이동합니다. &nbsp;
+				<button type="button" onclick="location.href='${pageContext.request.contextPath}/user/moveSendMail.do'">재설정</button></td>
+		</tr>
+
+		<tr>
+			<th>성별</th>
 			<td><c:if test="${ requestScope.user.gender eq 'M' }">
 					<input type="radio" name="gender" class="datailInput" value="M" checked> 남자 &nbsp;
 				<input type="radio" name="gender" class="datailInput" value="F"> 여자 
 			</c:if> <c:if test="${ requestScope.user.gender eq 'F' }">
 					<input type="radio" name="gender" class="datailInput" value="M"> 남자 &nbsp;
 				<input type="radio" name="gender" class="datailInput" value="F" checked> 여자 
-			</c:if></td></tr>
-		<tr><th>나이</th>
-			<td><input type="text" name="userAge" class="datailInput" min="19" max="100" value="${ user.age }"></td></tr>
+			</c:if>
+				<input type="submit" value="수정"> &nbsp; </td>
+		</tr>
+		<tr>
+			<th>나이</th>
+			<td><input type="text" name="userAge" class="datailInput" min="19" max="100"
+				value="${ user.age }"><input type="submit" value="수정"> &nbsp; </td>
+			
+		</tr>
 		<%-- <tr><th colspan="2">
 		<input type="submit" value="수정하기"> &nbsp; 
 		<input type="reset" value="수정취소"> &nbsp;
-		<a href="mdelete.do?userId=${ requestScope.member.userId }">탈퇴하기</a>
 	</th></tr>	 --%>
 	</table>
 	
-    <form name="deleteConfirm" id="deleteConfirm" action="${pageContext.request.contextPath}/user/delete.do" method="post">
-    	<button type="button" onclick="deleteConfirmPopUp()" class="submitId">탈퇴하기</button>
-    </form>
-	<form name="logout" id="logout" action="${pageContext.request.contextPath}/user/logout.do" method="post">
-    	<button type="submit" class="subminId">로그아웃</button>
-    </form>
 
 	<c:import url="/WEB-INF/views/common/footer.jsp" />
 </body>

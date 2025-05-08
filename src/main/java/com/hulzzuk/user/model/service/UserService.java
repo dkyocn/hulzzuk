@@ -9,9 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 public interface UserService {
-	// 내 정보 보기
-	ModelAndView selectUser(ModelAndView mv, String userId);
-	
 	// 로그인
 	ModelAndView loginMethod(ModelAndView mv, UserVO user, HttpSession session, SessionStatus status);
 	
@@ -20,11 +17,11 @@ public interface UserService {
 
 	// 이메일 인증번호 발송
 	ModelAndView sendMailMethod(ModelAndView mv, HttpSession session, HttpServletRequest request,
-			String userId, int width, int height);
+			String mode, String userId, int width, int height);
 	
 	// 인증번호 검증
-	ModelAndView verifyCode(String inputCode, String userId,
-            ModelAndView mv, HttpSession session);
+	ModelAndView verifyCode(String mode, String inputCode, String userId,
+            ModelAndView mv, HttpSession session, HttpServletRequest request);
 	
 	// 비밀번호 유효성 검사
 	ModelAndView pwdValidateMethod(ModelAndView mv, String newPwd);
@@ -36,5 +33,14 @@ public interface UserService {
 	// 비밀번호 업데이트
 	ModelAndView pwdUpdateMethod(ModelAndView mv, HttpSession session, 
 			HttpServletRequest request, String newPwd);
+	
+	// 내 정보 보기
+	ModelAndView selectUser(ModelAndView mv, String userId);
+	
+	// 회원 가입
+	ModelAndView insertUser(ModelAndView mv, HttpServletRequest request, UserVO user);
+	
+	// 회원 탈퇴
+	ModelAndView deleteUser(ModelAndView mv, HttpServletRequest request, HttpSession session, String userId);
 	
 }
