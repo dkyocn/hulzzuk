@@ -17,9 +17,40 @@ public class LogVO {
     
     private int loveCount; // 추가: 좋아요 수
     
+
+
+    
+    
+
+
 	public LogVO() {
 		super();
 	}
+
+
+
+	
+	
+	
+	public LogVO(long logId, String imagePath, String logTitle, Date logStartDate, Date logEndDate, int planDay,
+			String userId, Date createdAt, Date updatedAt, int loveCount, Integer accoId, Integer restId,
+			Integer attrId, String logContent) {
+		super();
+		this.logId = logId;
+		this.imagePath = imagePath;
+		this.logTitle = logTitle;
+		this.logStartDate = logStartDate;
+		this.logEndDate = logEndDate;
+		this.planDay = planDay;
+		this.userId = userId;
+		this.createdAt = createdAt;
+		this.updatedAt = updatedAt;
+		this.loveCount = loveCount;
+
+	}
+
+
+
 
 
 
@@ -150,8 +181,21 @@ public class LogVO {
 	
     public int getLoveCount() { return loveCount; }
     public void setLoveCount(int loveCount) { this.loveCount = loveCount; }
-	
-	
+
+
+
+   
     
+    
+
+	@Override
+	public String toString() {
+		return "LogVO [logId=" + logId + ", imagePath=" + imagePath + ", logTitle=" + logTitle + ", logStartDate="
+				+ logStartDate + ", logEndDate=" + logEndDate + ", planDay=" + planDay + ", userId=" + userId
+				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", loveCount=" + loveCount + "]";
+	}
+	
+	
+   
     
 }

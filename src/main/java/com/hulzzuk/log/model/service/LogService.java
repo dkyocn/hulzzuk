@@ -29,4 +29,5 @@ public interface LogService {
     void deleteLog(long id);
     
     List<LogVO> getLogPage(int start, int amount);
+	PlanVO getPlanById(Long planId);
 }

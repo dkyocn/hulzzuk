@@ -66,4 +66,9 @@ public class LogServiceImpl implements LogService {
     public List<LogVO> getLogPage(int start, int amount) {
         return logDao.getLogPage(start, amount);
     }
+
+	@Override
+	public PlanVO getPlanById(Long planId) {
+		return logDao.getPlanById(planId);
+	}
 }

@@ -61,4 +61,10 @@ public class LogDao {
     public List<PlanVO> selectPlanIdList(String userId) {
         return sqlSession.selectList("logMapper.selectPlanIdList", userId);
     }
+
+    //로그 작성을 위한 여행일정조회 
+    public PlanVO getPlanById(Long planId) {
+        return sqlSession.selectOne("logMapper.getPlanById", planId);
+    }
+    
 }
