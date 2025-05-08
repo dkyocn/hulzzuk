@@ -5,11 +5,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hulzzuk.common.enumeration.SortEnum;
 import com.hulzzuk.common.vo.Paging;
+import com.hulzzuk.location.model.enumeration.LocationEnum;
 import com.hulzzuk.log.model.dao.LogDao;
 import com.hulzzuk.log.model.vo.LogVO;
 import com.hulzzuk.plan.model.dao.PlanDao;
 import com.hulzzuk.plan.model.vo.PlanVO;
+import com.hulzzuk.review.model.vo.ReviewVO;
 
 
 @Service("logService")
@@ -66,4 +69,19 @@ public class LogServiceImpl implements LogService {
     public List<LogVO> getLogPage(int start, int amount) {
         return logDao.getLogPage(start, amount);
     }
+    
+ // 상세페이지 로그 갯수 조회
+ 	@Override
+ 	public int logCount(String locId, LocationEnum locationEnum) {
+ 		int logCount = logDao.logCount(locId, locationEnum);
+ 		 
+         return logCount;
+ 	}
+ 	
+ 	// 상세페이지 로그 리스트 조회
+ 	public List<LogVO> getLocLogList(String locId, LocationEnum locationEnum) {
+         List<LogVO> logList = logDao.getLocLogList(locId, locationEnum);
+  
+         return logList;
+ 	}
 }

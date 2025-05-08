@@ -8,9 +8,12 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.hulzzuk.common.enumeration.SortEnum;
 import com.hulzzuk.common.vo.Paging;
+import com.hulzzuk.location.model.enumeration.LocationEnum;
 import com.hulzzuk.log.model.vo.LogVO;
 import com.hulzzuk.plan.model.vo.PlanVO;
+import com.hulzzuk.review.model.vo.ReviewVO;
 
 @Repository
 public class LogDao {
@@ -61,4 +64,22 @@ public class LogDao {
     public List<PlanVO> selectPlanIdList(String userId) {
         return sqlSession.selectList("logMapper.selectPlanIdList", userId);
     }
+    
+    
+ // 로그갯수 조회
+ 	public int logCount(String locId, LocationEnum locationEnum) {
+ 		HashMap<String, String> map = new HashMap<>();
+         map.put("locId", locId);
+         map.put("locationEnum",  locationEnum != null ? locationEnum.name() : null);
+         return sqlSession.selectOne("logMapper.logCount", map);
+ 	}
+ 	
+ 	// 로그 리스트 조회
+ 	public List<LogVO> getLocLogList(String locId, LocationEnum locationEnum) {
+ 		HashMap<String, Object> map = new HashMap<>();
+ 		map.put("locId", locId);
+         map.put("locationEnum",  locationEnum != null ? locationEnum.name() : null);
+
+         return sqlSession.selectList("logMapper.getLocLogList", map);
+     }
 }
