@@ -34,9 +34,9 @@
     <button type="submit">선택</button>
 </form>
 
-<p>planList가 비었나? → ${empty planList}</p>
+<%-- <p>planList가 비었나? → ${empty planList}</p>
 <p>planList 사이즈 확인: ${fn:length(planList)}</p>
-
+ --%>
 <c:import url="/WEB-INF/views/common/footer.jsp" />
 
 </body>

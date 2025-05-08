@@ -16,7 +16,7 @@
 
 <div class="logHeader">
     <div class="left" >
-        <a href="${pageContext.request.contextPath}/log/create.do" class="btn-create">로그 생성</a>
+        <a href="${pageContext.request.contextPath}/log/selectPID.do" class="btn-create">로그 생성</a>
     </div>
     <div class="right">
         <select id="logFilter" onchange="filterLogs()">
@@ -45,12 +45,12 @@
 
 <script type="text/javascript" src-"${pageContext.servletContext.contextPath }/resources/js/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
-<script>
+
 function filterLogs() {
     // 아직 기능 없음
 }
 </script>
-</script>
+
 
 
 
