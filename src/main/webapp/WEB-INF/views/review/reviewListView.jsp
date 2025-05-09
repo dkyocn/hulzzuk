@@ -12,12 +12,12 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/review/reviewListView.css">
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
-<script type="text/javascript">
+<!-- <script type="text/javascript">
 	const raw = document.getElementById("rawText").innerHTML;
 	const tempDiv = document.createElement("div");
 	tempDiv.innerHTML = raw;
 	document.getElementById("cleanText").textContent = tempDiv.textContent;
-</script>
+</script> -->
 </head>
 
 <body>
