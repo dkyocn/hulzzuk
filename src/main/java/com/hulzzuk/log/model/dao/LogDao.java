@@ -8,14 +8,12 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.hulzzuk.common.enumeration.SortEnum;
 import com.hulzzuk.common.vo.Paging;
 import com.hulzzuk.location.model.enumeration.LocationEnum;
 import com.hulzzuk.log.model.vo.LogPlaceVO;
 import com.hulzzuk.log.model.vo.LogReviewVO;
 import com.hulzzuk.log.model.vo.LogVO;
 import com.hulzzuk.plan.model.vo.PlanVO;
-import com.hulzzuk.review.model.vo.ReviewVO;
 
 @Repository
 public class LogDao {
@@ -73,16 +71,24 @@ public class LogDao {
  		HashMap<String, String> map = new HashMap<>();
          map.put("locId", locId);
          map.put("locationEnum",  locationEnum != null ? locationEnum.name() : null);
-         return sqlSession.selectOne("logMapper.logCount", map);
+         return sqlSession.selectOne("logReviewMapper.logCount", map);
  	}
  	
- 	// 로그 리스트 조회
- 	public List<LogVO> getLocLogList(String locId, LocationEnum locationEnum) {
+ 	// 로그 id로 로그 조회
+ 	public List<Long> getLogId(String locId, LocationEnum locationEnum) {
  		HashMap<String, Object> map = new HashMap<>();
  		map.put("locId", locId);
          map.put("locationEnum",  locationEnum != null ? locationEnum.name() : null);
 
-         return sqlSession.selectList("logMapper.getLocLogList", map);
+         return sqlSession.selectList("logReviewMapper.getLogId", map);
+     }
+ 	
+ 	// 로그 리스트 조회
+ 	public List<LogVO> getLogSelectOne(Long logId) {
+ 		HashMap<String, Object> map = new HashMap<>();
+ 		map.put("logId", logId);
+ 		
+         return sqlSession.selectList("logMapper.getLogSelectOne", map);
      }
 
     //로그 작성을 위한 여행일정조회 

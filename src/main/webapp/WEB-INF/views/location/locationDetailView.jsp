@@ -192,7 +192,7 @@ navigator.geolocation.getCurrentPosition(function(position) {
 
         <div class="review-container">
         
-	<c:import url="/WEB-INF/views/review/reviewListView.jsp" />
+		<c:import url="/WEB-INF/views/review/reviewListView.jsp" />
 
         <!-- 더보기 버튼 -->
         <%-- <div class="more-button-container">
@@ -203,16 +203,8 @@ navigator.geolocation.getCurrentPosition(function(position) {
     <!-- 로그 영역 -->
     <div class="log-section">
         <h2>로그 (10)</h2>
-        <%-- <div class="log-grid">
-            <img src="${pageContext.request.contextPath}/resources/images/log1.jpg" alt="로그1">
-            <img src="${pageContext.request.contextPath}/resources/images/log2.jpg" alt="로그2">
-            <img src="${pageContext.request.contextPath}/resources/images/log3.jpg" alt="로그3">
-        </div> --%>
-
-		<!-- 더보기 버튼 -->
-        <%-- <div class="more-button-container">
-            <a href="logList?locId=${location.locId}" class="more-button">더보기</a>
-        </div> --%>
+        
+       <c:import url="/WEB-INF/views/logs/logListView.jsp" />
     </div>
 
 </div>

@@ -38,6 +38,7 @@ public interface LogService {
  	int logCount(String locId, LocationEnum locationEnum);
  	// 상세페이지 리뷰 리스트 조회
  	List<LogVO> getLocLogList(String locId, LocationEnum locationEnum);
+ 	
 	PlanVO getPlanById(Long planId);
 	
 	//**********LogReviewService에서부터 병합 

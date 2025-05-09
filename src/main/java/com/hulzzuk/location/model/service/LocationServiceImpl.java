@@ -112,8 +112,10 @@ public class LocationServiceImpl implements LocationService{
 
             mv.addObject("list", locationList);
             mv.addObject("paging", paging);
-            mv.addObject("locationEnum", locationEnum);
-        	mv.setViewName("location/locationListView");
+			
+			  mv.addObject("locationEnum", locationEnum);
+			  mv.setViewName("location/locationListView");
+			 
         }
         mv.addObject("keyword",keyword);
         mv.addObject("sortEnum", sortEnum);
