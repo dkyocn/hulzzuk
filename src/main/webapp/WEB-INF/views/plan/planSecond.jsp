@@ -209,7 +209,7 @@
                     await initializeLocations(); // 업데이트된 데이터로 초기화
                     console.log("Locations updated:", planLocVO);
                 }
-            }, 5000); // 5000ms = 5초
+            }, 3000); // 3000ms = 3초
 
 // 초기 실행
             await initializeLocations();
