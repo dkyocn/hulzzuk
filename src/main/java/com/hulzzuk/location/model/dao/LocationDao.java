@@ -1,5 +1,6 @@
 package com.hulzzuk.location.model.dao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -75,12 +76,49 @@ public class LocationDao {
         map.put("keyword", keyword);
         map.put("locationEnum", locationEnum);
 
+        List<LocationVO> locationVOList = new ArrayList<>();
         // 각 LocationEnum에 맞는 조회 쿼리 실행
-        return switch (locationEnum) {
-            case ACCO -> sqlSessionTemplate.selectList("accoMapper.getAccoList", map);
-            case REST -> sqlSessionTemplate.selectList("restMapper.getRestList", map);
-            case ATTR -> sqlSessionTemplate.selectList("attrMapper.getAttrList", map);
-            default -> sqlSessionTemplate.selectList("attrMapper.getAttrList", map);
-        };
+        switch (locationEnum) {
+            case ACCO:
+                locationVOList = sqlSessionTemplate.selectList("accoMapper.getAccoList", map);
+                locationVOList.forEach(locationVO -> {
+                    locationVO.setLocationEnum(LocationEnum.ACCO);
+                });
+                return locationVOList;
+            case REST:
+                locationVOList = sqlSessionTemplate.selectList("restMapper.getRestList", map);
+                locationVOList.forEach(locationVO -> {
+                    locationVO.setLocationEnum(LocationEnum.REST);
+                });
+                return locationVOList;
+            case ATTR:
+                locationVOList = sqlSessionTemplate.selectList("attrMapper.getAttrList", map);
+                locationVOList.forEach(locationVO -> {
+                    locationVO.setLocationEnum(LocationEnum.ATTR);
+                });
+                return locationVOList;
+            case ALL : 
+                List<LocationVO> attrList = sqlSessionTemplate.selectList("attrMapper.getAttrList", map);
+                attrList.forEach(locationVO -> {
+                    locationVO.setLocationEnum(LocationEnum.ATTR);
+                });
+                
+                List<LocationVO> restList = sqlSessionTemplate.selectList("restMapper.getRestList", map);
+                restList.forEach(locationVO -> {
+                    locationVO.setLocationEnum(LocationEnum.REST);
+                });
+                
+                List<LocationVO> accoList = sqlSessionTemplate.selectList("accoMapper.getAccoList", map);
+                accoList.forEach(locationVO -> {
+                    locationVO.setLocationEnum(LocationEnum.ACCO);
+                });
+                
+                locationVOList = accoList;
+                locationVOList.addAll(restList);
+                locationVOList.addAll(attrList);
+                return locationVOList;
+        }
+
+        return locationVOList;
     }
 }

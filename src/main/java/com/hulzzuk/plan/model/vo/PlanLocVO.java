@@ -8,7 +8,9 @@ public class PlanLocVO {
     private int seq;
     private int planDay;
 
-    public PlanLocVO(long planId, String accoId, String attrId, String restId, int seq, int planDay) {
+    public PlanLocVO() {}
+
+    public PlanLocVO(long planId, String accoId, String attrId, String restId, int planDay, int seq) {
         this.planId = planId;
         this.accoId = accoId;
         this.attrId = attrId;
