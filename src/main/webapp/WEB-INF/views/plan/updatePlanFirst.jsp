@@ -8,6 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <head>
     <title>hulzzuk</title>
@@ -20,7 +21,6 @@
         // 선택된 데이터 전역 변수
         let selectedDates = []; // 선택된 날짜를 저장할 배열
         let selectedLocations = []; // 선택된 장소들을 저장할 배열
-
 
         // 한글-영어 클래스 이름 매핑
         const locationClassMap = {
@@ -37,10 +37,9 @@
 
         // 장소 클릭 시 호출되는 함수 (전역 스코프)
         function clickLoc(locName) {
-
             const className = locationClassMap[locName];
             if (!className) {
-                console.error(`매핑되지 않은 장소: `+ locName);
+                console.error(`매핑되지 않은 장소: ${locName}`);
                 return;
             }
 
@@ -62,21 +61,72 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
+            // JSP에서 전달된 PlanVO 데이터
+            const planData = {
+                planId: "${requestScope.plan.planId}",
+                title: "${requestScope.plan.planTitle}",
+                planPlace: "${requestScope.plan.planPlace}",
+                startDate: "${requestScope.plan.planStartDate}",
+                endDate: "${requestScope.plan.planEndDate}"
+            };
+
+            // selectedDates에 시작 날짜와 종료 날짜 저장
+            if (planData.startDate === planData.endDate) {
+                selectedDates.push(planData.startDate);
+            } else {
+                selectedDates.push(planData.startDate, planData.endDate);
+            }
+
+            const locations = planData.planPlace.split(',').map(item => item.trim());
+            console.log('locations:', locations);
+            locations.forEach(location => {
+                selectedLocations.push(location);
+            });
+
+            console.log("selectedDates:", selectedDates);
+            console.log("selectedLocations:", selectedLocations);
+
+            // selectedLocations 초기 설정 반영
+            selectedLocations.forEach(locName => {
+                const className = locationClassMap[locName];
+                if (className) {
+                    const locElement = document.querySelector(className);
+                    if (locElement) {
+                        locElement.style.backgroundColor = 'rgb(72 72 72 / 76%)'; // 선택된 상태
+                    } else {
+                        console.error(`요소가 존재하지 않음: ${className}`);
+                    }
+                } else {
+                    console.error(`매핑되지 않은 장소: ${locName}`);
+                }
+            });
+
             const calendar1El = document.getElementById('calendar1');
             const calendar2El = document.getElementById('calendar2');
             let calendar1, calendar2;
             let isSyncing = false; // 동기화 중복 방지 플래그
 
-            // 오늘 날짜 기준으로 초기 날짜 설정
+            // 오늘 날짜 기준으로 기본 초기 날짜 설정
             const today = new Date();
             const currentYear = today.getFullYear();
             const currentMonth = today.getMonth(); // 0-based
-            <%--const currentDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-01`;--%>
-            const currentDate = currentYear+'-'+String(currentMonth + 1).padStart(2, '0')+'-01';
-            const nextMonthDate = new Date(currentYear, currentMonth + 1, 1);
-            const nextMonth = nextMonthDate.getFullYear()+'-'+String(nextMonthDate.getMonth() + 1).padStart(2, '0')+'-01';
-            console.log('currentDate:', currentDate); // 예: "2025-04-01"
-            console.log('nextMonth:', nextMonth); // 예: "2025-05-01"
+            let initialDate = currentYear + '-' + String(currentMonth + 1).padStart(2, '0') + '-01'; // 기본값: 현재 달
+            let nextMonthInitialDate;
+
+            // selectedDates가 있을 경우 초기 날짜를 selectedDates의 첫 번째 날짜 기준으로 설정
+            if (selectedDates.length > 0) {
+                selectedDates.sort(); // 날짜 정렬 (가장 빠른 날짜가 첫 번째로 오도록)
+                const earliestDate = new Date(selectedDates[0]); // 가장 빠른 날짜
+                initialDate = earliestDate.getFullYear() + '-' + String(earliestDate.getMonth() + 1).padStart(2, '0') + '-01'; // 해당 월의 첫 날
+                console.log('Initial date set to earliest selected date:', initialDate);
+            }
+
+            // calendar2의 초기 날짜 설정 (calendar1의 다음 달)
+            const initialDateObj = new Date(initialDate);
+            const nextMonthDate = new Date(initialDateObj.getFullYear(), initialDateObj.getMonth() + 1, 1);
+            nextMonthInitialDate = nextMonthDate.getFullYear() + '-' + String(nextMonthDate.getMonth() + 1).padStart(2, '0') + '-01';
+            console.log('calendar1 initialDate:', initialDate);
+            console.log('calendar2 initialDate:', nextMonthInitialDate);
 
             // 한국어 로케일 커스터마이징: "일" 제거
             FullCalendar.globalLocales.push((function () {
@@ -126,6 +176,8 @@
 
                 const isAlreadySelected = selectedDates.includes(clickedDate);
 
+                console.log("handleDateClick called, Clicked date:", clickedDate, "Is selected:", isAlreadySelected, "Current selectedDates:", selectedDates);
+
                 if (isAlreadySelected) {
                     // 선택 해제
                     selectedDates = selectedDates.filter(date => date !== clickedDate);
@@ -156,16 +208,8 @@
                 selectedDates.sort();
                 console.log('선택된 날짜:', selectedDates);
 
-                // 다른 달력에도 반영
-                [calendar1, calendar2].forEach(cal => {
-                    cal.getEvents().forEach(event => event.remove());
-                    selectedDates.forEach(date => {
-                        const dayEl = cal.el.querySelector(`[data-date="`+date+`"]`);
-                        if (dayEl) {
-                            dayEl.classList.add('fc-day-selected');
-                        }
-                    });
-                });
+                // 모든 달력에 선택 상태 반영
+                applySelectedDates();
             }
 
             // 사용자 정의 버튼 정의
@@ -194,7 +238,7 @@
                 }
             };
 
-            // 3월 달력
+            // calendar1: selectedDates를 기준으로 초기화
             calendar1 = new FullCalendar.Calendar(calendar1El, {
                 initialView: 'dayGridMonth',
                 locale: 'ko',
@@ -204,7 +248,7 @@
                     right: 'customNext'
                 },
                 customButtons: customButtons,
-                initialDate: currentDate,
+                initialDate: initialDate, // 동적으로 설정된 초기 날짜
                 selectable: true,
                 unselectAuto: false,
                 showNonCurrentDates: false, // 현재 달이 아닌 날짜 숨기기
@@ -216,14 +260,16 @@
                     return info.dayNumberText.replace('일', '');
                 },
                 datesSet: function (info) {
-                    if (isSyncing) return; // 중복 동기화 방지
+                    if (isSyncing) return;
                     isSyncing = true;
 
+                    console.log("datesSet called for calendar1, Current start:", info.view.currentStart, "Selected dates:", selectedDates);
+
                     // calendar1의 날짜를 기준으로 calendar2 동기화
-                    const currentDate = info.view.currentStart; // 현재 표시된 월의 첫 날
+                    const currentDate = info.view.currentStart;
                     const nextMonth = new Date(currentDate);
-                    nextMonth.setMonth(currentDate.getMonth() + 1); // 다음 달
-                    calendar2.gotoDate(nextMonth); // calendar2를 다음 달로 이동
+                    nextMonth.setMonth(currentDate.getMonth() + 1);
+                    calendar2.gotoDate(nextMonth);
 
                     // 선택된 날짜 재적용
                     applySelectedDates();
@@ -232,7 +278,7 @@
                 }
             });
 
-            // 4월 달력
+            // calendar2: calendar1의 다음 달로 초기화
             calendar2 = new FullCalendar.Calendar(calendar2El, {
                 initialView: 'dayGridMonth',
                 locale: 'ko',
@@ -242,7 +288,7 @@
                     right: 'customNext'
                 },
                 customButtons: customButtons,
-                initialDate: nextMonth,
+                initialDate: nextMonthInitialDate, // 동적으로 설정된 초기 날짜
                 selectable: true,
                 unselectAuto: false,
                 showNonCurrentDates: false, // 현재 달이 아닌 날짜 숨기기
@@ -254,14 +300,16 @@
                     return info.dayNumberText.replace('일', '');
                 },
                 datesSet: function (info) {
-                    if (isSyncing) return; // 중복 동기화 방지
+                    if (isSyncing) return;
                     isSyncing = true;
 
+                    console.log("datesSet called for calendar2, Current start:", info.view.currentStart, "Selected dates:", selectedDates);
+
                     // calendar2의 날짜를 기준으로 calendar1 동기화
-                    const currentDate = info.view.currentStart; // 현재 표시된 월의 첫 날
+                    const currentDate = info.view.currentStart;
                     const prevMonth = new Date(currentDate);
-                    prevMonth.setMonth(currentDate.getMonth() - 1); // 이전 달
-                    calendar1.gotoDate(prevMonth); // calendar1을 이전 달로 이동
+                    prevMonth.setMonth(currentDate.getMonth() - 1);
+                    calendar1.gotoDate(prevMonth);
 
                     // 선택된 날짜 재적용
                     applySelectedDates();
@@ -273,6 +321,9 @@
             // 달력 렌더링
             calendar1.render();
             calendar2.render();
+
+            // 초기 선택된 날짜 반영 (렌더링 후 실행)
+            applySelectedDates();
         });
 
         // "다음" 버튼 클릭 시 폼 제출
@@ -292,6 +343,7 @@
             }
 
             // hidden input에 데이터 설정
+            document.getElementById("planId").value = ${requestScope.plan.planId};
             document.getElementById('selectedDates').value = selectedDates.join(',');
             document.getElementById('selectedLocations').value = selectedLocations.join(',');
 
@@ -310,35 +362,36 @@
     </div>
     <hr class="planTitleHr">
 </div>
-<form id="planForm" action="${pageContext.request.contextPath}/plan/create.do" method="POST">
-<div class="nameLocation">
-    <div class="name">
-        <input placeholder="일정 제목을 입력하세요." type="text" name="planName" size="200">
-        <input type="hidden" name="selectedDates" id="selectedDates">
-        <input type="hidden" name="selectedLocations" id="selectedLocations">
-        <div class="location">
-            <p>여행 지역 선택</p>
-            <div class="planLocation">
-                <div class="seoul" onclick="clickLoc('서울')"><div class="clickSeoul"></div><p class="locName">서울</p></div>
-                <div class="gyeonggi" onclick="clickLoc('경기')"><div class="clickGyeonggi"></div><p class="locName">경기</p></div>
-                <div class="busan" onclick="clickLoc('부산')"><div class="clickBusan"></div><p class="locName">부산</p></div>
-                <div class="incheon" onclick="clickLoc('인천')"><div class="clickIncheon"></div><p class="locName">인천</p></div>
-                <div class="jeju" onclick="clickLoc('제주')"><div class="clickJeju"></div><p class="locName">제주</p></div>
-                <div class="gangwon" onclick="clickLoc('강원')"><div class="clickGangwon"></div><p class="locName">강원</p></div>
-                <div class="jeolla" onclick="clickLoc('전라')"><div class="clickJeolla"></div><p class="locName">전라</p></div>
-                <div class="gyeongsang" onclick="clickLoc('경상')"><div class="clickGyeongsang"></div><p class="locName">경상</p></div>
-                <div class="chungcheong" onclick="clickLoc('충청')"><div class="clickChungcheong"></div><p class="locName">충청</p></div>
+<form id="planForm" action="${pageContext.request.contextPath}/plan/update.do" method="POST">
+    <div class="nameLocation">
+        <div class="name">
+            <input placeholder="일정 제목을 입력하세요." type="text" name="planName" size="200" value="${requestScope.plan.planTitle}">
+            <input type="hidden" name="planId" id="planId">
+            <input type="hidden" name="selectedDates" id="selectedDates">
+            <input type="hidden" name="selectedLocations" id="selectedLocations">
+            <div class="location">
+                <p>여행 지역 선택</p>
+                <div class="planLocation">
+                    <div class="seoul" onclick="clickLoc('서울')"><div class="clickSeoul"></div><p class="locName">서울</p></div>
+                    <div class="gyeonggi" onclick="clickLoc('경기')"><div class="clickGyeonggi"></div><p class="locName">경기</p></div>
+                    <div class="busan" onclick="clickLoc('부산')"><div class="clickBusan"></div><p class="locName">부산</p></div>
+                    <div class="incheon" onclick="clickLoc('인천')"><div class="clickIncheon"></div><p class="locName">인천</p></div>
+                    <div class="jeju" onclick="clickLoc('제주')"><div class="clickJeju"></div><p class="locName">제주</p></div>
+                    <div class="gangwon" onclick="clickLoc('강원')"><div class="clickGangwon"></div><p class="locName">강원</p></div>
+                    <div class="jeolla" onclick="clickLoc('전라')"><div class="clickJeolla"></div><p class="locName">전라</p></div>
+                    <div class="gyeongsang" onclick="clickLoc('경상')"><div class="clickGyeongsang"></div><p class="locName">경상</p></div>
+                    <div class="chungcheong" onclick="clickLoc('충청')"><div class="clickChungcheong"></div><p class="locName">충청</p></div>
+                </div>
             </div>
         </div>
+        <div class="calendar-container">
+            <div id="calendar1"></div>
+            <div id="calendar2"></div>
+        </div>
     </div>
-    <div class="calendar-container">
-        <div id="calendar1"></div>
-        <div id="calendar2"></div>
+    <div class="btnDiv">
+        <button type="button" class="nextBtn" onclick="goToNext()">다음</button>
     </div>
-</div>
-<div class="btnDiv">
-    <button type="button" class="nextBtn" onclick="goToNext()">다음</button>
-</div>
 </form>
 <c:import url="/WEB-INF/views/common/footer.jsp" />
 </body>

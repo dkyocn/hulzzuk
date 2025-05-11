@@ -55,24 +55,21 @@ public class PlanServiceImpl implements PlanService {
             // 검색결과가 적용된 총 목록 갯수 조회해서, 총 페이지 수 계산함
             int listCount = planDao.countPlan(loginUser.getUserId());
             // 페이지 관련 항목들 계산 처리
-            Paging paging = new Paging(null,listCount, limit, currentPage, "page.do");
+            Paging paging = new Paging(null, listCount, limit, currentPage, "page.do");
             paging.calculate();
 
             // 마이바티스 매퍼에서 사용되는 메소드는 Object 1개만 전달할 수 있음
 
             // 서비스 모델로 페이징 적용된 목록 조회 요청하고 결과받기
-            List<PlanVO> planPage = planDao.getPlanPage(loginUser.getUserId(),paging);
-
-            if (planPage != null && !planPage.isEmpty()) { // 조회 성공시
+            List<PlanVO> planPage = planDao.getPlanPage(loginUser.getUserId(), paging);
                 // ModelAndView : Model + View
                 mv.addObject("list", planPage); // request.setAttribute("list", list) 와 같음
                 mv.addObject("paging", paging);
 
                 mv.setViewName("plan/planPage");
-            }
         } else {
             // 로그인 요청
-            mv.addObject("fail", "N");
+            mv.addObject("fail", "Y");
             mv.setViewName("user/loginPage");
         }
 
@@ -83,9 +80,9 @@ public class PlanServiceImpl implements PlanService {
     @Override
     public ModelAndView createPlan(ModelAndView modelAndView, HttpServletRequest request, String title, String selectedDate, String selectedLocations) {
 
-        String userID = "";
-        long planId = 0;
-        PlanVO planVO = new PlanVO();
+        String userID;
+        long planId;
+        PlanVO planVO;
 
         // selectedDate sql.Date로 변경
         String[] selectDates = selectedDate.split(",");
@@ -107,17 +104,17 @@ public class PlanServiceImpl implements PlanService {
             // Plan 저장
             planDao.insertPlan(planVO);
             planId = planVO.getPlanId();
-            if(planId == 0) {
+            if (planId == 0) {
                 throw new IllegalArgumentException(ErrorCode.PLAN_INSERT_ERROR.getMessage());
             }
 
             // TB_PL_USER 저장
-            if(planDao.insertPlanUser(new PlanUserVO(userID,planId)) == 0) {
+            if (planDao.insertPlanUser(new PlanUserVO(userID, planId)) == 0) {
                 throw new IllegalArgumentException(ErrorCode.PL_USER_INSERT_ERROR.getMessage());
             }
 
             modelAndView.addObject("plan", planVO);
-            modelAndView.setViewName("plan/createPlanSecond");
+            modelAndView.setViewName("plan/planSecond");
 
         } else {
             // 재로그인 요청
@@ -138,40 +135,40 @@ public class PlanServiceImpl implements PlanService {
             // JSON 파싱
             ObjectMapper objectMapper = new ObjectMapper();
             List<Map<String, Object>> day1 = objectMapper.readValue(day1Locations, List.class);
-            for(int i = 0; i < day1.size(); i++) {
+            for (int i = 0; i < day1.size(); i++) {
                 Map<String, Object> map = day1.get(i);
                 log.info("locEnum : {}", map.get("locEnum"));
-                switch ((String)map.get("locEnum")){
+                switch ((String) map.get("locEnum")) {
                     case "ACCO":
-                        planDao.insertPlanLoc(new PlanLocVO(planId, (String) map.get("id"),null,null,i+1,1));
+                        planDao.insertPlanLoc(new PlanLocVO(planId, (String) map.get("id"), null, null, 1, i + 1));
                         break;
                     case "REST":
-                        planDao.insertPlanLoc(new PlanLocVO(planId,null, null, (String) map.get("id"),i+1,1));
+                        planDao.insertPlanLoc(new PlanLocVO(planId, null, null, (String) map.get("id"), 1, i + 1));
                         break;
                     case "ATTR":
-                        planDao.insertPlanLoc(new PlanLocVO(planId, null, (String) map.get("id"),null,i+1,1));
+                        planDao.insertPlanLoc(new PlanLocVO(planId, null, (String) map.get("id"), null, 1, i + 1));
                         break;
-                        default:
-                            throw new IllegalArgumentException(ErrorCode.PL_TRIP_INSERT_ERROR.getMessage());
+                    default:
+                        throw new IllegalArgumentException(ErrorCode.PL_TRIP_INSERT_ERROR.getMessage());
 
                 }
 
             }
-            if(!day1Locations.isEmpty()) {
+            if (!day2Locations.isEmpty()) {
                 List<Map<String, Object>> day2 = objectMapper.readValue(day2Locations, List.class);
-                for(int i = 0; i < day2.size(); i++) {
+                for (int i = 0; i < day2.size(); i++) {
                     Map<String, Object> map = day2.get(i);
                     log.info("locEnum : {}", map.get("locEnum"));
                     log.info("day2 : {}", map.get("day"));
-                    switch ((String)map.get("locEnum")){
+                    switch ((String) map.get("locEnum")) {
                         case "ACCO":
-                            planDao.insertPlanLoc(new PlanLocVO(planId, (String) map.get("id"),null,null,i+1,2));
+                            planDao.insertPlanLoc(new PlanLocVO(planId, (String) map.get("id"), null, null, 2, i + 1));
                             break;
                         case "REST":
-                            planDao.insertPlanLoc(new PlanLocVO(planId,null, null, (String) map.get("id"),i+1,2));
+                            planDao.insertPlanLoc(new PlanLocVO(planId, null, null, (String) map.get("id"), 2, i + 1));
                             break;
                         case "ATTR":
-                            planDao.insertPlanLoc(new PlanLocVO(planId, null, (String) map.get("id"),null,i+1,2));
+                            planDao.insertPlanLoc(new PlanLocVO(planId, null, (String) map.get("id"), null, 2, i + 1));
                             break;
                         default:
                             throw new IllegalArgumentException(ErrorCode.PL_TRIP_INSERT_ERROR.getMessage());
@@ -180,14 +177,163 @@ public class PlanServiceImpl implements PlanService {
                 }
             }
 
-           return getPlanPage(request,null,null,mv);
+            return getPlanPage(request, null, null, mv);
         } catch (Exception e) {
             throw new RuntimeException(ErrorCode.PLAN_INSERT_ERROR.getMessage());
         }
     }
 
     @Override
-    public void deletePlan(long planId) {
+    public Map<String, Object> addLocation(Map<String, Object> addLocation) {
+
+        try {
+            Long planId = Long.parseLong(addLocation.get("planId").toString());
+            String locId = addLocation.get("locId").toString();
+            String locEnum = addLocation.get("locEnum").toString();
+            int planDay = Integer.parseInt(addLocation.get("planDay").toString());
+            int seq = Integer.parseInt(addLocation.get("seq").toString());
+
+            PlanLocVO planLocVO = new PlanLocVO();
+
+            switch (locEnum) {
+                case "ACCO":
+                    planLocVO = new PlanLocVO(planId, locId, null, null, planDay, seq);
+                    break;
+                case "REST":
+                    planLocVO = new PlanLocVO(planId, null, null, locId, planDay, seq);
+                    break;
+                case "ATTR":
+                    planLocVO = new PlanLocVO(planId, null, locId, null, planDay, seq);
+                    break;
+            }
+
+            // 전달 받은 planLocVO 저장
+            planDao.insertPlanLoc(planLocVO);
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("successYN", true);
+            return map;
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(ErrorCode.PL_TRIP_INSERT_ERROR.getMessage());
+        }
+    }
+
+    @Override
+    public Map<String, Object> deleteLocation(List<Map<String, Object>> deleteLocations) {
+
+        deleteLocations.forEach(map -> {
+            if(planDao.deletePlanLoc(map) == 0) {
+                throw new RuntimeException(ErrorCode.PL_TRIP_DELETE_ERROR.getMessage());
+            }
+        });
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("successYN", true);
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> updateLocation( Map<String, Object> updateLocation) {
+
+        // planId에 맞는 loc 일괄 삭제
+        if(planDao.deletePlanLocById(Long.parseLong(updateLocation.get("planId").toString())) == 0) {
+            throw new RuntimeException(ErrorCode.PL_TRIP_DELETE_ERROR.getMessage());
+        }
+
+        // trip pl 일괄 등록
+        // day 1 등록
+        insertPlanLoc((List<Map<String, Object>>) updateLocation.get("day1Locations"), 1, Long.parseLong(updateLocation.get("planId").toString()));
+        // day 2 등록
+        if(updateLocation.size() == 3) { // day 2가 있을 때만 등록
+            insertPlanLoc((List<Map<String, Object>>) updateLocation.get("day2Locations"), 2, Long.parseLong(updateLocation.get("planId").toString()));
+        }
+
+       Map<String, Object> map = new HashMap<>();
+        map.put("successYN", true);
+        return map;
+    }
+
+    private void insertPlanLoc(List<Map<String, Object>> dayLocations, int planDay, long planId) {
+        for (int i = 0; i < dayLocations.size(); i++) {
+            Map<String, Object> map = dayLocations.get(i);
+            switch ((String) map.get("category")) {
+                case "ACCO":
+                    planDao.insertPlanLoc(new PlanLocVO(planId, (String) map.get("id"), null, null, planDay, i + 1));
+                    break;
+                case "REST":
+                    planDao.insertPlanLoc(new PlanLocVO(planId, null, null, (String) map.get("id"), planDay, i + 1));
+                    break;
+                case "ATTR":
+                    planDao.insertPlanLoc(new PlanLocVO(planId, null, (String) map.get("id"), null, planDay, i + 1));
+                    break;
+                default:
+                    throw new IllegalArgumentException(ErrorCode.PL_TRIP_INSERT_ERROR.getMessage());
+
+            }
+        }
+    }
+
+    @Override
+    public Map<String, Object> getPlLocation(long planId) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("planLoc",planDao.getPlanLocByPlanId(planId));
+        return map;
+    }
+
+    @Override
+    public ModelAndView updatePlan(ModelAndView modelAndView, HttpServletRequest request, long planId, String title, String selectedDatesJson, String selectedLocations) {
+
+        PlanVO planVO;
+
+        // selectedDate sql.Date로 변경
+        String[] selectDates = selectedDatesJson.split(",");
+
+        // request에서 현재 로그인된 사용자 찾기
+        UserVO loginUser = (UserVO) request.getSession().getAttribute("loginUser");
+        if (loginUser != null) {
+
+            planVO = switch (selectDates.length) {
+                case 1 ->
+                        new PlanVO(title, selectedLocations, Date.valueOf(selectDates[0]), Date.valueOf(selectDates[0]));
+                case 2 ->
+                        new PlanVO(title, selectedLocations, Date.valueOf(selectDates[0]), Date.valueOf(selectDates[1]));
+                default -> throw new IllegalArgumentException(ErrorCode.PLAN_OUT_OF_BOUNDS.getMessage());
+            };
+
+            // planVo id 저장
+            planVO.setPlanId(planId);
+
+            // Plan 수정
+            planDao.updatePlan(planVO);
+            if (planVO.getPlanId() == 0) {
+                throw new IllegalArgumentException(ErrorCode.PLAN_UPDATE_ERROR.getMessage());
+            }
+
+
+            modelAndView.addObject("planLoc", planDao.getPlanLocByPlanId(planId));
+            modelAndView.addObject("plan", planVO);
+            modelAndView.setViewName("plan/planSecond");
+
+        } else {
+            // 재로그인 요청
+            modelAndView.addObject("fail", "Y");
+            modelAndView.setViewName("user/loginPage");
+        }
+
+        return modelAndView;
+    }
+
+    @Override
+    public ModelAndView getPlanById (ModelAndView modelAndView,long planId){
+        PlanVO planVO = planDao.getPlanById(planId);
+
+        modelAndView.addObject("plan", planVO);
+        modelAndView.setViewName("plan/updatePlanFirst");
+        return modelAndView;
+    }
+
+    @Override
+    public void deletePlan ( long planId){
         int successYN = planDao.deletePlan(planId);
 
         if (successYN == 0) {
