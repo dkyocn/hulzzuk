@@ -187,7 +187,7 @@
             // 업데이트된 장소 데이터를 가져오는 함수
             async function fetchUpdatedLocations() {
                 try {
-                    const response = await fetch(contextPath + `/plan/getPlLocations.do?planId=` + window.planId, {
+                    const response = await fetch(contextPath+`/plan/getPlLocations.do?planId=`+window.planId, {
                         method: 'GET',
                         headers: { 'Content-Type': 'application/json' }
                     });
@@ -200,59 +200,18 @@
                 }
             }
 
-            // 두 배열을 깊이 비교하는 함수
-            function isEqual(array1, array2) {
-                if (array1.length !== array2.length) return false;
-
-                return array1.every((item1, index) => {
-                    const item2 = array2[index];
-                    // 각 속성 비교 (planId, accoId, attrId, restId, seq, planDay)
-                    return item1.planId === item2.planId &&
-                        item1.accoId === item2.accoId &&
-                        item1.attrId === item2.attrId &&
-                        item1.restId === item2.restId &&
-                        item1.seq === item2.seq &&
-                        item1.planDay === item2.planDay;
-                });
-            }
-
-            // 배열을 planDay와 seq 기준으로 정렬하는 함수
-            function sortByPlanDayAndSeq(array) {
-                return [...array].sort((a, b) => {
-                    if (a.planDay !== b.planDay) return a.planDay - b.planDay;
-                    return a.seq - b.seq;
-                });
-            }
-
-            // editMode가 false일 때 3초마다 planLocList 갱신
+// 5초마다 장소 업데이트 확인
             setInterval(async () => {
-                if (!isEditMode) { // editMode가 false일 때만 실행
-                    const updatedData = await fetchUpdatedLocations();
-                    console.log("Fetched updatedData.planLoc:", planLocVO);
-                    console.log("Fetched updatedData.planLoc:", updatedData.planLoc);
-
-                    if (updatedData && updatedData.planLoc) {
-                        // 기존 planLocVO와 새로운 updatedData.planLoc 비교
-                        const sortedPlanLocVO = sortByPlanDayAndSeq(planLocVO);
-                        const isDataChanged = !isEqual(sortedPlanLocVO, updatedData.planLoc);
-
-                        if (isDataChanged) {
-                            planLocVO.length = 0; // 기존 데이터 초기화
-                            updatedData.planLoc.forEach(loc => planLocVO.push(loc));
-                            await initializeLocations(); // 업데이트된 데이터로 재초기화
-                            console.log('UI 갱신');
-                            renderLocations(); // UI만 갱신
-                            await updateNumbersAndDistances(); // 거리 계산 업데이트
-                            await updateMapVisibility(); // 맵 업데이트
-                            console.log("planLocList updated:", planLocVO);
-                        } else {
-                            console.log("No changes detected, skipping update.");
-                        }
-                    }
+                const updatedData = await fetchUpdatedLocations();
+                if (updatedData && updatedData.planLocVO) {
+                    planLocVO.length = 0; // 기존 데이터 초기화
+                    updatedData.planLocVO.forEach(loc => planLocVO.push(loc));
+                    await initializeLocations(); // 업데이트된 데이터로 초기화
+                    console.log("Locations updated:", planLocVO);
                 }
             }, 3000); // 3000ms = 3초
 
-            // 초기 실행
+// 초기 실행
             await initializeLocations();
 
             navigator.geolocation.getCurrentPosition(function(position) {
@@ -290,7 +249,7 @@
                     await addMarkersForLocations();
                     if (locations.length > 0) {
                         const firstLocation = locations[0];
-                        const response = await fetch(contextPath + `/loc/getLocation.do?locId=` + firstLocation.id + `&locationEnum=` + firstLocation.locEnum);
+                        const response = await fetch(contextPath + `/loc/getLocation.do?locId=`+firstLocation.id+`&locationEnum=`+firstLocation.locEnum);
                         const data = await response.json();
                     } else if (map) {
                         markerMap.forEach(marker => marker.setMap(null));
@@ -317,7 +276,7 @@
 
                 for (let index = 0; index < locations.length; index++) {
                     const location = locations[index];
-                    const response = await fetch(contextPath + `/loc/getLocation.do?locId=` + location.id + `&locationEnum=` + location.locEnum);
+                    const response = await fetch(contextPath + `/loc/getLocation.do?locId=`+location.id+`&locationEnum=`+location.locEnum);
                     const data = await response.json();
                     if (data && data.locationVo && data.locationVo.x && data.locationVo.y) {
                         const position = new kakao.maps.LatLng(data.locationVo.y, data.locationVo.x);
@@ -372,7 +331,7 @@
             window.addEventListener("message", async function (event) {
                 if (event.origin !== window.location.origin) return;
                 const { id, locEnum } = event.data;
-                const response = await fetch(contextPath + `/loc/getLocation.do?locId=` + id + `&locationEnum=` + locEnum);
+                const response = await fetch(contextPath + `/loc/getLocation.do?locId=`+id+`&locationEnum=`+locEnum);
                 const data = await response.json();
                 if (data && data.locationVo && data.locationVo.placeName && data.category) {
                     const locationData = { id: String(id), locEnum: String(locEnum), placeName: data.locationVo.placeName.trim(), category: data.category.trim(), day: selectedDay };
@@ -463,7 +422,7 @@
 
             async function toggleEditMode() {
                 isEditMode = !isEditMode;
-                const addedLocations = document.querySelectorAll(`.addedLocation[data-day="`+selectedDay+`"]`);
+                const addedLocations = document.querySelectorAll(`.addedLocation[data-day="` + selectedDay + `"]`);
                 const distanceItems = document.querySelectorAll(".distanceItem");
                 console.log("Toggling Edit Mode:", isEditMode, "Locations:", addedLocations.length);
 
@@ -762,10 +721,16 @@
                 await updateMapVisibility();
             });
 
-            function openChecklist() {
-                window.open(contextPath + '/chkList/list.do?planId=${requestScope.plan.planId}', 'checkListPopup', 'width=700,height=500');
-            }
-            document.getElementById("checklistBtn").addEventListener("click", openChecklist);
+            <%--function savePlan() {--%>
+            <%--    if (!${requestScope.plan.planId} || day1Locations.length === 0) {--%>
+            <%--        alert("저장할 데이터가 없습니다.");--%>
+            <%--        return;--%>
+            <%--    }--%>
+            <%--    document.getElementById("day1Locations").value = JSON.stringify(day1Locations);--%>
+            <%--    if (day2Locations.length > 0) document.getElementById("day2Locations").value = JSON.stringify(day2Locations);--%>
+            <%--    document.getElementById("saveLocationsForm").submit();--%>
+            <%--}--%>
+            <%--document.getElementById("saveBtn").addEventListener("click", savePlan);--%>
         });
 
         function modifiedPlanName() {}
@@ -799,7 +764,7 @@
                 <fmt:formatDate value="${planVO.planEndDate}" pattern="M.d" var="endDate"/>
                 (${endDate})</p></div>
         </c:if>
-        <button class="checklistBtn" id="checklistBtn"><span class="checkListText">체크리스트</span>
+        <button class="checklistBtn"><span class="checkListText">체크리스트</span>
             <img class="checkListImg" src="${pageContext.request.contextPath}/resources/images/common/add-button-black.png" alt="">
         </button>
     </div>
