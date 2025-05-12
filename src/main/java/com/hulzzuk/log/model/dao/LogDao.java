@@ -96,6 +96,22 @@ public class LogDao {
         return sqlSession.selectOne("logMapper.getPlanById", planId);
     }
     
+
+//    //*****************************LogPlaceDao 로부터 병함
+//    public PlanVO fetchPlanById(long planId) {
+//    return sqlSession.selectOne("logMapper.getPlanById", planId);
+//}
+//
+//    public List<LogPlaceVO> selectByPlanDay(int planId, int planDay) {
+//    Map<String, Object> params = new HashMap<>();
+//    params.put("planId", planId);
+//    params.put("planDay", planDay);
+//    
+//    return sqlSession.selectList("logPlaceMapper.selectPlacesByPlanDay", params);
+//}
+ 
+    
+
     //*****************************LogPlaceDao 로부터 병함
     public PlanVO fetchPlanById(long planId) {
     return sqlSession.selectOne("logMapper.getPlanById", planId);
@@ -112,4 +128,5 @@ public class LogDao {
     public int insertLogReveiw(LogReviewVO review) {
 		return sqlSession.insert("logReviewMapper.insertLogReview", review);
 	}
+
 }
