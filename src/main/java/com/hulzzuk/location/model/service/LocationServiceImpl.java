@@ -112,8 +112,10 @@ public class LocationServiceImpl implements LocationService{
 
             mv.addObject("list", locationList);
             mv.addObject("paging", paging);
-            mv.addObject("locationEnum", locationEnum);
-        	mv.setViewName("location/locationListView");
+			
+			  mv.addObject("locationEnum", locationEnum);
+			  mv.setViewName("location/locationListView");
+			 
         }
         mv.addObject("keyword",keyword);
         mv.addObject("sortEnum", sortEnum);
@@ -142,10 +144,15 @@ public class LocationServiceImpl implements LocationService{
 
 		map.put("category", locationEnum);
 		switch(locationEnum) {
-			case ACCO ->  map.put("locationVo", locationDao.getAccoById(locId));
-			case REST ->  map.put("locationVo", locationDao.getRestById(locId));
-			case ATTR ->  map.put("locationVo", locationDao.getAttrById(locId));
-			default -> map.put("locationVo", locationDao.getAttrById(locId));
+			case ACCO :
+				map.put("locationVo", locationDao.getAccoById(locId));
+				break;
+			case REST:
+				map.put("locationVo", locationDao.getRestById(locId));
+				break;
+			case ATTR :
+				map.put("locationVo", locationDao.getAttrById(locId));
+				break;
 		}
 
 

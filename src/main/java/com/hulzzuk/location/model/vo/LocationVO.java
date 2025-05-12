@@ -1,5 +1,7 @@
 package com.hulzzuk.location.model.vo;
 
+import com.hulzzuk.location.model.enumeration.LocationEnum;
+
 public class LocationVO {
 
 	private String locId;
@@ -13,6 +15,7 @@ public class LocationVO {
 	private String restMenu;
 	private String imgPath;
 	private String mapPath;
+	private LocationEnum locationEnum;
 
 	// constructor
 	public LocationVO() {}
@@ -121,6 +124,12 @@ public class LocationVO {
 	public void setMapPath(String mapPath) {
 		this.mapPath = mapPath;
 	}
-	
-	
+
+	public LocationEnum getLocationEnum() {
+		return locationEnum;
+	}
+
+	public void setLocationEnum(LocationEnum locationEnum) {
+		this.locationEnum = locationEnum;
+	}
 }
