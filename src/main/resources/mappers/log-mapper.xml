@@ -109,29 +109,4 @@
     </choose>
 </select>
 
-<!-- 로그 조회 리스트 -->
-<select id="getReviewList" parameterType="HashMap" resultMap="resultList">
-    SELECT r.REVIEW_ID, r.USER_REV, r.ACCO_ID, r.REST_ID, r.ATTR_ID, r.USER_REVIEW_TEXT, 
-           r.CREATED_AT, r.USER_ID, 
-           u.USER_NICK  <!-- UserVO 정보 추가 -->
-    FROM TB_REVIEW r
-    JOIN TB_USER u ON r.USER_ID = u.USER_ID <!-- USER_ID로 JOIN -->
-    <choose>
-        <when test="locationEnum == 'ACCO'">
-            WHERE r.ACCO_ID = #{locId}
-        </when>
-        <when test="locationEnum == 'REST'">
-            WHERE r.REST_ID = #{locId}
-        </when>
-        <when test="locationEnum == 'ATTR'">
-            WHERE r.ATTR_ID = #{locId}
-        </when>
-    </choose>
-    <choose>
-        <when test="sortEnum == 'DATEDESC'">
-            ORDER BY r.CREATED_AT DESC
-        </when>
-    </choose>
-</select>
-
 </mapper>
