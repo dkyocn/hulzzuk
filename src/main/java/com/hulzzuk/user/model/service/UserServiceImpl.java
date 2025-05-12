@@ -354,7 +354,7 @@ public class UserServiceImpl implements UserService {
 	public ModelAndView insertUser(ModelAndView mv, HttpServletRequest request, UserVO user) {
 		// 필수값 유효성 검사
 		if (StringUtils.isBlank(user.getUserId()) || StringUtils.isBlank(user.getUserPwd())
-			|| user.getUserAge() == null || StringUtils.isBlank(user.getGender())) {
+			|| StringUtils.isBlank(user.getGender()) || user.getUserAge() == null) {
 			request.getSession().setAttribute("joinSuccess", false);
 			mv.addObject("message", "모든 항목을 입력해주세요.");
 			mv.addObject("action", "close");
@@ -373,7 +373,18 @@ public class UserServiceImpl implements UserService {
 		user.setUserPwd(encryptedPwd);
 		
 		// 닉네임 생성 (이메일 앞부분)
-		user.setUserNick(user.getUserId().substring(0, user.getUserId().indexOf("@")));
+		//user.setUserNick(user.getUserId().substring(0, user.getUserId().indexOf("@")));
+		
+		String baseNick = user.getUserId().substring(0, user.getUserId().indexOf("@")); String finalNick = baseNick;
+		  
+		// DB에 닉네임이 존재하는지 확인하고 중복될 경우 숫자 붙이기 
+		int suffix = 1; 
+		while (userDao.countNickName(finalNick) > 0) { 
+			finalNick = baseNick + String.format("%02d", suffix++); // asdf01, asdf02 ... 
+		}
+		  
+		user.setUserNick(finalNick);
+		 
 		
 		// 기본값 설정
 	    user.setUserKey(null);                 // null 처리
@@ -401,36 +412,58 @@ public class UserServiceImpl implements UserService {
 	    return mv;
 	}
 	
-	// 회원 탈퇴
+	// 회원 탈퇴 안내 (info 페이지에서 이동)
 	@Override
-	public ModelAndView deleteUser(ModelAndView mv, HttpServletRequest request, HttpSession session, @RequestParam("userId") String userId) {
+	public ModelAndView deleteGuide(ModelAndView mv, HttpSession session, @RequestParam("userId") String userId) {
 
 		String sessionUserId = (String) session.getAttribute("authUserId");
 		
-		logger.info("sessionUserId : " + sessionUserId);
-		logger.info("userId : " + userId);
-		
 		if (sessionUserId == null || !sessionUserId.equals(userId)) {
-			request.getSession().setAttribute("deleteSuccess", false);
-	        mv.addObject("message", "로그인 세션이 존재하지 않거나 사용자 정보가 일치하지 않습니다.");
-	        mv.addObject("actionUrl", request.getContextPath() + "/user/deleteConfirmPopUp.do");
+			mv.setViewName("redirect:/user/infoPage.do?fail=Y");	// 세션 없을 경우
 	    } else if(userDao.deleteUser(userId) > 0) {
-			request.getSession().setAttribute("deleteSuccess", true);
-			mv.addObject("message", "정말 탈퇴하시겠습니까?");
-			mv.addObject("actionUrl", request.getContextPath() + "/user/deleteConfirmPopUp.do");
-		}else {
-			request.getSession().setAttribute("deleteSuccess", false);
-			mv.addObject("message", "로그인 세션이 존재하지 않습니다.");
-			mv.addObject("actionUrl", request.getContextPath() + "/user/deleteConfirmPopUp.do");
+			mv.setViewName("user/deleteUser");	// 세션 있을 경우
+		} else {
+		    mv.setViewName("redirect:/user/infoPage.do?fail=E"); // 탈퇴 실패 시
 		}
-		
-		mv.addObject("width", 350);
-	    mv.addObject("height", 300);
-	    mv.setViewName("common/postPopUp");
+
 		return mv;
 	}
+	
+	// 회원 탈퇴
+	@Override
+	public String deleteUser(HttpServletRequest request, HttpSession session, SessionStatus status) {
+		String userId = (String) session.getAttribute("deleteUserId");
 		
-}
+		// 세션 없애기
+		session.invalidate();
+		status.setComplete();
+		
+		// 탈퇴 처리
+		int result = userDao.deleteUser(userId);
+		
+		String deleteYN = new String();
+		 
+		String contextPath = request.getContextPath();
+
+//		mv.addObject("moveUrl", request.getContextPath() + "/user/login.do");
+		
+		if(result > 0) {
+			deleteYN = "success|" + contextPath + "/main.do";
+		}else {
+			throw new IllegalArgumentException(ErrorCode.USER_DELETE_ERROR.getMessage());
+		}
+		
+		// 탈퇴 완료 팝업
+		/*
+		 * mv.addObject("message", "탈퇴 완료되었습니다."); mv.addObject("actionUrl",
+		 * request.getContextPath() + "/user/deletePopUp.do"); mv.addObject("width",
+		 * 350); mv.addObject("height", 300); mv.setViewName("common/postPopUp");
+		 */
+		
+		return deleteYN;
+	} 
+		
+}	
 
 
 

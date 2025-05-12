@@ -122,9 +122,7 @@ $(document).ready(function () {
         if (pw.length > 0 && pw.length < 8 || pw.length > 16) {
             msg = "! 8~16자 사이여야 합니다.";
         }
-       /*  if (/\s/.test(pw)) {
-            msg = "! 공백은 사용할 수 없습니다.";
-        } */
+       
         if (
             pw.length > 0 &&
             (pw.search(/[0-9]/g) < 0 || pw.search(/[a-z]/ig) < 0 || pw.search(/[~!@#$]/g) < 0)

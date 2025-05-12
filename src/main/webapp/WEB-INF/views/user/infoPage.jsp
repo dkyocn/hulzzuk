@@ -7,12 +7,11 @@
 <head>
 <meta charset="UTF-8">
 <title>hulzzuk</title>
-
 <script type="text/javascript" src="${ pageContext.servletContext.contextPath }/resources/js/jquery-3.7.1.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
 <style type="text/css">
 form#info {
-	width: 1000px;
+	width: 800px;
 	text-align: center;
 	border: 1px solid #585858;
 	margin: 0 auto;
@@ -74,27 +73,16 @@ window.onload = function(){
     });
 };
 
-// 탈퇴하기 팝업
-function deleteConfirmPopUp(){
-	const popup = window.open('', 'deleteConfirmPopUp', 'width=350,height=250');
-    if (popup) popup.focus();
+// 탈퇴하기 버튼 클릭 시 호출
+window.onload = function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const fail = urlParams.get("fail");
 
-    const form = document.createElement('form');
-    form.method = 'post';
-    form.action = '${pageContext.request.contextPath}/user/delete.do';
-    form.target = 'deleteConfirmPopUp';
-
-    const input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = 'userId';
-    
-    const userIdInput = document.querySelector('input[name="userId"]');
-    input.value = userIdInput ? userIdInput.value : '';
-    form.appendChild(input);
-
-    document.body.appendChild(form);
-    form.submit();
-    document.body.removeChild(form);
+    if (fail === "Y") {
+        alert("로그인 세션이 존재하지 않거나 사용자 정보가 일치하지 않습니다.");
+    } else if (fail === "E") {
+        alert("회원 탈퇴 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
+    }
 };
 </script>
 </head>
@@ -148,12 +136,12 @@ function deleteConfirmPopUp(){
 		<%-- <tr><th colspan="2">
 		<input type="submit" value="수정하기"> &nbsp; 
 		<input type="reset" value="수정취소"> &nbsp;
-		<a href="mdelete.do?userId=${ requestScope.member.userId }">탈퇴하기</a>
 	</th></tr>	 --%>
 	</table>
 	
-    <form name="deleteConfirm" id="deleteConfirm" action="${pageContext.request.contextPath}/user/delete.do" method="post">
-    	<button type="button" onclick="deleteConfirmPopUp()" class="submitId">탈퇴하기</button>
+    <form name="deleteConfirm" id="deleteConfirm" action="${pageContext.request.contextPath}/user/deleteGuide.do" method="post">
+	    <input type="hidden" name="userId" value="${sessionScope.authUserId}" />
+    	<button type="submit" class="submitId">탈퇴하기</button>
     </form>
 	<form name="logout" id="logout" action="${pageContext.request.contextPath}/user/logout.do" method="post">
     	<button type="submit" class="subminId">로그아웃</button>
