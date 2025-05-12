@@ -1,11 +1,9 @@
 package com.hulzzuk.user.model.vo;
 
-import java.util.Date;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
-
-import org.springframework.format.annotation.DateTimeFormat;
+import java.sql.Date;
 
 public class UserVO implements java.io.Serializable {
 	private static final long serialVersionUID = -163877130673884040L;
@@ -14,7 +12,6 @@ public class UserVO implements java.io.Serializable {
 	private String userPwd; 		//	USER_PWD	VARCHAR2(255 BYTE)
 	private String userNick;		//	USER_NICK	VARCHAR2(20 BYTE)
 	private String gender;			//	USER_GENDER	CHAR(1 BYTE)
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date userAge;			//	USER_AGE	DATE
 	private String userProfile;		//  USER_PROFILE VARCHAR2(500 BYTE)
 	private String userKey;			//	USER_KEY	VARCHAR2(30 BYTE)
@@ -22,14 +19,13 @@ public class UserVO implements java.io.Serializable {
 	private String userRefreshCode;	//	USER_REFRESHCODE	VARCHAR2(255 BYTE)
 	private String adminYN;			//	ADMIN_YN	VARCHAR2(4 BYTE)
 	
-	// 나이 계산 메소드
 	public int getAge() {
-		if (userAge == null) return 0;
-		
-		LocalDate birth = userAge.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		LocalDate today = LocalDate.now();
+	    if (userAge == null) return 0;
 
-		return Period.between(birth, today).getYears();
+	    LocalDate birth = userAge.toLocalDate();  // java.sql.Date 전용 메서드
+	    LocalDate today = LocalDate.now();
+
+	    return Period.between(birth, today).getYears();
 	}
 	
 	public UserVO() {
@@ -93,11 +89,11 @@ public class UserVO implements java.io.Serializable {
 		this.gender = gender;
 	}
 
-	public java.util.Date getUserAge() {
+	public Date getUserAge() {
 		return userAge;
 	}
 
-	public void setUserAge(java.util.Date userAge) {
+	public void setUserAge(Date userAge) {
 		this.userAge = userAge;
 	}
 

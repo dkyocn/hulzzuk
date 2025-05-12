@@ -40,7 +40,10 @@ public interface UserService {
 	// 회원 가입
 	ModelAndView insertUser(ModelAndView mv, HttpServletRequest request, UserVO user);
 	
+	// 회원탈퇴 안내
+	ModelAndView deleteGuide(ModelAndView mv, HttpSession session, String userId);
+	
 	// 회원 탈퇴
-	ModelAndView deleteUser(ModelAndView mv, HttpServletRequest request, HttpSession session, String userId);
+	String deleteUser(HttpServletRequest request, HttpSession session, SessionStatus status);
 	
 }
