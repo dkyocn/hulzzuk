@@ -35,6 +35,14 @@ public class UserController {
 		return mv; 
 	}
 	
+	// 로그인 방법 선택
+	@RequestMapping(value = "loginSelect.do", method = RequestMethod.GET)
+	public ModelAndView loginSelect(ModelAndView mv) {
+		mv.setViewName("user/socialLogin");
+		
+		return mv;
+	}
+	
 	// 로그인 처리
 	@RequestMapping(value = "login.do", method = RequestMethod.POST)
 	public ModelAndView loginMethod(ModelAndView mv, UserVO user, HttpSession session, SessionStatus status) {
