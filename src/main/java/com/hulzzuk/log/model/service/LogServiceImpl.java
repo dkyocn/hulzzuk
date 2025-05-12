@@ -7,10 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.hulzzuk.common.vo.Paging;
 import com.hulzzuk.log.model.dao.LogDao;
+import com.hulzzuk.log.model.dao.LogReviewDao;
 import com.hulzzuk.log.model.vo.LogPlaceVO;
-import com.hulzzuk.log.model.vo.LogReviewVO;
 import com.hulzzuk.log.model.vo.LogVO;
-import com.hulzzuk.plan.model.dao.PlanDao;
 import com.hulzzuk.plan.model.vo.PlanVO;
 
 
@@ -19,6 +18,9 @@ public class LogServiceImpl implements LogService {
 
     @Autowired
     private LogDao logDao;
+    
+    @Autowired
+    private LogReviewDao logReviewDao; // 로그탭안의 내용 조회를 위해서 주입
 
     @Override
     public List<LogVO> getLogList(Paging paging) {
@@ -73,31 +75,38 @@ public class LogServiceImpl implements LogService {
 	public PlanVO getPlanById(Long planId) {
 		return logDao.getPlanById(planId);
 	}
-	//************LogReviewServiceImple merged
+
 	@Override
-	public int insertLogReview(LogReviewVO review) {
-	     return logDao.insertLogReveiw(review);
+	public List<LogPlaceVO> getPlacesByPlanDay(Long planId, int day) {
+		
+		return logReviewDao.selectByPlanDay(planId,day);
 	}
+	
 	
 	
 	//************LogPlaceServiceImple merged
 	
-	@Override
-	public PlanVO fetchPlanById(long planId) {
-		return logDao.fetchPlanById(planId);
-	}
+//	@Override
+//	public PlanVO fetchPlanById(long planId) {
+//		return logDao.fetchPlanById(planId);
+//	}
+//
+//	@Override
+//	public PlanVO getPlanById(int planId) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public List<LogPlaceVO> getPlacesByPlanDay(int planId, int planDay) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 
-	@Override
-	public PlanVO getPlanById(int planId) {
-		return logDao.fetchPlanById(planId);
-	}
 
 
-	@Override
-	public List<LogPlaceVO> getPlacesByPlanDay(int planId, int planDay) {
-		return logDao.selectByPlanDay(planId,planDay);
-	}
+
 	
 	
 }

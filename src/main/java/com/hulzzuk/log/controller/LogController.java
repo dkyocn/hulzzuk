@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.hulzzuk.common.vo.FileNameChange;
+import com.hulzzuk.log.model.service.LogReviewService;
 import com.hulzzuk.log.model.service.LogService;
 import com.hulzzuk.log.model.vo.LogPlaceVO;
 import com.hulzzuk.log.model.vo.LogVO;
@@ -31,6 +32,9 @@ public class LogController {
 
     @Autowired
     private LogService logService;
+   
+    @Autowired
+    private LogReviewService logReviewService;
 
     // 로그 목록 조회 페이지
     @GetMapping("/page.do")
@@ -57,21 +61,22 @@ public class LogController {
     		HttpSession session) {
         // 세션에서 로그인 유저 ID 가져오기
     	UserVO loginUser = (UserVO) session.getAttribute("loginUser");
+    	//로그인 안된경우 -> 로그인 페이지
     	if(loginUser ==null ) {
+    		// 로그인 후원래 가려던 페이지 기억해두기
+    		session.setAttribute("redirectAfterLogin", "/log/selectPID.do");
     		return new ModelAndView("redirect:/user/login.do"); // 로그인페이지
     	}
     	
       //  String userId = loginUser.getUserId();
-       
-    	 ModelAndView mav = new ModelAndView("logs/SelectPlanId"); // /WEB-INF/views/logs/SelectPlanId.jsp
-       
+        // 로그인된경우:
         List<PlanVO> planList = logService.selectPlanIdList(loginUser.getUserId());
+    	ModelAndView mav = new ModelAndView("logs/SelectPlanId"); // /WEB-INF/views/logs/SelectPlanId.jsp
         mav.addObject("planList", planList);
         
+        //planId 넘어온경우:  바로 log 생성 화면으로 리다이렉
         if (planId != null) {
-            // planId로 무언가 로직 실행하거나 redirect
             System.out.println("선택된 planId: " + planId);
-            
             mav.setViewName("redirect:/log/create.do?planId=" + planId); // 예시
         }
         
@@ -83,14 +88,25 @@ public class LogController {
     @GetMapping("/create.do")
     public ModelAndView showCreateLogPage(@RequestParam(name="planId", required=false) Long planId){
     	 ModelAndView mav = new ModelAndView("logs/logInsert"); // /WEB-INF/views/logs/logInsert.jsp
-  
-    	 if (planId != null) {
-    	        // planId로 해당 여행일 조회
-    	        PlanVO plan = logService.getPlanById(planId); // getPlanById :service 추가함 
-    	        mav.addObject("plan", plan); // JSP에서 ${plan.planTitle} 로 쓰기 
-    	    }
-    	return mav;
+    
+    	if (planId != null) {
+    	    PlanVO plan = logService.getPlanById(planId);
+    	    mav.addObject("plan", plan);
+    	 // 여행 장소 리스트 (day1, day2)
+         List<LogPlaceVO> day1Places = logService.getPlacesByPlanDay(planId, 1);
+         List<LogPlaceVO> day2Places = logService.getPlacesByPlanDay(planId, 2);
+
+         mav.addObject("day1PlaceList", day1Places);
+         mav.addObject("day2PlaceList", day2Places);
+
+         System.out.println("🔥 day1PlaceList size = " + day1Places.size());
+         System.out.println("🔥 day2PlaceList size = " + day2Places.size());
+     }
+    	 System.out.println("✅ [LogController] logInsert.jsp로 이동 완료");
+	     return mav;
     }
+
+    
 
     // 데이터 저장 처리
     @RequestMapping(value="/create.do", method=RequestMethod.POST)
@@ -141,17 +157,16 @@ public class LogController {
         return mav;
     }
   
-    //로그작성을 위한 planID세부사항 불러오
-    @RequestMapping("insertPage.do")
-    public String showLogInsertPage(@RequestParam("planId") int planId, Model model) {
-        List<LogPlaceVO> day1Places = logService.getPlacesByPlanDay(planId, 1);  // day1 리스트 조회
-        List<LogPlaceVO> day2Places = logService.getPlacesByPlanDay(planId, 2);  // day2 리스트 조회
-        PlanVO plan = logService.fetchPlanById(planId); // 플랜 정보 조회
-
-        model.addAttribute("plan", plan);
-        model.addAttribute("day1PlaceList", day1Places);
-        model.addAttribute("day2PlaceList", day2Places);
-
-        return "logs/logInsert";  //logs/logInsert.jsp
+    //거리 계산이 필요할 때 추가 구현 방법 (Haversine):
+    public static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+        double R = 6371.0; // Radius of the earth in km
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                 + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                 * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return Math.round(R * c * 100.0) / 100.0; // 소수점 2자리까지
     }
+   
 } 
