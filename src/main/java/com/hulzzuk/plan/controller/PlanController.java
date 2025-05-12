@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("plan")
@@ -42,23 +43,18 @@ public class PlanController {
     }
 
     @RequestMapping("moveUpdate.do")
-    public ModelAndView moveUpdatePage(ModelAndView mv, @RequestParam(name = "planId") long planId,
-                                       @RequestParam(name = "page", required = false) String page) {
+    public ModelAndView moveUpdatePage(ModelAndView mv, @RequestParam(name = "planId") long planId) {
 
-        // id로 plan 조회
-
-        mv.setViewName("plan/updatePlan");
-
-        return mv;
+        return planService.getPlanById(mv,planId);
     }
 
-    @RequestMapping("update.do")
-    public ModelAndView updatePlan(ModelAndView mv, PlanVO planVO) {
-
-        mv.addObject("planVO", planVO);
-
-        mv.setViewName("plan/updatePlan");
-        return mv;
+    @RequestMapping(value = "update.do", method =  RequestMethod.POST)
+    public ModelAndView updatePlan(ModelAndView mv, HttpServletRequest httpServletRequest,
+                                   @RequestParam(name = "planId")  long planId,
+                                   @RequestParam(name = "planName") String title,
+                                   @RequestParam(name = "selectedDates") String selectedDates,
+                                   @RequestParam(name = "selectedLocations") String selectedLocations) {
+        return planService.updatePlan(mv, httpServletRequest, planId, title, selectedDates, selectedLocations);
     }
 
     /**
@@ -94,6 +90,30 @@ public class PlanController {
                                          @RequestParam(name = "day1Locations") String day1LocationsJson,
                                          @RequestParam(name = "day2Locations", required = false) String day2LocationsJson) {
         return planService.createPlanSecond(mv, request, planId, day1LocationsJson, day2LocationsJson);
+    }
+
+    @RequestMapping(value = "addLocation.do", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> addLocation(@RequestBody Map<String, Object> addLocation) {
+        return planService.addLocation(addLocation);
+    }
+
+    @RequestMapping(value = "deleteLocations.do", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> deleteLocation(@RequestBody List<Map<String, Object>> deleteLocation) {
+        return planService.deleteLocation(deleteLocation);
+    }
+
+    @RequestMapping(value = "updateLocations.do", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> updateLocation(@RequestBody Map<String, Object> updateLocation) {
+        return planService.updateLocation(updateLocation);
+    }
+
+    @RequestMapping(value = "getPlLocations.do", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> getPlLocation(@RequestParam("planId") long planId) {
+        return planService.getPlLocation(planId);
     }
 
     @RequestMapping("moveDelete.do")

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.hulzzuk.common.vo.Paging;
+import com.hulzzuk.location.model.enumeration.LocationEnum;
 import com.hulzzuk.log.model.vo.LogPlaceVO;
 import com.hulzzuk.log.model.vo.LogReviewVO;
 import com.hulzzuk.log.model.vo.LogVO;
@@ -63,12 +64,39 @@ public class LogDao {
     public List<PlanVO> selectPlanIdList(String userId) {
         return sqlSession.selectList("logMapper.selectPlanIdList", userId);
     }
+  
+    
+ // 로그갯수 조회
+ 	public int logCount(String locId, LocationEnum locationEnum) {
+ 		HashMap<String, String> map = new HashMap<>();
+         map.put("locId", locId);
+         map.put("locationEnum",  locationEnum != null ? locationEnum.name() : null);
+         return sqlSession.selectOne("logReviewMapper.logCount", map);
+ 	}
+ 	
+ 	// 로그 id로 로그 조회
+ 	public List<Long> getLogId(String locId, LocationEnum locationEnum) {
+ 		HashMap<String, Object> map = new HashMap<>();
+ 		map.put("locId", locId);
+         map.put("locationEnum",  locationEnum != null ? locationEnum.name() : null);
+
+         return sqlSession.selectList("logReviewMapper.getLogId", map);
+     }
+ 	
+ 	// 로그 리스트 조회
+ 	public List<LogVO> getLogSelectOne(Long logId) {
+ 		HashMap<String, Object> map = new HashMap<>();
+ 		map.put("logId", logId);
+ 		
+         return sqlSession.selectList("logMapper.getLogSelectOne", map);
+     }
 
     //로그 작성을 위한 여행일정조회 
     public PlanVO getPlanById(Long planId) {
         return sqlSession.selectOne("logMapper.getPlanById", planId);
     }
     
+
 //    //*****************************LogPlaceDao 로부터 병함
 //    public PlanVO fetchPlanById(long planId) {
 //    return sqlSession.selectOne("logMapper.getPlanById", planId);
@@ -83,4 +111,22 @@ public class LogDao {
 //}
  
     
+
+    //*****************************LogPlaceDao 로부터 병함
+    public PlanVO fetchPlanById(long planId) {
+    return sqlSession.selectOne("logMapper.getPlanById", planId);
+}
+
+    public List<LogPlaceVO> selectByPlanDay(int planId, int planDay) {
+    Map<String, Object> params = new HashMap<>();
+    params.put("planId", planId);
+    params.put("planDay", planDay);
+    
+    return sqlSession.selectList("logPlaceMapper.selectPlacesByPlanDay", params);
+}
+  //*****************************LogResolvedDao 로부터 병함
+    public int insertLogReveiw(LogReviewVO review) {
+		return sqlSession.insert("logReviewMapper.insertLogReview", review);
+	}
+
 }

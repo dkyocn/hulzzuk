@@ -8,9 +8,11 @@ public enum ErrorCode {
     USER_NOT_FOUND(419,"해당 ID의 회원 정보가 존재하지 않습니다."),
     PLAN_OUT_OF_BOUNDS(452,"일정의 날짜가 잘못설정되었습니다."),
     PLAN_INSERT_ERROR(506,"일정을 등록하는데 실패하였습니다."),
+    PLAN_UPDATE_ERROR(516,"일정을 수정하는데 실패하였습니다."),
     PLAN_DELETE_ERROR(512,"일정을 삭제하는데 실패하였습니다."),
     PL_USER_INSERT_ERROR(513,"일정-사용자 중계를 등록하는데 실패하였습니다."),
     PL_TRIP_INSERT_ERROR(514,"일정-장소 중계를 등록하는데 실패하였습니다."),
+    PL_TRIP_DELETE_ERROR(517,"일정-장소 중계를 삭제하는데 실패하였습니다."),
     REVIEW_NOT_FOUND(420, "해당 ID의 리뷰가 존재하지 않습니다."),
 	MAIL_SEND_FAIL(421, "메일 발송이 실패했습니다.");
 

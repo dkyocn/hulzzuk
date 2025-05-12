@@ -8,11 +8,8 @@
 <meta charset="UTF-8">
 <title>hulzzuk</title>
 
-<script type="text/javascript"
-	src="${ pageContext.servletContext.contextPath }/resources/js/jquery-3.7.1.min.js"></script>
-<link
-	href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap"
-	rel="stylesheet">
+<script type="text/javascript" src="${ pageContext.servletContext.contextPath }/resources/js/jquery-3.7.1.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
 <style type="text/css">
 form#info {
 	width: 1000px;
@@ -36,6 +33,11 @@ td {
 	width: 500px;
 }
 
+.datailInput {
+	border-width: none;
+	outline: none;
+}
+
 form #info>td #nickname {
 	border-width: none;
 	outline: none;
@@ -47,51 +49,79 @@ table #infoDetail>th {
 }
 </style>
 <script type="text/javascript">
-	function validate() {
-		//암호와 암호확인이 일치하는지 확인
-		var pwdValue = $('#userPwd').val();
-		var pwdValue2 = document.getElementById('userPwd2').value;
-		console.log(pwdValue + ', ' + pwdValue2);
+window.onload = function(){
+	const photofile = document.getElementById('photofile');
 
-		if (pwdValue !== pwdValue2) {
-			alert('암호와 암호확인이 일치하지 않습니다. 다시 입력하세요.');
-			document.getElementById('userPwd').value = ''; //기록된 값 지우기
-			$('#userPwd2').val(''); //기록된 값 지우기
-			document.getElementById('userPwd').focus(); //입력커서 지정함
-			return false; //전송 취소함
-		}
-		return true; //전송 보냄
-	}
+    photofile.addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (!file || !file.type.startsWith('image/')) {
+            alert('이미지 파일을 선택해주세요.');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const photo1 = document.getElementById('photo1');
+            const photoDefault = document.getElementById('photoDefault');
+            const targetImg = photo1 || photoDefault;
+
+            if (targetImg) {
+                targetImg.setAttribute('src', e.target.result);
+                targetImg.setAttribute('data-file', file.name);
+            }
+        };
+        reader.readAsDataURL(file);
+    });
+};
+
+// 탈퇴하기 팝업
+function deleteConfirmPopUp(){
+	const popup = window.open('', 'deleteConfirmPopUp', 'width=350,height=250');
+    if (popup) popup.focus();
+
+    const form = document.createElement('form');
+    form.method = 'post';
+    form.action = '${pageContext.request.contextPath}/user/delete.do';
+    form.target = 'deleteConfirmPopUp';
+
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'userId';
+    
+    const userIdInput = document.querySelector('input[name="userId"]');
+    input.value = userIdInput ? userIdInput.value : '';
+    form.appendChild(input);
+
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+};
 </script>
 </head>
 <body>
 	<c:import url="/WEB-INF/views/common/header.jsp" />
 	<form id="info" enctype="multipart/form-data">
 		<tr>
-			<th text-align="center"></th>
-			<td><%-- <img src="${ requestScope.user.userProfile }"><input type="submit" value="사진변경">  --%>
+			<th text-align="center"></th><td>
 			<c:if test="${ !empty requestScope.user.userProfile }">
-			<div id="myphoto1">
-				<img src="${ requestScope.user.userProfile }" id="photo1">
-			</div> <br>
-			${ requestScope.ofile } <br>
-			변경할 사진 선택 : <input type="file" id="photofile" name="photofile">			
-		 </c:if>
-		 <c:if test="${ empty requestScope.user.userProfile }">
-			<div id="myphoto2">
-				<img src="${ requestScope.user.userProfile }" id="photo2">
-			</div> <br>
-			<input type="file" id="photofile" name="photofile">			
-		 </c:if></td>
+				<div id="myphoto1">
+					<img src="${ requestScope.user.userProfile }" id="photo1">
+				</div>		
+			</c:if>
+			
+			<c:if test="${ empty requestScope.user.userProfile }">
+				<div id="myphoto2">
+					<img src="${pageContext.request.contextPath}/resources/images/logo2.png" id="photoDefault">
+				</div>
+			</c:if><br>
+			${ requestScope.ofile }<br>
+			</td>
 		</tr>
-		<br>
-		<br>
+		<br><br>
 		<tr>
 			<td id="nickname"><input text-align="center" type="text"
 				name="userNick" id="userNick"
-				value="${ requestScope.user.userNick }" readonly>
-				<input type="submit" value="수정하기"> &nbsp;</td>
-			<br>
+				value="${ requestScope.user.userNick }" readonly></td><br>
 		</tr>
 	</form>
 	<br>
@@ -99,50 +129,35 @@ table #infoDetail>th {
 	<table id="infoDetail" align="center" border="1px" width="1000"
 		cellspacing="5" cellpadding="0">
 		<br>
-		<tr>
-			<th width="120">아이디</th>
-			<%-- input 태그의 name 속성의 이름은 member.dto.Member 클래스의 property 명과 같게 함 --%>
-			<td><input type="text" name="userId" id="userId"
-				value="${ requestScope.user.userId }" readonly></td>
-		</tr>
-		<tr>
-			<th>암호</th>
-			<td><input type="password" name="userPwd" id="userPwd"></td>
-		</tr>
-		<tr>
-			<th>암호확인</th>
-			<td><input type="password" id="userPwd2"><input type="submit" value="수정하기"> &nbsp; </td>
-			
-		</tr>
-
-		<tr>
-			<th>성별</th>
+		<tr><th width="120">아이디(이메일)</th>
+		<%-- input 태그의 name 속성의 이름은 member.dto.Member 클래스의 property 명과 같게 함 --%>
+			<td><input type="email" name="userId" id="userId" class="datailInput"
+				value="${ requestScope.user.userId }" readonly></td></tr>
+		<tr><th>비밀번호</th>
+			<td>****</td></tr>
+		<tr><th>성별</th>
 			<td><c:if test="${ requestScope.user.gender eq 'M' }">
-					<input type="radio" name="gender" value="M" checked> 남자 &nbsp;
-				<input type="radio" name="gender" value="F"> 여자 
+					<input type="radio" name="gender" class="datailInput" value="M" checked> 남자 &nbsp;
+				<input type="radio" name="gender" class="datailInput" value="F"> 여자 
 			</c:if> <c:if test="${ requestScope.user.gender eq 'F' }">
-					<input type="radio" name="gender" value="M"> 남자 &nbsp;
-				<input type="radio" name="gender" value="F" checked> 여자 
-			</c:if>
-				<input type="submit" value="수정하기"> &nbsp; </td>
-		</tr>
-		<tr>
-			<th>나이</th>
-			<td><input type="text" name="userAge" min="19" max="100"
-				value="${ user.age }"><input type="submit" value="수정하기"> &nbsp; </td>
-			
-		</tr>
+					<input type="radio" name="gender" class="datailInput" value="M"> 남자 &nbsp;
+				<input type="radio" name="gender" class="datailInput" value="F" checked> 여자 
+			</c:if></td></tr>
+		<tr><th>나이</th>
+			<td><input type="text" name="userAge" class="datailInput" min="19" max="100" value="${ user.age }"></td></tr>
 		<%-- <tr><th colspan="2">
 		<input type="submit" value="수정하기"> &nbsp; 
 		<input type="reset" value="수정취소"> &nbsp;
 		<a href="mdelete.do?userId=${ requestScope.member.userId }">탈퇴하기</a>
 	</th></tr>	 --%>
 	</table>
-	<c:url var="mdel" value="mdelete.do">
-		<c:param name="userId" value="${ requestScope.user.userId }"></c:param>
-	</c:url>
-	<a href="${ mdel }" style="left: 55%">탈퇴하기</a>
-	<a href="${pageContext.request.contextPath}/user/logout.do" style="right: 55%">로그아웃</a>
+	
+    <form name="deleteConfirm" id="deleteConfirm" action="${pageContext.request.contextPath}/user/delete.do" method="post">
+    	<button type="button" onclick="deleteConfirmPopUp()" class="submitId">탈퇴하기</button>
+    </form>
+	<form name="logout" id="logout" action="${pageContext.request.contextPath}/user/logout.do" method="post">
+    	<button type="submit" class="subminId">로그아웃</button>
+    </form>
 
 	<c:import url="/WEB-INF/views/common/footer.jsp" />
 </body>

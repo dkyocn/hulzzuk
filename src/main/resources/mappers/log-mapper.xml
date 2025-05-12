@@ -88,33 +88,13 @@
 		WHERE UP.USER_ID = #{userId} 
 		ORDER BY PLAN_START_DATE DESC
 	</select>
-	
 
-	<select id="getPlanById" parameterType="long" resultMap="planResultMap">
-    SELECT PLAN_ID, PLAN_TITLE, PLAN_PLACE, PLAN_START_DATE, PLAN_END_DATE
-    FROM TB_PLAN
-    WHERE PLAN_ID = #{planId}
-	</select>
-	
-	
-	    <!-- 로그 상세 조회 -->
-    <select id="selectLogById" parameterType="long" resultMap="logResultMap">
-        SELECT 
-            LOG_ID,
-            IMAGE_PATH,
-            LOG_TITLE,
-            LOG_START_DATE,
-            LOG_END_DATE,
-            PLAN_DAY,
-            USER_ID,
-            CREATED_AT,
-            UPDATED_AT,
-            0 AS LOVE_COUNT
-        FROM TB_LOG
-        WHERE LOG_ID = #{logId}
-    </select>
 
-	
-	
-	
+<!-- 로그 단일 조회 -->
+ <select id="getLogSelectOne" parameterType="HashMap" resultMap="logResultMap">
+    SELECT IMAGE_PATH, LOG_TITLE, LOG_START_DATE, LOG_END_DATE, PLAN_DAY, USER_ID, CREATED_AT
+    FROM TB_LOG
+    where LOG_ID = #{logId} 
+</select>
+
 </mapper>

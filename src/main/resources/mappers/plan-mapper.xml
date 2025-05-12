@@ -31,10 +31,22 @@
         where up.user_id = #{userId}
     </select>
 
+    <!-- plan 단일 조회 -->
+    <select id="getPlanById" parameterType="Long" resultMap="resultVO">
+        select PLAN_ID, PLAN_TITLE, PLAN_PLACE, PLAN_START_DATE, PLAN_END_DATE
+        from TB_PLAN
+        where plan_id = #{planId}
+    </select>
+
     <!-- plan 생성 -->
     <insert id="insertPlan" parameterType="Plan" useGeneratedKeys="true" keyColumn="PLAN_ID" keyProperty="planId">
         insert into TB_PLAN (PLAN_TITLE, PLAN_PLACE, PLAN_START_DATE, PLAN_END_DATE) values (#{planTitle},#{planPlace}, #{planStartDate},#{planEndDate})
     </insert>
+
+    <update id="updatePlan" parameterType="Plan" useGeneratedKeys="true" keyColumn="PLAN_ID" keyProperty="planId">
+        update TB_PLAN set PLAN_TITLE = #{planTitle}, PLAN_PLACE = #{planPlace}, PLAN_START_DATE = #{planStartDate}, PLAN_END_DATE = #{planEndDate}
+        where PLAN_ID = #{planId}
+    </update>
 
     <!-- plan 삭제 -->
     <delete id="deletePlan" parameterType="long">

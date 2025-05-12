@@ -17,14 +17,6 @@
 		<result property="adminYN" column="ADMIN_YN" />
 	</resultMap>
 
-	<!-- 회원 정보 조회 -->
-	<select id="selectUser" parameterType="string"
-		resultMap="resultList">
-		select *
-		from tb_user
-		where user_id = #{ userId }
-	</select>
-
 	<!-- 로그인용 쿼리 -->
 	<select id="loginMethod" parameterType="User"
 		resultMap="resultList">
@@ -39,5 +31,42 @@
 		where user_id = #{ userId }
 	</update>
 	
+	<!-- 회원가입용 쿼리 -->
+	<insert id="insertUser" parameterType="User">
+		insert into tb_user
+		values (#{ userId }, #{ userPwd }, #{ userNick }, #{ gender }, #{ userAge }, #{ userProfile }, 
+			#{ userKey }, #{ userPath }, #{ userRefreshCode }, default)
+	</insert>
+	
+	<!-- 회원 정보 조회용 쿼리 -->
+	<select id="selectUser" parameterType="string" resultMap="resultList">
+		select *
+		from tb_user
+		where user_id = #{ userId }
+	</select>
+	
+	<!-- 회원 정보 수정용 쿼리 -->
+	<update id="updateUser" parameterType="User">
+	</update>
+	
+	<!-- 회원 정보 삭제용 쿼리 -->
+	<delete id="deleteUser" parameterType="String">
+		delete from tb_user
+		where user_id = #{ userId }
+	</delete>
 
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
