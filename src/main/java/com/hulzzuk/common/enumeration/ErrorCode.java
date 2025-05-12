@@ -14,6 +14,9 @@ public enum ErrorCode {
     PL_USER_INSERT_ERROR(513,"일정-사용자 중계를 등록하는데 실패하였습니다."),
     PL_TRIP_INSERT_ERROR(514,"일정-장소 중계를 등록하는데 실패하였습니다."),
     PL_TRIP_DELETE_ERROR(517,"일정-장소 중계를 삭제하는데 실패하였습니다."),
+    CHECKLIST_INSERT_ERROR(518,"체크리스트 항목을 추가하는데 실패하였습니다."),
+    CHECKLIST_UPDATE_ERROR(519,"체크리스트 항목을 수정하는데 실패하였습니다."),
+    CHECKLIST_DELETE_ERROR(520,"체크리스트 항목을 삭제하는데 실패하였습니다."),
     REVIEW_NOT_FOUND(420, "해당 ID의 리뷰가 존재하지 않습니다."),
 	MAIL_SEND_FAIL(421, "메일 발송이 실패했습니다.");
 	
