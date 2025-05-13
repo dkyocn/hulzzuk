@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="loveMapper">
+	
+	<resultMap type="Love" id="resultList">
+		<result property="loveId" column="LOVE_ID" />
+		<result property="accoId" column="ACCO_ID" />
+		<result property="restId" column="REST_ID" />
+		<result property="attrId" column="ATTR_ID" />
+		<result property="logId" column="LOG_ID" />
+		<result property="userId" column="USER_ID" />
+	</resultMap>
+	
+	<!-- 숙소 찜 등록용 쿼리 -->
+	<insert id="insertAccoLove" parameterType="Love">
+		insert into tb_love (ACCO_ID, USER_ID)
+		values ( #{accoId}, #{userId} )
+	</insert>
+	
+	<!-- 맛집 찜 등록용 쿼리 -->
+	<insert id="insertRestLove" parameterType="Love">
+		insert into tb_love (REST_ID, USER_ID)
+		values ( #{restId}, #{userId})
+	</insert>
+	
+	<!-- 즐길거리 찜 등록용 쿼리 -->
+	<insert id="insertAttrLove" parameterType="Love">
+		insert into tb_love (ATTR_ID, USER_ID)
+		values ( #{attrId}, #{userId})
+	</insert>
+	
+	<!-- 여행로그 찜 등록용 쿼리 -->
+	<insert id="insertLogLove" parameterType="Love">
+		insert into tb_love (LOG_ID, USER_ID)
+		values ( #{logId}, #{userId})
+	</insert>
+	
+
+	<!-- 찜 삭제용 쿼리 -->
+	<delete id="deleteLove">
+		delete from tb_love
+		where love_id = #{ loveId }
+	</delete>
+	
+</mapper>

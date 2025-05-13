@@ -27,9 +27,9 @@
     </div>
 
     <div class="rmenu">
-        <a href="#">My 찜</a>
+        <a href="${pageContext.request.contextPath}/love/moveLove.do">My 찜</a>
         <a href="${pageContext.request.contextPath}/log/page.do?page=1">여행로그</a>
-        <a href="${ pageContext.servletContext.contextPath }/plan/page.do?page=1">일정</a>
+        <a href="${pageContext.servletContext.contextPath}/plan/page.do?page=1">일정</a>
         <c:if test="${empty loginUser }">
       	 	<a href="${pageContext.request.contextPath}/user/loginSelect.do">로그인</a>
         </c:if>
