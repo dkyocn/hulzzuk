@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+  "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vocMapper">
+
+<resultMap type="voc" id="resultList">
+	<result property="vocId" column="VOC_ID" />
+	<result property="title" column="TITLE" />
+	<result property="content" column="CONTENT" />
+	<result property="category" column="CATEGORY" />
+	<result property="createdAt" column="CREATED_AT" />
+	<result property="updatedAt" column="UPDATED_AT" />
+	<result property="userId" column="USER_ID"/>
+	</resultMap>
+	
+	<!--  고객의 소리 총 갯수 조회용 쿼리 -->
+	<select id="getVocListCount" resultType="_int" parameterType="Long">
+		select count(*) from TB_VOC
+		<where>
+	        <if test="keyword != null and keyword != ''">
+	          (TITLE LIKE '%' || #{keyword} || '%')
+	        </if>
+	</where>
+		 <choose>
+	        <when test="vocEnum == 'INQRY'">
+	            WHERE CATEGORY = #{vocEnum}
+	        </when>
+	        <when test="vocEnum == 'PRAISE'">
+	            WHERE CATEGORY = #{vocEnum}
+	        </when>
+	        <when test="vocEnum == 'COMPLAINT'">
+	            WHERE CATEGORY = #{vocEnum}
+	        </when>
+	        <when test="vocEnum == 'IMPROVEMENTS'">
+	            WHERE CATEGORY = #{vocEnum}
+	        </when>
+        </choose>
+	</select>
+	
+	<!-- 리스트 조회 -->
+	<select id="getVocList"  parameterType="HashMap" resultMap="resultList">
+	 SELECT * FROM ( SELECT ROWNUM AS RNUM, A.*
+								FROM (SELECT v.VOC_ID, v.TITLE, v.CONTENT, v.CATEGORY, v.CREATED_AT, v.UPDATED_AT, v.USER_ID
+											    FROM TB_VOC v
+											    <where>
+												        <if test="keyword != null and keyword != ''">
+												          (TITLE LIKE '%' || #{keyword} || '%')
+												        </if>
+												</where>
+											     <choose>
+											        <when test="vocEnum == 'INQRY'">
+											            WHERE v.CATEGORY = #{vocEnum}
+											        </when>
+											        <when test="vocEnum == 'PRAISE'">
+											            WHERE v.CATEGORY = #{vocEnum}
+											        </when>
+											        <when test="vocEnum == 'COMPLAINT'">
+											            WHERE v.CATEGORY = #{vocEnum}
+											        </when>
+											        <when test="vocEnum == 'IMPROVEMENTS'">
+											            WHERE v.CATEGORY = #{vocEnum}
+											        </when>
+											    </choose>
+											       ORDER BY v.CREATED_AT DESC
+											     ) A
+										)
+	
+	<if test="paging !=null">
+		   WHERE RNUM BETWEEN #{paging.startRow} AND #{paging.endRow}
+	</if>
+   </select>
+											    
+	  <!-- SELECT v.VOC_ID, v.TITLE, v.CONTENT, v.CATEGORY, v.CREATED_AT, v.UPDATED_AT, v.USER_ID,
+           u.USER_NICK  UserVO 정보 추가
+    FROM TB_VOC v
+    JOIN TB_USER u ON v.USER_ID = u.USER_ID USER_ID로 JOIN
+    <where>
+	        <if test="keyword != null and keyword != ''">
+	          (TITLE LIKE '%' || #{keyword} || '%')
+	        </if>
+	</where>
+     <choose>
+        <when test="vocEnum == 'INQRY'">
+            WHERE v.CATEGORY = #{vocEnum}
+        </when>
+        <when test="vocEnum == 'PRAISE'">
+            WHERE v.CATEGORY = #{vocEnum}
+        </when>
+        <when test="vocEnum == 'COMPLAINT'">
+            WHERE v.CATEGORY = #{vocEnum}
+        </when>
+        <when test="vocEnum == 'IMPROVEMENTS'">
+            WHERE v.CATEGORY = #{vocEnum}
+        </when>
+    </choose>
+    AND RNUM BETWEEN #{paging.startRow} AND #{paging.endRow}
+    -->
+	
+	<!--  리스트 한 개 조회 -->
+	<select id="getVocById" parameterType="Long" resultMap="resultList">
+	SELECT * FROM TB_VOC
+	WHERE VOC_ID = #{ vocId }
+	</select>
+	
+	<!-- 생성 -->
+	<insert id="createVoc" parameterType="Voc">
+		<!-- 먼저 SEQ에서 VOC_ID를 가져옴 -->
+    <selectKey keyProperty="vocId" resultType="long" order="BEFORE">
+        SELECT TB_VOC_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+	 	insert into TB_VOC(VOC_ID,TITLE, CONTENT, CATEGORY, CREATED_AT, UPDATED_AT, USER_ID)
+    	values (#{vocId}, #{title}, #{content}, #{category}, sysdate, sysdate, #{userId})
+	</insert>
+	
+	<!-- 수정 -->
+	<update id="updateVoc"  parameterType="Voc">
+		update TB_VOC 
+		SET TITLE=#{title}, CONTENT= #{content}, UPDATED_AT = sysdate
+		WHERE VOC_ID = #{ vocId }
+	</update>
+	
+	<!-- 삭제 -->
+	<delete id="deleteVoc"  parameterType="Long">
+	DELETE FROM TB_VOC
+	WHERE VOC_ID = #{ vocId }
+	</delete>
+</mapper>

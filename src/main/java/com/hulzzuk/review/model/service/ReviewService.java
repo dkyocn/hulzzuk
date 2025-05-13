@@ -22,6 +22,8 @@ public interface ReviewService {
 	List<ReviewVO> getReviewList(String locId, LocationEnum locationEnum,  SortEnum sortEnum);
 	// 리뷰 UserNick 조회
 	 HashMap<String, String> getUserNicks(String locId, LocationEnum locationEnum, SortEnum sortEnum);
+	 // 리뷰 별점 평균 조회
+	Double getAvgRating(String locId, LocationEnum locationEnum);
 	// 내리뷰 조회
 	ModelAndView getMyReviewList(ModelAndView mv, String userId);
 	// 리뷰 한 개 조회

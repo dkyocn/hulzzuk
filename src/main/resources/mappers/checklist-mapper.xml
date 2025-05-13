@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="checkListMapper">
+    <resultMap id="resultMap" type="Checklist">
+        <result property="checkId" column="CHECK_ID"/>
+        <result property="checkTitle" column="CHECK_TITLE"/>
+        <result property="checkContent" column="CHECK_CONTENT"/>
+        <result property="checkYN" column="CHECK_YN"/>
+        <result property="planId" column="PLAN_ID" />
+    </resultMap>
+
+    <select id="getCheckListList" resultMap="resultMap" parameterType="hashMap">
+        select * from TB_CHECKLIST where plan_id = #{planId}
+                                     <if test="num != 0 ">
+                                         and check_title = #{num}
+                                     </if>
+                                     order by check_title, check_id
+    </select>
+
+    <insert id="createChecklistContent" parameterType="Checklist" useGeneratedKeys="true" keyColumn="CHECK_ID" keyProperty="checkId">
+        insert into TB_CHECKLIST (check_title, check_content,check_yn, plan_id) values (#{checkTitle}, #{checkContent}, #{checkYN}, #{planId})
+    </insert>
+
+    <delete id="deleteChecklistContent" parameterType="long">
+        delete from TB_CHECKLIST where check_id = #{checkId}
+    </delete>
+
+    <update id="updateCheckYN" parameterType="Checklist">
+        update TB_CHECKLIST set check_yn = #{checkYN} where check_id = #{checkId}
+    </update>
+</mapper>

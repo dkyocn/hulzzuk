@@ -43,8 +43,12 @@ public class LocationServiceImpl implements LocationService{
 
 
 		if(locationVO != null) {
+			// 평균 평점 계산
+	        Double avgRating = reviewService.getAvgRating(locId, locationEnum);
+	        
 			mv.addObject("location", locationVO);
 			mv.addObject("locationEnum", locationEnum);
+			mv.addObject("avgRating", avgRating != null ? avgRating : 0.0);  // 평균 평점 추가
 			mv.addObject("reviewCount", reviewService.reviewCount(locId, locationEnum));
 			mv.addObject("reviewList", reviewService.getReviewList(locId, locationEnum, null));
 			mv.addObject("userNicks", reviewService.getUserNicks(locId, locationEnum, null));
@@ -74,7 +78,7 @@ public class LocationServiceImpl implements LocationService{
         }
 
         if(locationEnum .equals(LocationEnum.ALL)) {
-        	// 숙소
+        	// 숙소 리스트 조회
         	int accoListCount = getLocationListCount(keyword, sortEnum, locationEnum.ACCO);
         	Paging accoPaging = new Paging(keyword, accoListCount, pageLimit, currentPage, "page.do");
         	accoPaging.calculate();
@@ -112,10 +116,9 @@ public class LocationServiceImpl implements LocationService{
 
             mv.addObject("list", locationList);
             mv.addObject("paging", paging);
-			
-			  mv.addObject("locationEnum", locationEnum);
-			  mv.setViewName("location/locationListView");
-			 
+			mv.addObject("locationEnum", locationEnum);
+			  
+			mv.setViewName("location/locationListView");
         }
         mv.addObject("keyword",keyword);
         mv.addObject("sortEnum", sortEnum);

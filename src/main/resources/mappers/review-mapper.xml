@@ -65,6 +65,24 @@
         </when>
     </choose>
 </select>
+
+<!-- 리뷰 평점 구하기 -->
+<select id="getAvgRating" resultType="Double" parameterType="map">
+    SELECT ROUND(AVG(user_rev), 1)
+    FROM TB_REVIEW
+    WHERE
+        <choose>
+            <when test="locationEnum == 'ACCO'">
+                ACCO_ID = #{locId}
+            </when>
+            <when test="locationEnum == 'REST'">
+                REST_ID = #{locId}
+            </when>
+            <when test="locationEnum == 'ATTR'">
+                ATTR_ID = #{locId}
+            </when>
+        </choose>
+</select>
  
   <!--  내 리뷰 조회 -->
   <select id="getMyReviewList" parameterType="Review" resultMap="resultList">

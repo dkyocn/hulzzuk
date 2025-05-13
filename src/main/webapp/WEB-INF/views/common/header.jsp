@@ -31,7 +31,7 @@
         <a href="${pageContext.request.contextPath}/log/page.do?page=1">여행로그</a>
         <a href="${ pageContext.servletContext.contextPath }/plan/page.do?page=1">일정</a>
         <c:if test="${empty loginUser }">
-      	 	<a href="${pageContext.request.contextPath}/user/login.do">로그인</a>
+      	 	<a href="${pageContext.request.contextPath}/user/loginSelect.do">로그인</a>
         </c:if>
         <c:if test="${!empty loginUser}">
          	<a href="${pageContext.request.contextPath}/user/select.do?userId=${loginUser.userId}">프로필</a>
@@ -87,7 +87,7 @@ s
         <li class="mymenu"><a href="#">My 찜</a></li>
         
         <c:url var="myrev" value="review/select.do">
-            <c:param name="userId" value="jungdongju99@gmail.com" />
+            <c:param name="userId" value="${loginUser.userId}" />
         </c:url>
         <li class="mymenu"><a href="${ myrev }">My 리뷰</a></li>
     </ul>

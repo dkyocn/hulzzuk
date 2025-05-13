@@ -60,6 +60,12 @@ public class ReviewServiceImpl implements ReviewService{
 	        
 	        return userNicks;
 		}
+		
+	// 리뷰 별점 평균 조회
+		public Double getAvgRating(String locId, LocationEnum locationEnum) {
+		    Double avgRating = reviewDao.getAvgRating(locId, locationEnum);
+		    return avgRating != null ? avgRating : 0.0;
+		}
 
 	// 내 리뷰 조회
 	@Override
@@ -107,7 +113,6 @@ public class ReviewServiceImpl implements ReviewService{
 	            reviewVO.setAccoId(locId);
 	            reviewVO.setUserId(((UserVO)request.getSession().getAttribute("loginUser")).getUserId());
 	            reviewVO.setCreateAt(new java.sql.Date(System.currentTimeMillis()));
-	            reviewVO.setUserRev(0);
 	            logger.info("session User :  " + ((UserVO)request.getSession().getAttribute("loginUser")).getUserId() );
 	            logger.info("User ID :  "+reviewVO.getUserId());
 	            successYN =  reviewDao.insertAccoReview(reviewVO);

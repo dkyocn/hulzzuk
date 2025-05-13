@@ -17,7 +17,7 @@
     </insert>
 
     <select id="getPlanLocByPlanId" parameterType="long" resultMap="resultVO">
-        select * from TB_TRIP_PL where plan_id = #{planId}
+        select * from TB_TRIP_PL where plan_id = #{planId} order by plan_day, seq
     </select>
 
     <delete id="deletePlanLocDay" parameterType="hashMap">

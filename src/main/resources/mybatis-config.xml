@@ -26,7 +26,9 @@
 		<typeAlias type="com.hulzzuk.log.model.vo.LogPlaceVO" alias="logPlace"/>
 		<typeAlias type="com.hulzzuk.plan.model.vo.PlanUserVO" alias="PlanUser"/>
 		<typeAlias type="com.hulzzuk.plan.model.vo.PlanLocVO" alias="PlanLoc"/>
+		<typeAlias type="com.hulzzuk.checklist.model.vo.ChecklistVO" alias="Checklist"/>
 		<typeAlias type="com.hulzzuk.common.vo.Paging" alias="Paging"/>
+		<typeAlias type="com.hulzzuk.voc.model.vo.VocVO" alias="Voc"/>
 	</typeAliases>
 	
 	<mappers>
@@ -42,5 +44,7 @@
 		<mapper resource="mappers/logReview-mapper.xml" />
 		<mapper resource="mappers/planUser-mapper.xml"/>
 		<mapper resource="mappers/planLoc-mapper.xml"/>
+		<mapper resource="mappers/voc-mapper.xml"/>
+		<mapper resource="mappers/checklist-mapper.xml"/>
 	</mappers>
 </configuration>

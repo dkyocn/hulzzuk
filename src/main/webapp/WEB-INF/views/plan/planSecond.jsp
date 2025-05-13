@@ -216,15 +216,25 @@
                 });
             }
 
+            // 배열을 planDay와 seq 기준으로 정렬하는 함수
+            function sortByPlanDayAndSeq(array) {
+                return [...array].sort((a, b) => {
+                    if (a.planDay !== b.planDay) return a.planDay - b.planDay;
+                    return a.seq - b.seq;
+                });
+            }
+
             // editMode가 false일 때 3초마다 planLocList 갱신
             setInterval(async () => {
                 if (!isEditMode) { // editMode가 false일 때만 실행
                     const updatedData = await fetchUpdatedLocations();
+                    console.log("Fetched updatedData.planLoc:", planLocVO);
                     console.log("Fetched updatedData.planLoc:", updatedData.planLoc);
 
                     if (updatedData && updatedData.planLoc) {
                         // 기존 planLocVO와 새로운 updatedData.planLoc 비교
-                        const isDataChanged = !isEqual(planLocVO, updatedData.planLoc);
+                        const sortedPlanLocVO = sortByPlanDayAndSeq(planLocVO);
+                        const isDataChanged = !isEqual(sortedPlanLocVO, updatedData.planLoc);
 
                         if (isDataChanged) {
                             planLocVO.length = 0; // 기존 데이터 초기화
@@ -752,16 +762,10 @@
                 await updateMapVisibility();
             });
 
-            <%--function savePlan() {--%>
-            <%--    if (!${requestScope.plan.planId} || day1Locations.length === 0) {--%>
-            <%--        alert("저장할 데이터가 없습니다.");--%>
-            <%--        return;--%>
-            <%--    }--%>
-            <%--    document.getElementById("day1Locations").value = JSON.stringify(day1Locations);--%>
-            <%--    if (day2Locations.length > 0) document.getElementById("day2Locations").value = JSON.stringify(day2Locations);--%>
-            <%--    document.getElementById("saveLocationsForm").submit();--%>
-            <%--}--%>
-            <%--document.getElementById("saveBtn").addEventListener("click", savePlan);--%>
+            function openChecklist() {
+                window.open(contextPath + '/chkList/list.do?planId=${requestScope.plan.planId}', 'checkListPopup', 'width=700,height=500');
+            }
+            document.getElementById("checklistBtn").addEventListener("click", openChecklist);
         });
 
         function modifiedPlanName() {}
@@ -795,7 +799,7 @@
                 <fmt:formatDate value="${planVO.planEndDate}" pattern="M.d" var="endDate"/>
                 (${endDate})</p></div>
         </c:if>
-        <button class="checklistBtn"><span class="checkListText">체크리스트</span>
+        <button class="checklistBtn" id="checklistBtn"><span class="checkListText">체크리스트</span>
             <img class="checkListImg" src="${pageContext.request.contextPath}/resources/images/common/add-button-black.png" alt="">
         </button>
     </div>
