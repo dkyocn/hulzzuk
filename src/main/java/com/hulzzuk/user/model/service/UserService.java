@@ -16,8 +16,11 @@ public interface UserService {
 	ModelAndView logoutMethod(ModelAndView mv, HttpSession session, SessionStatus status);
 
 	// 이메일 인증번호 발송
-	ModelAndView sendMailMethod(ModelAndView mv, HttpSession session, HttpServletRequest request,
+	ModelAndView sendMailAuthMethod(ModelAndView mv, HttpSession session, HttpServletRequest request,
 			String mode, String userId, int width, int height);
+
+	// 이메일
+	void sendMail(String userId, String title, String message);
 	
 	// 인증번호 검증
 	ModelAndView verifyCode(String mode, String inputCode, String userId,

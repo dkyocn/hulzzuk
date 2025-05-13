@@ -13,4 +13,7 @@
         insert into TB_USER_PL(USER_ID,PLAN_ID) values (#{userId},#{planId})
     </insert>
 
+    <select id="selectPlanUser" parameterType="PlanUser" resultMap="resultVO">
+        select * from tb_user_pl where user_id = #{userId} and plan_id = #{planId}
+    </select>
 </mapper>
