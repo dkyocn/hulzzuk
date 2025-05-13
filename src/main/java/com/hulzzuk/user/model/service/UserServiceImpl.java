@@ -20,6 +20,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.hulzzuk.common.enumeration.ErrorCode;
+import com.hulzzuk.user.controller.KakaoLoginAuth;
 import com.hulzzuk.user.model.dao.UserDao;
 import com.hulzzuk.user.model.vo.UserVO;
 
@@ -34,6 +35,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	private KakaoLoginAuth kakaoLoginAuth;
 	
 	// 패스워드 암호화 처리
 	private static final PasswordEncryptor passwordEncryptor = new PasswordEncryptor();
@@ -64,6 +68,26 @@ public class UserServiceImpl implements UserService {
 		
 		// 해당 세션 객체가 있으면 리턴받고, 없으면 null 리턴받음
 		if (session != null) {
+			  // 소셜 로그인 여부 확인
+			
+	        UserVO user = (UserVO) session.getAttribute("loginUser");
+	        String sns = user.getUserPath();
+	        String accessToken = (String) session.getAttribute("accessToken");
+
+	        if (sns != null && accessToken != null) {
+	            switch (sns) {
+	                case "kakao":
+	                	kakaoLoginAuth.logOut(accessToken);
+	                	//kakaoLoginAuth.disconnect(accessToken); 
+	                    break;
+	                /*
+	                case "naver":
+	                    naverLoginAuth.logOut(accessToken); // Naver 로그아웃 호출
+	                    break;
+	                */
+	            }
+	        }
+			
 			// 해당 세션객체가 있다면, 세션 객체를 없앰
 			session.invalidate();
 			status.setComplete();
@@ -432,37 +456,46 @@ public class UserServiceImpl implements UserService {
 	// 회원 탈퇴
 	@Override
 	public String deleteUser(HttpServletRequest request, HttpSession session, SessionStatus status) {
-		String userId = (String) session.getAttribute("deleteUserId");
-		
-		// 세션 없애기
-		session.invalidate();
-		status.setComplete();
-		
-		// 탈퇴 처리
-		int result = userDao.deleteUser(userId);
-		
-		String deleteYN = new String();
-		 
-		String contextPath = request.getContextPath();
+		// 세션에서 ID 불러오기
+        String authUserId = (String)session.getAttribute("authUserId");
+        String deleteYN = new String();
+        
+        // 해당 세션 객체가 있으면 리턴받고, 없으면 null 리턴받음
+ 		if (session != null) {
+ 			  // 소셜 로그인 여부 확인
+ 			
+ 	        UserVO user = (UserVO) session.getAttribute("loginUser");
+ 	        String sns = user.getUserPath();
+ 	        String accessToken = (String) session.getAttribute("accessToken");
 
-//		mv.addObject("moveUrl", request.getContextPath() + "/user/login.do");
-		
-		if(result > 0) {
-			deleteYN = "success|" + contextPath + "/main.do";
-		}else {
-			throw new IllegalArgumentException(ErrorCode.USER_DELETE_ERROR.getMessage());
+	        if (sns != null && accessToken != null) {
+	            switch (sns) {
+	                case "kakao":
+	                	kakaoLoginAuth.disconnect(accessToken);
+	                	//kakaoLoginAuth.disconnect(accessToken); 
+	                    break;
+	                /*
+	                case "naver":
+	                    naverLoginAuth.logOut(accessToken); // Naver 로그아웃 호출
+	                    break;
+	                */
+	            }
+	        }
+			// 세션 없애기
+			session.invalidate();
+			status.setComplete();
+			
+			// 탈퇴 처리
+			int result = userDao.deleteUser(authUserId);
+	
+			if(result > 0) {
+				deleteYN = "success|" + request.getContextPath() + "/main.do";
+			}else {
+				throw new IllegalArgumentException(ErrorCode.USER_DELETE_ERROR.getMessage());
+			}
 		}
-		
-		// 탈퇴 완료 팝업
-		/*
-		 * mv.addObject("message", "탈퇴 완료되었습니다."); mv.addObject("actionUrl",
-		 * request.getContextPath() + "/user/deletePopUp.do"); mv.addObject("width",
-		 * 350); mv.addObject("height", 300); mv.setViewName("common/postPopUp");
-		 */
-		
 		return deleteYN;
-	} 
-		
+ 	}
 }	
 
 
