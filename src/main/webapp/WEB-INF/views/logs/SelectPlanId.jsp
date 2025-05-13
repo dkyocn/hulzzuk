@@ -32,6 +32,8 @@
 	    </div>
 	    <br/>
     <button type="submit">선택</button>
+    
+    	<br/><br/><br/>
 </form>
 
 <%-- <p>planList가 비었나? → ${empty planList}</p>

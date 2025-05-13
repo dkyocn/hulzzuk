@@ -162,29 +162,54 @@ public class UserController {
 	    }
 	}
 	
-	// 회원 탈퇴
-	@RequestMapping(value = "delete.do", method = RequestMethod.POST)
-	public ModelAndView deleteUser(ModelAndView mv, HttpServletRequest request, HttpSession session, @RequestParam("userId") String userId) {
-		return userService.deleteUser(mv, request, session, userId);
+	// 회원 탈퇴 안내
+	@RequestMapping(value = "deleteGuide.do", method = RequestMethod.POST)
+	public ModelAndView deleteGuide(ModelAndView mv, HttpSession session, @RequestParam("userId") String userId) {
+		mv.setViewName("user/deleteUser");
+		return mv;
 	}
 	
-	// 회원 탈퇴 팝업 확인버튼 동작
-	@RequestMapping(value = "deleteConfirmPopUp.do", method = RequestMethod.POST)
-	@ResponseBody
-	public String deleteConfirmPopUpMethod(HttpServletRequest request) {
-		HttpSession session = request.getSession();
-	    Boolean deleteSuccess = (Boolean) session.getAttribute("deleteSuccess");
-
-	    // 사용 후 제거 (중복 방지)
-	    session.removeAttribute("deleteSuccess");
-
-	    String contextPath = request.getContextPath();
-	    if (Boolean.TRUE.equals(deleteSuccess)) {
-	        return "success|" + contextPath + "/main.do";  // 메인페이지 이동
-	    } else {
-	        return "success";  // 그냥 닫기
-	    }
+	// 약관 동의 후 회원 탈퇴 재확인
+	@RequestMapping(value="deleteGuidePopUp.do", method = RequestMethod.POST)
+	public ModelAndView deleteGuidePopUp(ModelAndView mv, HttpServletRequest request, HttpSession session, @RequestParam("userId") String userId) {
+		session.setAttribute("deleteUserId", userId);
+		
+		mv.addObject("message", "정말 탈퇴하시겠습니까?<br>버튼 클릭 시 즉시 탈퇴됩니다.");
+		mv.addObject("actionUrl", request.getContextPath() + "/user/delete.do");
+		mv.addObject("width", 350);
+	    mv.addObject("height", 300);
+	    mv.setViewName("common/postPopUp");
+		return mv;
 	}
+	
+	
+   //회원 탈퇴
+   @RequestMapping(value = "delete.do", method = RequestMethod.POST) 
+   @ResponseBody
+   public String deleteUser(HttpServletRequest request, HttpSession session, SessionStatus status) { 
+	  return userService.deleteUser(request, session, status);
+   }
+	 
+	
+		/*
+		 * // 회원 탈퇴
+		 * 
+		 * @RequestMapping(value = "delete.do", method = RequestMethod.POST)
+		 * 
+		 * @ResponseBody public String deleteUser(HttpServletRequest request) { String
+		 * contextPath = request.getContextPath(); return "success|" + contextPath +
+		 * "/main.do"; }
+		 */
+	
+	/*
+	 * // 회원 탈퇴 팝업 확인버튼 동작
+	 * 
+	 * @RequestMapping(value = "deletePopUp.do", method = RequestMethod.POST)
+	 * 
+	 * @ResponseBody public String deleteConfirmPopUpMethod(HttpServletRequest
+	 * request) { String contextPath = request.getContextPath(); return "success|" +
+	 * contextPath + "/main.do"; // 메인 페이지 이동 }
+	 */
 	
 }
 

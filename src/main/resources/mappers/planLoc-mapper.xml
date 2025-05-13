@@ -15,4 +15,27 @@
     <insert id="insertPlanLoc" parameterType="PlanLoc">
         insert into TB_TRIP_PL(PLAN_ID, ACCO_ID, ATTR_ID, REST_ID, SEQ, PLAN_DAY) values (#{planId}, #{accoId}, #{attrId}, #{restId}, #{seq}, #{planDay})
     </insert>
+
+    <select id="getPlanLocByPlanId" parameterType="long" resultMap="resultVO">
+        select * from TB_TRIP_PL where plan_id = #{planId} order by plan_day, seq
+    </select>
+
+    <delete id="deletePlanLocDay" parameterType="hashMap">
+        delete from TB_TRIP_PL
+        <where>
+            <if test="locEnum == 'ACCO'">
+                ACCO_ID = #{locId}
+            </if>
+            <if test="locEnum == 'REST'">
+                REST_ID = #{locId}
+            </if>
+            <if test="locEnum == 'ATTR'">
+                ATTR_ID = #{locId}
+            </if>
+        </where>
+    </delete>
+
+    <delete id="deletePlanLocById" parameterType="long">
+        delete from TB_TRIP_PL where plan_id = #{planId}
+    </delete>
 </mapper>

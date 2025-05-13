@@ -34,6 +34,11 @@ public class UserDao {
 		return sqlSessionTemplate.insert("userMapper.insertUser", user);
 	}
 	
+	// 닉네임 설정
+	public int countNickName(String userNick) {
+		return sqlSessionTemplate.selectOne("userMapper.countNickName", userNick);
+	}
+	
 	// 회원 탈퇴
 	public int deleteUser(String userId) {
 		return sqlSessionTemplate.delete("userMapper.deleteUser", userId);

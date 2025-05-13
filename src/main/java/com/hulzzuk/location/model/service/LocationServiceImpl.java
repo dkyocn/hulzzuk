@@ -144,10 +144,15 @@ public class LocationServiceImpl implements LocationService{
 
 		map.put("category", locationEnum);
 		switch(locationEnum) {
-			case ACCO ->  map.put("locationVo", locationDao.getAccoById(locId));
-			case REST ->  map.put("locationVo", locationDao.getRestById(locId));
-			case ATTR ->  map.put("locationVo", locationDao.getAttrById(locId));
-			default -> map.put("locationVo", locationDao.getAttrById(locId));
+			case ACCO :
+				map.put("locationVo", locationDao.getAccoById(locId));
+				break;
+			case REST:
+				map.put("locationVo", locationDao.getRestById(locId));
+				break;
+			case ATTR :
+				map.put("locationVo", locationDao.getAttrById(locId));
+				break;
 		}
 
 

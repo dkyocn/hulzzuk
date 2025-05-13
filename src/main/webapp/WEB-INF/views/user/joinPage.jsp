@@ -143,9 +143,7 @@ $(document).ready(function () {
       if (pw.length > 0 && pw.length < 8 || pw.length > 16) {
           msg = "! 8~16자 사이여야 합니다.";
       }
-     /*  if (/\s/.test(pw)) {
-          msg = "! 공백은 사용할 수 없습니다.";
-      } */
+    
       if (
           pw.length > 0 &&
           (pw.search(/[0-9]/g) < 0 || pw.search(/[a-z]/ig) < 0 || pw.search(/[~!@#$]/g) < 0)
@@ -246,10 +244,10 @@ function userJoinPopUp() {
    if (gender) {
        document.getElementById('hiddenGender').value = gender.value;
    }
-   console.log("ID:", document.getElementById('hiddenUserId').value);
+   /* console.log("ID:", document.getElementById('hiddenUserId').value);
    console.log("PWD:", document.getElementById('hiddenUserPwd').value);
    console.log("AGE:", document.getElementById('hiddenUserAge').value);
-   console.log("GENDER:", document.getElementById('hiddenGender').value);
+   console.log("GENDER:", document.getElementById('hiddenGender').value); */
    // 팝업 창 열기
    const popup = window.open("", 'userJoinPopUp', 'width=350,height=250');
    if (popup) popup.focus();
@@ -275,16 +273,16 @@ function userJoinPopUp() {
 		<input type="hidden" name="mode" id="modeField" value="">
 		
 		<table id="joinUser">
-			<tr><th>아이디(이메일)</th>
-				<td><input type="email" name="userId" class="withBtn">
+			<tr><th>*아이디(이메일)</th>
+				<td><input type="email" name="userId" class="withBtn" required>
 				<button type="button" onclick="openMailPopUp()" class="joinButton">전송</button></td></tr>
-			<tr><th>인증번호</th>
-				<td><input type="password" name="inputCode" class="withBtn">
+			<tr><th>*인증번호</th>
+				<td><input type="password" name="inputCode" class="withBtn" required>
 				<button type="button" onclick="openVerifyPopUp()" class="joinButton">확인</button></td></tr>
-			<tr><th>비밀번호</th>
-				<td><input type="password" id="userPwd" name="userPwd" class="withoutBtn"></td></tr>
-			<tr><th>비밀번호 확인</th>
-				<td><input type="password" id="pwdConfirm" name="pwdConfirm" class="withBtn">
+			<tr><th>*비밀번호</th>
+				<td><input type="password" id="userPwd" name="userPwd" class="withoutBtn" required></td></tr>
+			<tr><th>*비밀번호 확인</th>
+				<td><input type="password" id="pwdConfirm" name="pwdConfirm" class="withBtn" required>
 				<button type="submit" class="joinButton"
 				formaction="${pageContext.request.contextPath}/user/pwdConfirm.do"
 				formmethod="post" onclick="return openPwdConfirmPopUp();">확인</button></td></tr>
