@@ -202,7 +202,7 @@ navigator.geolocation.getCurrentPosition(function(position) {
 
     <!-- 로그 영역 -->
     <div class="log-section">
-        <h2>로그 (10)</h2>
+        <h2>로그 (${ logCount })</h2>
         
        <c:import url="/WEB-INF/views/logs/logListView.jsp" />
     </div>
