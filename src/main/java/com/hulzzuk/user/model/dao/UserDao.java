@@ -43,5 +43,15 @@ public class UserDao {
 	public int deleteUser(String userId) {
 		return sqlSessionTemplate.delete("userMapper.deleteUser", userId);
 	}
+	
+	// 소셜 로그인 회원 정보 확인
+	public UserVO selectSocialUser(String userId) {
+		return sqlSessionTemplate.selectOne("userMapper.selectSocialUser", userId);
+	}
+
+	// 소셜 로그인 회원 가입
+	public int insertSocialUser(UserVO user) {
+		return sqlSessionTemplate.insert("userMapper.insertSocialUser", user);
+	}
 }
 

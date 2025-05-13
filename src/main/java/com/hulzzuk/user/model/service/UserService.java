@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 public interface UserService {
+	
 	// 로그인
 	ModelAndView loginMethod(ModelAndView mv, UserVO user, HttpSession session, SessionStatus status);
 	
@@ -45,5 +46,7 @@ public interface UserService {
 	
 	// 회원 탈퇴
 	String deleteUser(HttpServletRequest request, HttpSession session, SessionStatus status);
+
+	
 	
 }
