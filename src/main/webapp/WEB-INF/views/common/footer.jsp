@@ -40,7 +40,7 @@
 	<a href="#">여행로그</a>
     <a href="#">공지사항</a>
     <a href="#">FAQ</a>
-    <a href="#">고객의 소리</a>
+    <a href="${ pageContext.servletContext.contextPath }/voc/page.do?vocEnum=ALL&page=1">고객의 소리</a>
     <c:if test="${ !empty sessionScope.loginUser }">
 	    <a href="#">My 여행</a>
         <a href="${ pageContext.servletContext.contextPath }/plan/page.do?page=1">My 로그</a>

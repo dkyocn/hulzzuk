@@ -1,0 +1,128 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #fff;
+    margin: 0;
+    padding: 20px;
+}
+
+.voc-container {
+    width: 90%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+h2 {
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+/* 중앙 정렬을 위한 wrapper */
+.search-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+/* 검색 박스 스타일 */
+.search-box {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    width: 450px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    background: #fff;
+    border: 1px solid #E96A18;
+    border-radius: 40px;
+    overflow: auto;
+}
+
+/* 드롭다운 (전체 등) */
+.search-box select {
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    color: #888;
+    outline: none;
+    appearance: none;
+    padding-right: 20px;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23888" height="16" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: 12px;
+    margin-right: 10px;
+}
+
+/* 검색 입력창 */
+.search-box input[type="text"] {
+    border: none;
+    outline: none;
+    flex-grow: 1;
+    font-size: 14px;
+    color: #666;
+}
+
+/* 검색 버튼 */
+.search-box button {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-btn > img {
+    width: 30px;
+    height: 30px;
+}
+
+.write-button-wrapper {
+    text-align: right;
+    margin: 10px 0;
+}
+
+.write-button {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.write-button:hover {
+    background-color: #0056b3;
+}
+
+/* 테이블 */
+.voc-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.voc-table th, .voc-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.voc-table th {
+    background-color: #f5f5f5;
+}
+
+/* 카테고리 태그 색상 */
+.tag {
+    padding: 4px 8px;
+    border-radius: 10px;
+    color: white;
+    font-size: 12px;
+    display: inline-block;
+}
+
+.tag.INQRY { background-color: #2dc76d; }
+.tag.PRAISE { background-color: #ff6b6b; }
+.tag.COMPLAINT { background-color: #4a90e2; }
+.tag.IMPROVEMENTS { background-color: #ffb400; }

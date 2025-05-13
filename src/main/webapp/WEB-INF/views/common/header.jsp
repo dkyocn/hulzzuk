@@ -87,7 +87,7 @@ s
         <li class="mymenu"><a href="#">My 찜</a></li>
         
         <c:url var="myrev" value="review/select.do">
-            <c:param name="userId" value="jungdongju99@gmail.com" />
+            <c:param name="userId" value="${loginUser.userId}" />
         </c:url>
         <li class="mymenu"><a href="${ myrev }">My 리뷰</a></li>
     </ul>
