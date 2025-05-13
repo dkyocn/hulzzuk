@@ -46,7 +46,7 @@
             <a href="${pageContext.request.contextPath}/voc/create.do" class="write-button">작성하기</a>
         </c:when>
         <c:otherwise>
-            <a href="${pageContext.request.contextPath}/user/login.do" class="write-button">작성하기</a>
+            <a href="${pageContext.request.contextPath}/user/login.do?redirect=${pageContext.request.contextPath}/review/moveCreate.do?locationEnum=${locationEnum}&locId=${location.locId}" class="write-review-btn">리뷰 작성하기</a>
         </c:otherwise>
     </c:choose>
 </div>

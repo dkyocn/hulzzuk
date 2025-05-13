@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
     
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -140,8 +141,8 @@ navigator.geolocation.getCurrentPosition(function(position) {
     <div class="title-section">
         <h1>${location.placeName}</h1>
         <div class="rating">
-            ★ 4.8/5 &nbsp;&nbsp; ❤️ 20
-        </div>
+    		★ <fmt:formatNumber value="${avgRating}" maxFractionDigits="1"/> / 5 &nbsp;&nbsp; ❤️ 20
+		</div>
     </div>
 
     <!-- 메인 이미지 -->

@@ -45,6 +45,15 @@ public class ReviewDao {
         return map;
     }
 	
+	// 리뷰 평점 조회
+	public Double getAvgRating(String locId, LocationEnum locationEnum) {
+	    HashMap<String, String> map = new HashMap<>();
+	    map.put("locId", locId);
+	    map.put("locationEnum", locationEnum != null ? locationEnum.name() : null);
+
+	    return sqlSessionTemplate.selectOne("reviewMapper.getAvgRating", map);
+	}
+	
 	// 내 리뷰 조회
 	public List<ReviewVO> getMyReviewList(String userId) {
 		 HashMap<String, Object> map = new HashMap<>();

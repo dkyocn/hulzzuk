@@ -22,23 +22,75 @@
 <!-- include summernote css/js -->
 <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.css" rel="stylesheet">
 <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const stars = document.querySelectorAll(".star");
+    const userRevInput = document.getElementById("userRev");
+    const black = "${pageContext.request.contextPath}/resources/images/loc/loc-review-black.png";
+    const yellow = "${pageContext.request.contextPath}/resources/images/loc/loc-review-yellow.png";
+    let selectedRating = 0;
+
+    // 클릭 시 저장
+    stars.forEach((star, index) => {
+        star.addEventListener("click", () => {
+            selectedRating = index + 1;
+            userRevInput.value = selectedRating;
+            updateStars(selectedRating);
+        });
+
+        // hover 시 미리보기
+        star.addEventListener("mouseover", () => {
+            updateStars(index + 1);
+        });
+
+        // 마우스 나가면 기존 선택값 유지
+        star.addEventListener("mouseout", () => {
+            updateStars(selectedRating);
+        });
+    });
+
+    function updateStars(rating) {
+        stars.forEach((star, idx) => {
+            star.src = (idx < rating) ? yellow : black;
+        });
+    }
+});
+</script>
 </head>
 
 <body>
 <c:import url="/WEB-INF/views/common/header.jsp" />
 
-<h1>리뷰 생성</h1>
+<div class="review-form">
+<h2>리뷰 작성하기</h2>
 	<form method="post" action="create.do">
+		<div class="rating-image">
+		    <label for="userRev" style="margin: 0;">별점:</label>
+		    <div class="stars">
+		        <img src="${pageContext.request.contextPath}/resources/images/loc/loc-review-black.png" class="star" data-value="1" />
+		        <img src="${pageContext.request.contextPath}/resources/images/loc/loc-review-black.png" class="star" data-value="2" />
+		        <img src="${pageContext.request.contextPath}/resources/images/loc/loc-review-black.png" class="star" data-value="3" />
+		        <img src="${pageContext.request.contextPath}/resources/images/loc/loc-review-black.png" class="star" data-value="4" />
+		        <img src="${pageContext.request.contextPath}/resources/images/loc/loc-review-black.png" class="star" data-value="5" />
+		    </div>
+		    <!-- 실제 별점 값 -->
+		    <input type="hidden" name="userRev" id="userRev" value="0" />
+		</div>
   		<textarea id="summernote" name="userReviewText"></textarea>
   		<input Type="hidden" name="locationEnum" value="${locationEnum }"/>
   		<input Type="hidden" name="locId" value="${locId }"/>
-  		<button type="submit" >등록</button>
+  		<div class="btn-wrapper">
+            <button type="submit" class="submit-btn">등록</button>
+            <button type="button" class="cancel-btn" onclick="history.back();">취소</button>
+        </div>
 	</form>
+</div>
 	
 	<script>	
 		$('#summernote').summernote({
 			  // 에디터 크기 설정
-			  height: 800,
+			  height: 300,
 			  // 에디터 한글 설정
 			  lang: 'ko-KR',
 			  placeholder: '리뷰를 작성하세요',
