@@ -72,4 +72,8 @@ public class PlanDao {
     public List<PlanLocVO> getPlanLocByPlanId(long planId) {
         return sqlSessionTemplate.selectList("planLocMapper.getPlanLocByPlanId", planId);
     }
+
+    public PlanUserVO getPlanUser(PlanUserVO planUserVO) {
+        return sqlSessionTemplate.selectOne("planUserMapper.selectPlanUser", planUserVO);
+    }
 }

@@ -96,7 +96,7 @@ public class UserController {
               @RequestParam(name = "width") String width,
               @RequestParam(name = "height") String  height) {
 		
-		return userService.sendMailMethod(mv, session, request, mode, userId, Integer.parseInt(width), Integer.parseInt(height));
+		return userService.sendMailAuthMethod(mv, session, request, mode, userId, Integer.parseInt(width), Integer.parseInt(height));
 	}
 	
 	// 인증번호 검증 처리

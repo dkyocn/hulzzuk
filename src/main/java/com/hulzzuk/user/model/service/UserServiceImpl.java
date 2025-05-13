@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
 	
 	// 이메일 인증번호
 	@Override
-	public ModelAndView sendMailMethod(ModelAndView mv, HttpSession session, HttpServletRequest request, 
+	public ModelAndView sendMailAuthMethod(ModelAndView mv, HttpSession session, HttpServletRequest request,
 			String mode, String userId, int width, int height) {
 		
 		logger.info("userId : "+ userId);
@@ -114,52 +114,21 @@ public class UserServiceImpl implements UserService {
 		// 회원가입 페이지(mode : join)에서 아이디가 있으면 로그인 페이지로, 아이디 없으면 이메일 전송
 		// 비밀번호 재설정 할 때 입력했던 아이디 값을 파라미터로 같이 넘겨줘야 함
 		if (("resetSend".equals(mode) && userExits) || "joinSend".equals(mode) && !userExits) {
-			try {
-				
-				// 인증번호 생성
-				String authCode = generateAuthCode();
-				
-				// 인증번호 세션에 저장 (검증 시 필요)
-				session.setAttribute("authCode", authCode);
-				session.setAttribute("authUserId", userId);
-				
-				String to = userId; 		// 수신자 이메일
-				String from = "jungdongju99@gmail.com"; // 발신자 이메일
-				String password = "egzibfksztflconr"; 	// 발신자 비밀번호
-				String host = "smtp.gmail.com"; 		// 구글 메일 서버 호스트 이름
+			// 인증번호 생성
+			String authCode = generateAuthCode();
 
-				// SMTP 프로토콜 설정
-				Properties props = new Properties();
-				props.setProperty("mail.smtp.host", host);
-				props.setProperty("mail.smtp.port", "587");
-				props.setProperty("mail.smtp.auth", "true");
-				props.setProperty("mail.smtp.starttls.enable", "true");
+			// 인증번호 세션에 저장 (검증 시 필요)
+			session.setAttribute("authCode", authCode);
+			session.setAttribute("authUserId", userId);
 
-				// 보내는 사람 계정 정보 설정
-				Session mailSession = Session.getInstance(props, new Authenticator() {
-					protected PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication(from, password);
-					}
-				});
+			sendMail(userId,"[HULZZUK] 비밀번호 재설정 인증번호 안내","요청하신 비밀번호 재설정을 위한 인증번호입니다.\n\n"
+					+ "인증번호: " + authCode + "\n\n"
+					+ "해당 인증번호를 입력창에 정확히 입력해주세요.\n\n"
+					+ "(본 메일은 발신 전용입니다.)");
 
-				// 메일 내용 작성
-				Message msg = new MimeMessage(mailSession);
-				msg.setFrom(new InternetAddress(from));
-				msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-				msg.setSubject("[HULZZUK] 비밀번호 재설정 인증번호 안내");
-				msg.setText("요청하신 비밀번호 재설정을 위한 인증번호입니다.\n\n"
-                        + "인증번호: " + authCode + "\n\n"
-                        + "해당 인증번호를 입력창에 정확히 입력해주세요.\n\n"
-                        + "(본 메일은 발신 전용입니다.)");
-
-				// 메일 보내기
-				Transport.send(msg);
-			     // 성공: 팝업 메시지 + 닫기만
-	            mv.addObject("message", "인증번호가 전송되었습니다.");
-	            mv.addObject("action", "close");  // 팝업에서 닫기만
-	        } catch (Exception e) {
-	            throw new IllegalArgumentException(ErrorCode.MAIL_SEND_FAIL.getMessage());
-	        }
+			 // 성공: 팝업 메시지 + 닫기만
+			mv.addObject("message", "인증번호가 전송되었습니다.");
+			mv.addObject("action", "close");  // 팝업에서 닫기만
 	    } else {
 	    	if("resetSend".equals(mode)) {
 		        // 실패: 팝업 메시지 + 회원가입 페이지로 이동
@@ -184,6 +153,43 @@ public class UserServiceImpl implements UserService {
 		 Random random = new Random();
 		    int code = 100000 + random.nextInt(900000); // 100000 ~ 999999 사이 숫자
 		    return String.valueOf(code);
+	}
+
+	// 메일 전송 메서드
+	@Override
+	public void sendMail(String userId, String title, String message) {
+		try{
+
+			String from = "jungdongju99@gmail.com"; // 발신자 이메일
+			String password = "egzibfksztflconr"; 	// 발신자 비밀번호
+			String host = "smtp.gmail.com"; 		// 구글 메일 서버 호스트 이름
+
+			// SMTP 프로토콜 설정
+			Properties props = new Properties();
+			props.setProperty("mail.smtp.host", host);
+			props.setProperty("mail.smtp.port", "587");
+			props.setProperty("mail.smtp.auth", "true");
+			props.setProperty("mail.smtp.starttls.enable", "true");
+
+			// 보내는 사람 계정 정보 설정
+			Session mailSession = Session.getInstance(props, new Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(from, password);
+				}
+			});
+
+			// 메일 내용 작성
+			Message msg = new MimeMessage(mailSession);
+			msg.setFrom(new InternetAddress(from));
+			msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(userId));
+			msg.setSubject(title);
+			msg.setText(message);
+
+			// 메일 보내기
+			Transport.send(msg);
+		}  catch (Exception e) {
+			throw new IllegalArgumentException(ErrorCode.MAIL_SEND_FAIL.getMessage());
+		}
 	}
 	
 	// 인증번호 검증 메소드
