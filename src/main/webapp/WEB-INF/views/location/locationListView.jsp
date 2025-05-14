@@ -85,7 +85,7 @@
 <div class="location-grid">
     <c:forEach items="${ requestScope.list }" var="location">
         <div class="location-card">
-	            <div class="location-image">
+	            <div class="galleryItem2">
 	            	<a href="${pageContext.request.contextPath}/loc/select.do?locationEnum=${locationEnum }&locId=${location.locId}">
 	                	<img src="${ location.imgPath }" alt="검색" style="border:none;">
 	                 </a>
