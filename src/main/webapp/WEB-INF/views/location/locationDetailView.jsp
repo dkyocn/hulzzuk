@@ -135,6 +135,17 @@ navigator.geolocation.getCurrentPosition(function(position) {
 function planPopup(){
 	window.open('${ pageContext.servletContext.contextPath }/plan/LocDetailMovePlan.do','planList', 'width=700,height=700');
 }
+
+function clip() {
+    const url = window.location.href;  // 실제 현재 URL 가져오기
+    const textarea = document.createElement("textarea");
+    textarea.value = url;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textarea);
+    alert("링크가 복사되었습니다. 필요하신 곳에 붙여넣기 하세요!");
+}
 </script>
 </head>
 
@@ -167,9 +178,10 @@ function planPopup(){
         <button class="locReviewBtn" onclick="location.href='${ pageContext.servletContext.contextPath }/review/moveCreate.do?locationEnum=${locationEnum }&locId=${location.locId }';">
 			<img class="locReviewImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-review-black.png">
             <span class="locReviewText">리뷰작성</span> </button>
-        <button class="locShareBtn" onclick="location.href='${ pageContext.servletContext.contextPath }/plan/moveCreate.do';">
+        <button class="locShareBtn" onclick="clip()">
 			<img class="locShareImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-share-black.png">
-            <span class="locShareText">공유하기</span> </button>
+		    <span class="locShareText">공유하기</span> 
+		</button>
     </div>
 
     <!-- 기본 정보 + 예약 버튼 -->
