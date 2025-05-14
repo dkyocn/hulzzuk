@@ -1,6 +1,7 @@
 package com.hulzzuk.notice.model.dao;
 
 import com.hulzzuk.common.vo.Paging;
+import com.hulzzuk.notice.enummeration.Category;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,7 +20,7 @@ public class NoticeDao {
 		return sqlSessionTemplate.selectOne("noticeMapper.getNoticeById",id);
 	}
 
-	public List<NoticeVO> getNoticeList(String keyword, Paging paging, String category) {
+	public List<NoticeVO> getNoticeList(String keyword, Paging paging, Category category) {
 		HashMap<String, Object> map = new HashMap<>();
 
 		map.put("category", category);
@@ -28,7 +29,7 @@ public class NoticeDao {
 		return sqlSessionTemplate.selectList("noticeMapper.getNoticeList",map);
 	}
 
-	public int getNoticeListCount(String keyword, String category) {
+	public int getNoticeListCount(String keyword, Category category) {
 		HashMap<String, Object> map = new HashMap<>();
 
 		map.put("category", category);
