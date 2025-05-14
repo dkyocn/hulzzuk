@@ -136,14 +136,13 @@ public class PlanController {
         // 삭제 후 목록 페이지로 리다이렉트
         return "success";
     }
-
     
     // 상세페이지 일정 추가
     @RequestMapping("LocDetailMovePlan.do")
     public ModelAndView getLocPlanList(ModelAndView mv, HttpServletRequest request) {
     	return planService.getLocPlanList(mv, request);
     }
-    
+
     @RequestMapping("moveSharePopUp.do")
     public ModelAndView moveShareUserPopUp(ModelAndView mv, @RequestParam(name = "planId") long planId) {
         mv.addObject("planId", planId);

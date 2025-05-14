@@ -137,6 +137,7 @@ navigator.geolocation.getCurrentPosition(function(position) {
     marker.setMap(map);
 });
 
+
 function planPopup(){
 	window.open('${ pageContext.servletContext.contextPath }/plan/LocDetailMovePlan.do','planList', 'width=700,height=700');
 }
