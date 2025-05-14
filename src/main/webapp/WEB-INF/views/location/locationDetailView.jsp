@@ -30,14 +30,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 마우스를 올렸을 때
     locLoveBtn.addEventListener("mouseover", function () {
-    	locLoveImg.src = loveHoverImgSrc;
-    	locLoveText.style.color = "#E96A18";
+    	if(locLoveBtn.dataset.loved !== 'true') {
+    		locLoveImg.src = loveHoverImgSrc;
+        	locLoveText.style.color = "#E96A18";
+    	}
     });
 
     // 마우스가 떠났을 때
     locLoveBtn.addEventListener("mouseout", function () {
-    	locLoveImg.src = loveDefaultImgSrc;
-    	locLoveText.style.color = "#000000";
+    	if(locLoveBtn.dataset.loved !== 'true') {
+    		locLoveImg.src = loveDefaultImgSrc;
+        	locLoveText.style.color = "#000000";
+    	}
     });
 
 // 일정추가 버튼
@@ -91,6 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const shareDefaultImgSrc = "${pageContext.request.contextPath}/resources/images/loc/loc-share-black.png";
     const shareHoverImgSrc = "${pageContext.request.contextPath}/resources/images/loc/loc-share-orange.png";
 
+    
     // 마우스를 올렸을 때
     locShareBtn.addEventListener("mouseover", function () {
     	locShareImg.src = shareHoverImgSrc;
@@ -145,6 +150,45 @@ function clip() {
     document.execCommand("copy");
     document.body.removeChild(textarea);
     alert("링크가 복사되었습니다. 필요하신 곳에 붙여넣기 하세요!");
+
+function toggleLove(button) {
+    const userId = '${sessionScope.loginUser.userId}';
+    
+    console.log("userId:", userId);
+    
+    if (!userId) {
+        alert("로그인이 필요합니다.");
+        return;
+    }
+    
+    const loved = button.dataset.loved;
+    const img = button.querySelector('.locLoveImg');
+
+    const url = loved
+        ? '${pageContext.request.contextPath}/love/delete.do'
+        : '${pageContext.request.contextPath}/love/create.do?locId=' + ${requestScope.location.locId} + '&locationEnum=${requestScope.locationEnum}';
+	/* fetch(contextPath + `/loc/getLocation.do?locId=` + ${requestScope.location.locId} + `&locationEnum=` + ${requestScope.locationEnum}); */
+    fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            if (!loved) {
+                img.src = '${pageContext.request.contextPath}/resources/images/loc/loc-love-filled.png';
+                button.dataset.loved = 'true';
+            } else {
+                img.src = '${pageContext.request.contextPath}/resources/images/loc/loc-love-black.png';
+                button.dataset.loved = 'false';
+            }
+        } else {
+            console.warn("찜 요청 실패", data); // 디버그용, UI에는 안 보임
+        }
+    })
+    .catch(err => {
+        console.error("통신 오류:", err);
+    });
 }
 </script>
 </head>
@@ -169,10 +213,10 @@ function clip() {
 
     <!-- 버튼 그룹 -->
     <div class="button-group">
-        <button class="locLoveBtn" onclick="location.href='${ pageContext.servletContext.contextPath }/plan/moveCreate.do';">
-			<img class="locLoveImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-love-black.png">
-            <span class="locLoveText">찜하기</span> </button>
-        <button class="locPlanBtn" onclick="planPopup()">
+        <button class="locLoveBtn" data-loved="false" onclick="toggleLove(this)">
+    		<img class="locLoveImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-love-black.png">
+ 			<span class="locLoveText">찜하기</span></button>
+        <button class="locPlanBtn" onclick="location.href='${ pageContext.servletContext.contextPath }/plan/moveCreate.do';">
 			<img class="locPlanImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-plan-black.png">
             <span class="locPlanText">일정추가</span> </button>
         <button class="locReviewBtn" onclick="location.href='${ pageContext.servletContext.contextPath }/review/moveCreate.do?locationEnum=${locationEnum }&locId=${location.locId }';">

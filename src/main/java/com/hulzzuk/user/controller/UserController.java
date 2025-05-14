@@ -26,6 +26,28 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private KakaoLoginAuth kakaoLoginAuth;
+	
+	/*
+	 * @Autowired private NaverLoginAuth naverLoginAuth;
+	 */
+	
+	// 로그인 방법 선택
+	@RequestMapping(value = "loginSelect.do", method = RequestMethod.GET)
+	public ModelAndView loginSelect(ModelAndView mv, HttpSession session) {
+		// 소셜 로그인 접속을 위한 인증 url 정보 생성 
+    	String kakaoAuthUrl = kakaoLoginAuth.getAuthorizationUrl(session);
+    	//String naverAuthUrl = naverLoginAuth.getAuthorizationUrl(session);
+	  
+		// mv에 각각의 url 정보 저장 
+    	//mv.addObject("naverUrl", naverAuthUrl);
+		mv.addObject("kakaoUrl", kakaoAuthUrl);
+		mv.setViewName("user/socialLogin");
+		
+		return mv;
+	}
+	
 	// 로그인 페이지 이동
 	@RequestMapping(value = "login.do", method = RequestMethod.GET) 
 	public ModelAndView moveLoginPage(ModelAndView mv) {
@@ -66,7 +88,7 @@ public class UserController {
               @RequestParam(name = "width") String width,
               @RequestParam(name = "height") String  height) {
 		
-		return userService.sendMailMethod(mv, session, request, mode, userId, Integer.parseInt(width), Integer.parseInt(height));
+		return userService.sendMailAuthMethod(mv, session, request, mode, userId, Integer.parseInt(width), Integer.parseInt(height));
 	}
 	
 	// 인증번호 검증 처리
@@ -129,6 +151,13 @@ public class UserController {
 	    return userService.selectUser(mv, userId);
 	}
 	
+	// 마이 페이지 수정 페이지로 이동
+	@RequestMapping(value = "moveInfoUpdate.do")
+	public ModelAndView moveInfoUpdate(ModelAndView mv) {
+		mv.setViewName("user/infoUpdate");
+		return mv;
+	}
+	
 	// 회원 가입 페이지 이동
 	@RequestMapping(value = "moveJoin.do", method = RequestMethod.GET) 
 	public ModelAndView moveJoinPage(ModelAndView mv, UserVO user) {
@@ -171,8 +200,7 @@ public class UserController {
 	
 	// 약관 동의 후 회원 탈퇴 재확인
 	@RequestMapping(value="deleteGuidePopUp.do", method = RequestMethod.POST)
-	public ModelAndView deleteGuidePopUp(ModelAndView mv, HttpServletRequest request, HttpSession session, @RequestParam("userId") String userId) {
-		session.setAttribute("deleteUserId", userId);
+	public ModelAndView deleteGuidePopUp(ModelAndView mv, HttpServletRequest request) {
 		
 		mv.addObject("message", "정말 탈퇴하시겠습니까?<br>버튼 클릭 시 즉시 탈퇴됩니다.");
 		mv.addObject("actionUrl", request.getContextPath() + "/user/delete.do");
@@ -182,35 +210,12 @@ public class UserController {
 		return mv;
 	}
 	
-	
-   //회원 탈퇴
-   @RequestMapping(value = "delete.do", method = RequestMethod.POST) 
-   @ResponseBody
-   public String deleteUser(HttpServletRequest request, HttpSession session, SessionStatus status) { 
+    //회원 탈퇴
+    @RequestMapping(value = "delete.do", method = RequestMethod.POST) 
+    @ResponseBody
+    public String deleteUser(HttpServletRequest request, HttpSession session, SessionStatus status) { 
 	  return userService.deleteUser(request, session, status);
-   }
-	 
-	
-		/*
-		 * // 회원 탈퇴
-		 * 
-		 * @RequestMapping(value = "delete.do", method = RequestMethod.POST)
-		 * 
-		 * @ResponseBody public String deleteUser(HttpServletRequest request) { String
-		 * contextPath = request.getContextPath(); return "success|" + contextPath +
-		 * "/main.do"; }
-		 */
-	
-	/*
-	 * // 회원 탈퇴 팝업 확인버튼 동작
-	 * 
-	 * @RequestMapping(value = "deletePopUp.do", method = RequestMethod.POST)
-	 * 
-	 * @ResponseBody public String deleteConfirmPopUpMethod(HttpServletRequest
-	 * request) { String contextPath = request.getContextPath(); return "success|" +
-	 * contextPath + "/main.do"; // 메인 페이지 이동 }
-	 */
-	
+    }
 }
 
 

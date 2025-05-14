@@ -88,4 +88,8 @@ public class PlanDao {
 	    params.put("planDay", planDay);
 		return sqlSessionTemplate.selectOne("planLocMapper.findseq", params);
 	}
+
+    public PlanUserVO getPlanUser(PlanUserVO planUserVO) {
+        return sqlSessionTemplate.selectOne("planUserMapper.selectPlanUser", planUserVO);
+    }
 }

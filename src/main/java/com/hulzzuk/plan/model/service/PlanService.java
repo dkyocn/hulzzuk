@@ -19,8 +19,6 @@ public interface PlanService {
     ModelAndView getPlanPage(HttpServletRequest request, String page, String limit, ModelAndView modelAndView);
     // 일정 생성 - 시퀀스 1
     ModelAndView createPlan(ModelAndView modelAndView, HttpServletRequest request, String title, String selectedDatesJson, String selectedLocationsJson);
-    // 일정 생성 - 시퀀스 2
-    ModelAndView createPlanSecond(ModelAndView modelAndView, HttpServletRequest request, long planId, String day1Locations, String day2Locations);
     // 장소 저장
     Map<String, Object> addLocation(Map<String, Object> addLocation);
     // 장소 삭제
@@ -35,4 +33,7 @@ public interface PlanService {
     void deletePlan(long planId);
     // 상세페이지 일정 추가
 	ModelAndView getLocPlanList(ModelAndView mv, HttpServletRequest request);
+
+    // 일정 공유
+    Map<String, String> shareUser(HttpSession httpSession, long planId, String userId);
 }

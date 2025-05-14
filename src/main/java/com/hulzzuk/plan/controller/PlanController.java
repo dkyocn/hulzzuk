@@ -3,6 +3,7 @@ package com.hulzzuk.plan.controller;
 import com.hulzzuk.plan.model.service.PlanService;
 import com.hulzzuk.plan.model.vo.PlanVO;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -84,14 +85,6 @@ public class PlanController {
         return planService.createPlan(mv, request, title, selectedDates, selectedLocations);
     }
 
-    @RequestMapping(value = "createPlanSecond.do", method = RequestMethod.POST)
-    public ModelAndView createPlanSecond(ModelAndView mv, HttpServletRequest request,
-                                         @RequestParam(name = "planId")  long planId,
-                                         @RequestParam(name = "day1Locations") String day1LocationsJson,
-                                         @RequestParam(name = "day2Locations", required = false) String day2LocationsJson) {
-        return planService.createPlanSecond(mv, request, planId, day1LocationsJson, day2LocationsJson);
-    }
-
     @RequestMapping(value = "addLocation.do", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> addLocation(@RequestBody Map<String, Object> addLocation) {
@@ -143,10 +136,25 @@ public class PlanController {
         // 삭제 후 목록 페이지로 리다이렉트
         return "success";
     }
+
     
     // 상세페이지 일정 추가
     @RequestMapping("LocDetailMovePlan.do")
     public ModelAndView getLocPlanList(ModelAndView mv, HttpServletRequest request) {
     	return planService.getLocPlanList(mv, request);
+    }
+    
+    @RequestMapping("moveSharePopUp.do")
+    public ModelAndView moveShareUserPopUp(ModelAndView mv, @RequestParam(name = "planId") long planId) {
+        mv.addObject("planId", planId);
+        mv.setViewName("plan/sharePopUp");
+        return mv;
+    }
+
+    @RequestMapping(value = "shareUser.do", method =  RequestMethod.POST)
+    @ResponseBody
+    public Map<String, String> shareUser(HttpSession httpSession, @RequestParam(name = "planId") long planId,
+                                         @RequestParam(name = "userId") String userId) {
+        return planService.shareUser(httpSession,planId, userId);
     }
 }
