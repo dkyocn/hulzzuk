@@ -11,7 +11,7 @@
 		<result property="isPinned" column="IS_PINNED" />
 		<result property="createdAt" column="CREATED_AT" />
 		<result property="updatedAt" column="UPDATED_AT" />
-		<!-- <result property="category" column="CATEGORY" /> -->
+		 <result property="category" column="CATEGORY" />
 	</resultMap>
 
 	<select id="getNoticeById" parameterType="Long" resultMap="resultVO">
@@ -19,5 +19,50 @@
 		FROM TB_NOTICE where notice_id = #{noticeId}
     </select>
 
+	<select id="getNoticeList" parameterType="hashMap" resultMap="resultVO">
+		<![CDATA[
+    SELECT NOTICE_ID, TITLE, CONTENT, IS_PINNED, CREATED_AT, UPDATED_AT, CATEGORY
+    FROM (
+        SELECT ROWNUM RNUM, A.*
+        FROM (
+            SELECT NOTICE_ID, TITLE, CONTENT, IS_PINNED, CREATED_AT, UPDATED_AT, CATEGORY
+            FROM TB_NOTICE
+            ]]>
+		<where>
+			CATEGORY = #{category}
+			<if test="keyword != null and keyword != ''">
+				AND TITLE LIKE '%' || #{keyword} || '%'
+			</if>
+		</where>
+		<![CDATA[
+            ORDER BY IS_PINNED DESC, NOTICE_ID DESC
+        ) A
+        WHERE ROWNUM <= #{paging.endRow}
+    )
+    WHERE RNUM >= #{paging.startRow}
+    ]]>
+	</select>
 
+	<select id="getNoticeListCount" parameterType="hashMap" resultType="_int">
+		select count(*) from TB_NOTICE
+		<where>
+			CATEGORY = #{category}
+			<if test="keyword != null and keyword != ''">
+				and (TITLE LIKE '%' || #{keyword} || '%')
+			</if>
+		</where>
+	</select>
+
+	<insert id="createNotice" parameterType="Notice" useGeneratedKeys="true" keyColumn="NOTICE_ID" keyProperty="noticeId">
+		insert into TB_NOTICE(TITLE, CONTENT, IS_PINNED, CREATED_AT, UPDATED_AT, CATEGORY)
+		values (#{title}, #{content}, #{isPinned}, sysdate, sysdate, #{category})
+	</insert>
+
+	<update id="updateNotice" parameterType="Notice">
+		update  TB_NOTICE set title = #{title}, CONTENT = #{content}, IS_PINNED = #{isPinned}, UPDATED_AT = sysdate where notice_id = #{noticeId}
+	</update>
+
+	<delete id="deleteNotice" parameterType="long">
+		delete from TB_NOTICE where notice_id = #{noticeId}
+	</delete>
 </mapper>

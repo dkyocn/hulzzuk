@@ -18,6 +18,7 @@
 
 <!-- 		<typeAlias type="com.hulzzuk.log.model.vo.LogVO" alias="log"/> -->
 		<typeAlias type="com.hulzzuk.user.model.vo.UserVO" alias="User" />
+		<typeAlias type="com.hulzzuk.love.model.vo.LoveVO" alias="Love"/>
 		<typeAlias type="com.hulzzuk.notice.model.vo.NoticeVO" alias="Notice" />	
 		<typeAlias type="com.hulzzuk.location.model.vo.LocationVO" alias="Location" />	
 		<typeAlias type="com.hulzzuk.review.model.vo.ReviewVO" alias="Review" />				
@@ -40,6 +41,7 @@
 		<mapper resource="mappers/log-mapper.xml" />
 		<mapper resource="mappers/notice-mapper.xml" />
 		<mapper resource="mappers/user-mapper.xml"/>
+		<mapper resource="mappers/love-mapper.xml"/>
 		<mapper resource="mappers/plan-mapper.xml" />
 		<mapper resource="mappers/logReview-mapper.xml" />
 		<mapper resource="mappers/planUser-mapper.xml"/>

@@ -10,41 +10,114 @@
 <script type="text/javascript" src="${ pageContext.servletContext.contextPath }/resources/js/jquery-3.7.1.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
 <style type="text/css">
-form#info {
-	width: 800px;
+table#infoProfile {
+	width: 700px;
 	text-align: center;
 	border: 1px solid #585858;
+	margin-top: 0;
 	margin: 0 auto;
 }
 
-form#info img {
+table#infoProfile img {
 	width: 250px;
 	height: 250px;
 	border: 1px solid #585858;
 	border-radius: 50%;
+	object-fit: cover;
+	margin-top: 20px;
+	margin-bottom: 20px;
 }
 
-th {
-	border: 0;
+table#infoProfile td#nickname {
+	text-align: center;
+	margin-bottom: 30px;
 }
 
-td {
-	width: 500px;
+table#infoProfile td#nickname input {
+	font-size: 16px;
+	border: none;
+	background-color: transparent;
+	text-align: center;
+	font-weight: bold;
+	width: 100%;
+	margin-bottom: 30px;
 }
 
-.datailInput {
-	border-width: none;
+div#infoDetail{
+	text-align: center;
+	margin: 0 auto;
+	width: 700px;
+}
+
+table#infoTable {
+	width: 100%;
+	border: 1px solid #585858;
+	border-collapse: collapse;
+	margin: 0 auto;
+}
+
+table#infoTable input.datailInput{
+	border: none;
 	outline: none;
+	width: 93%; 
+	height: 43px;
+	padding: 0;
+	margin: 0;
+	font-size: 16px;
+	border: none;
+	outline: none;
+	box-sizing: border-box;
 }
 
-form #info>td #nickname {
-	border-width: none;
-	outline: none;
+
+table#infoTable th{
+	width: 150px;
+	border: 1px solid #585858;
+	padding: 10px 25px;
 	text-align: center;
 }
 
-table #infoDetail>th {
+table#infoTable td{
+	width: 400px;
+	height: 43px;
+	border: 1px solid #585858;
+	padding: 0;
+	padding-left: 8px;
+	text-align: left;
+}
+
+form#deleteConfirm,
+form#logout {
+	text-align: center;
+	margin-top: 15px;
+}
+
+div#topBtnArea {
+	width: 700px; /* infoProfile 및 btnArea와 동일 너비 */
+	display: flex;
+	justify-content: flex-end;
+	margin: 20px auto 0;
+}
+
+div#btnArea {
+	width: 700px;
+	display: flex;
+	justify-content: space-between;
+	margin: 15px auto 30px;
+}
+
+.submitId {
+	background: none;
 	border: none;
+	color: #919296;
+	text-decoration: underline;
+	cursor: pointer;
+	font-size: 14px;
+}
+
+.submitId:hover, .subminId:hover {
+	color: #6d6d6d;
+}
 }
 </style>
 <script type="text/javascript">
@@ -87,10 +160,17 @@ window.onload = function () {
 </script>
 </head>
 <body>
-	<c:import url="/WEB-INF/views/common/header.jsp" />
-	<form id="info" enctype="multipart/form-data">
-		<tr>
-			<th text-align="center"></th><td>
+<c:import url="/WEB-INF/views/common/header.jsp" />
+<div id="topBtnArea">
+	<form name="moveInfoUpdate" id="moveInfoUpdate" action="${pageContext.request.contextPath}/user/moveInfoUpdate.do">
+	    <input type="hidden" name="userId" value="${sessionScope.authUserId}" />
+	   	<button type="submit" class="submitId">수정하기</button>
+	</form>
+</div>
+<br>
+<form id="info" enctype="multipart/form-data">
+	<table id="infoProfile">
+		<tr><td>
 			<c:if test="${ !empty requestScope.user.userProfile }">
 				<div id="myphoto1">
 					<img src="${ requestScope.user.userProfile }" id="photo1">
@@ -101,51 +181,36 @@ window.onload = function () {
 				<div id="myphoto2">
 					<img src="${pageContext.request.contextPath}/resources/images/logo2.png" id="photoDefault">
 				</div>
-			</c:if><br>
-			${ requestScope.ofile }<br>
-			</td>
-		</tr>
-		<br><br>
-		<tr>
-			<td id="nickname"><input text-align="center" type="text"
-				name="userNick" id="userNick"
-				value="${ requestScope.user.userNick }" readonly></td><br>
-		</tr>
-	</form>
-	<br>
-
-	<table id="infoDetail" align="center" border="1px" width="1000"
-		cellspacing="5" cellpadding="0">
-		<br>
-		<tr><th width="120">아이디(이메일)</th>
-		<%-- input 태그의 name 속성의 이름은 member.dto.Member 클래스의 property 명과 같게 함 --%>
-			<td><input type="email" name="userId" id="userId" class="datailInput"
-				value="${ requestScope.user.userId }" readonly></td></tr>
-		<tr><th>비밀번호</th>
-			<td>****</td></tr>
-		<tr><th>성별</th>
-			<td><c:if test="${ requestScope.user.gender eq 'M' }">
-					<input type="radio" name="gender" class="datailInput" value="M" checked> 남자 &nbsp;
-				<input type="radio" name="gender" class="datailInput" value="F"> 여자 
-			</c:if> <c:if test="${ requestScope.user.gender eq 'F' }">
-					<input type="radio" name="gender" class="datailInput" value="M"> 남자 &nbsp;
-				<input type="radio" name="gender" class="datailInput" value="F" checked> 여자 
-			</c:if></td></tr>
-		<tr><th>나이</th>
-			<td><input type="text" name="userAge" class="datailInput" min="19" max="100" value="${ user.age }"></td></tr>
-		<%-- <tr><th colspan="2">
-		<input type="submit" value="수정하기"> &nbsp; 
-		<input type="reset" value="수정취소"> &nbsp;
-	</th></tr>	 --%>
+			</c:if>
+			${ requestScope.ofile }</td></tr>
+		<tr><td id="nickname">
+			<input text-align="center" type="text" name="userNick" id="userNick" value="${ requestScope.user.userNick }" readonly></td></tr>
 	</table>
-	
-    <form name="deleteConfirm" id="deleteConfirm" action="${pageContext.request.contextPath}/user/deleteGuide.do" method="post">
-	    <input type="hidden" name="userId" value="${sessionScope.authUserId}" />
-    	<button type="submit" class="submitId">탈퇴하기</button>
-    </form>
-	<form name="logout" id="logout" action="${pageContext.request.contextPath}/user/logout.do" method="post">
-    	<button type="submit" class="subminId">로그아웃</button>
-    </form>
+</form>
+<br>
+<div id="infoDetail">
+	<table id="infoTable">
+		<tr><th>아이디(이메일)</th>
+			<td><input type="email" name="userId" class="datailInput"
+				value="${ requestScope.user.userId }" readonly></td></tr>
+		<tr><th>비밀번호</th><td>****</td></tr>
+		<tr><th>성별</th><td>
+			<c:if test="${ requestScope.user.gender eq 'M' }">남자</c:if> 
+			<c:if test="${ requestScope.user.gender eq 'F' }">여자</c:if>
+			</td></tr>
+		<tr><th>생년월일</th>
+			<td><input type="text" name="userAge" class="datailInput" min="19" max="100" value="${ user.age }"></td></tr>
+	</table>
+	<div id="btnArea">
+	    <form name="deleteConfirm" id="deleteConfirm" action="${pageContext.request.contextPath}/user/deleteGuide.do" method="post">
+		    <input type="hidden" name="userId" value="${sessionScope.authUserId}" />
+	    	<button type="submit" class="submitId">탈퇴하기</button>
+	    </form>
+		<form name="logout" id="logout" action="${pageContext.request.contextPath}/user/logout.do" method="post">
+	    	<button type="submit" class="submitId">로그아웃</button>
+	    </form>
+	</div>
+</div>
 
 	<c:import url="/WEB-INF/views/common/footer.jsp" />
 </body>
