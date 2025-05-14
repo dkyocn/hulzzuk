@@ -1,0 +1,123 @@
+@charset "UTF-8";
+
+/* 기본 설정 */
+body {
+    font-family: 'Noto Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* 전체 콘텐츠 중앙 정렬 */
+.planWrapper {
+    width: 900px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+/* 상단 타이틀 영역 */
+.planPageTitle {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 0 4%;
+}
+
+h1.planTitle {
+    margin-bottom: 0;
+}
+
+hr.planTitleHr {
+    border-width: 2px 0 0 0;
+    border-color: black;
+    margin: 0 2% 1.5%;
+}
+
+/* 일정 리스트 */
+div.planList {
+    margin-bottom: 2%;
+    padding-left: 4%;
+    padding-right: 4%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* 일정 내용 (이미지 + 텍스트) */
+.planContent {
+    width: 80%;
+    display: flex;
+}
+
+/* 지역 이미지 */
+.planImg {
+    width: 120px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* 텍스트 영역 */
+.planContentTitle {
+    width: 100%;
+    margin-top: 2%;
+    margin-left: 30px;
+    display: flex;
+    flex-direction: column; /* 제목과 날짜 세로로 쌓기 */
+    align-items: flex-start; /* 왼쪽 정렬 */
+}
+
+.planName {
+    font-size: 20px;
+    color: #000;
+    text-decoration: none;
+}
+
+p.planDate {
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.planTitleRow {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* 제목과 버튼 사이 간격 */
+    margin-left: 5%; /* 제목 기준 정렬 유지 */
+}
+
+.deleteEdit {
+    display: flex;
+}
+
+.planDayBtn:hover {
+    background-color: #FF8C00;
+}
+
+.planDays {
+    display: flex;
+    gap: 10px; /* 버튼 간의 간격 */
+    margin-top: 11px;
+    margin-left: 15px; /* delete 버튼과의 간격 */
+}
+
+.planDayBtn {
+    background-color: #FFA500;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    margin-left: 4px;
+    width: 65px;
+    height: 35px;
+    margin-top: 10px; 
+}
+
+.planDayBtn:hover {
+    background-color: #FF8C00;
+}
+

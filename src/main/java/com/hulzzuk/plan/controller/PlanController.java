@@ -88,6 +88,7 @@ public class PlanController {
     @RequestMapping(value = "addLocation.do", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> addLocation(@RequestBody Map<String, Object> addLocation) {
+    	Map<String, Object> response = planService.addLocation(addLocation);
         return planService.addLocation(addLocation);
     }
 
@@ -134,6 +135,12 @@ public class PlanController {
         planService.deletePlan(planId);
         // 삭제 후 목록 페이지로 리다이렉트
         return "success";
+    }
+    
+    // 상세페이지 일정 추가
+    @RequestMapping("LocDetailMovePlan.do")
+    public ModelAndView getLocPlanList(ModelAndView mv, HttpServletRequest request) {
+    	return planService.getLocPlanList(mv, request);
     }
 
     @RequestMapping("moveSharePopUp.do")

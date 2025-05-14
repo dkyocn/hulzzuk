@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.Date;
@@ -136,13 +137,25 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     public Map<String, Object> addLocation(Map<String, Object> addLocation) {
-
+    	
+    	
         try {
+        	int seq;
             Long planId = Long.parseLong(addLocation.get("planId").toString());
             String locId = addLocation.get("locId").toString();
             String locEnum = addLocation.get("locEnum").toString();
             int planDay = Integer.parseInt(addLocation.get("planDay").toString());
-            int seq = Integer.parseInt(addLocation.get("seq").toString());
+            
+            System.out.println("넘어온 planId: " + planId);
+            System.out.println("넘어온 planDay: " + planDay);
+            
+            if(addLocation.get("seq")  ==  null) {
+            	int currentSeq = planDao.findseq(planId, planDay);
+            	System.out.println("현재 시퀀스 개수: " + currentSeq); // 또는 로그로 출력
+                seq = currentSeq + 1;
+            }else {
+            	seq = Integer.parseInt(addLocation.get("seq").toString());
+            }
 
             PlanLocVO planLocVO = new PlanLocVO();
 
@@ -291,6 +304,23 @@ public class PlanServiceImpl implements PlanService {
             throw new IllegalArgumentException(ErrorCode.PLAN_DELETE_ERROR.getMessage());
         }
     }
+
+    // 상세페이지 일정 추가
+	@Override
+	public ModelAndView getLocPlanList(ModelAndView mv, HttpServletRequest request) {
+		UserVO loginUser = (UserVO) request.getSession().getAttribute("loginUser");
+		 if (loginUser != null) {
+			 List<PlanVO> planList = planDao.getLocPlanList(loginUser.getUserId());
+             // ModelAndView : Model + View
+             mv.addObject("planList", planList); // request.setAttribute("list", list) 와 같음
+             mv.setViewName("plan/locPlanList");
+		 }else {
+	            // 로그인 요청
+	            mv.addObject("fail", "Y");
+	            mv.setViewName("user/loginPage");
+	        }
+		return mv;
+	}
 
     @Override
     public  Map<String, String> shareUser(HttpSession httpSession, long planId, String userId) {
