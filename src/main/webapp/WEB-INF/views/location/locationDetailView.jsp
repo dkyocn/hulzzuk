@@ -217,7 +217,7 @@ function toggleLove(button) {
         <button class="locLoveBtn" data-loved="false" onclick="toggleLove(this)">
     		<img class="locLoveImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-love-black.png">
  			<span class="locLoveText">찜하기</span></button>
-        <button class="locPlanBtn" onclick="location.href='${ pageContext.servletContext.contextPath }/plan/moveCreate.do';">
+        <button class="locPlanBtn" onclick="planPopup()">
 			<img class="locPlanImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-plan-black.png">
             <span class="locPlanText">일정추가</span> </button>
         <button class="locReviewBtn" onclick="location.href='${ pageContext.servletContext.contextPath }/review/moveCreate.do?locationEnum=${locationEnum }&locId=${location.locId }';">
