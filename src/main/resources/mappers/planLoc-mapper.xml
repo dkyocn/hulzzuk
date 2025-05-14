@@ -38,4 +38,12 @@
     <delete id="deletePlanLocById" parameterType="long">
         delete from TB_TRIP_PL where plan_id = #{planId}
     </delete>
+    
+    <!-- 시퀀스 찾기 -->
+    <select id="findseq" parameterType="map" resultType="int">
+	 select count (*) 
+	 from TB_TRIP_PL
+	 where PLAN_ID = #{ planId }
+	 and PLAN_DAY = #{ planDay }
+    </select>
 </mapper>

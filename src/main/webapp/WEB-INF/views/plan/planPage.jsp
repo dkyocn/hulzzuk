@@ -113,7 +113,7 @@
                     <img class="planImg" src="${pageContext.request.contextPath}/resources/images/plan/jeolla.jpeg" alt="">
                 </c:when>
             </c:choose>
-            <div class="planContentTitle">
+            <div class="planContentTitle2">
                 <c:url var="bd" value="select.do">
                     <c:param name="planId" value="${ plan.planId }" />
                     <c:param name="page" value="${ nowpage }" />

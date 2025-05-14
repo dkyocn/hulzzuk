@@ -7,6 +7,7 @@ import com.hulzzuk.plan.model.vo.PlanVO;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
 import java.util.List;
@@ -72,4 +73,19 @@ public class PlanDao {
     public List<PlanLocVO> getPlanLocByPlanId(long planId) {
         return sqlSessionTemplate.selectList("planLocMapper.getPlanLocByPlanId", planId);
     }
+
+    // 상세페이지 일정  추가
+	public List<PlanVO> getLocPlanList(String userId) {
+		HashMap<String, Object> list = new HashMap<>();
+		list.put("userId", userId);
+        return sqlSessionTemplate.selectList("planMapper.getLocPlanList", list);
+	}
+	
+	// 시퀀스 갯수 찾기
+	public int findseq( long planId,  int planDay) {
+		Map<String, Object> params = new HashMap<>();
+	    params.put("planId", planId);
+	    params.put("planDay", planDay);
+		return sqlSessionTemplate.selectOne("planLocMapper.findseq", params);
+	}
 }

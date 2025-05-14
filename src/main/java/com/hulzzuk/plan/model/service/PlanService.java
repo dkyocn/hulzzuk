@@ -33,4 +33,6 @@ public interface PlanService {
     ModelAndView updatePlan(ModelAndView modelAndView, HttpServletRequest request, long planId, String title, String selectedDatesJson, String selectedLocationsJson);
     // 일정 삭제
     void deletePlan(long planId);
+    // 상세페이지 일정 추가
+	ModelAndView getLocPlanList(ModelAndView mv, HttpServletRequest request);
 }

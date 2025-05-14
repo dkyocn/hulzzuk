@@ -18,6 +18,8 @@
 <script type="text/javascript">
 // 찜하기 버튼
 document.addEventListener("DOMContentLoaded", function () {
+	window.locId =  "${requestScope.location.locId}";
+	window.locEnum = "${requestScope.locationEnum}";
     const locLoveBtn = document.querySelector(".locLoveBtn");
     const locLoveImg = locLoveBtn.querySelector(".locLoveImg");
     const locLoveText = locLoveBtn.querySelector(".locLoveText");
@@ -129,6 +131,10 @@ navigator.geolocation.getCurrentPosition(function(position) {
 
     marker.setMap(map);
 });
+
+function planPopup(){
+	window.open('${ pageContext.servletContext.contextPath }/plan/LocDetailMovePlan.do','planList', 'width=700,height=700');
+}
 </script>
 </head>
 
@@ -155,10 +161,10 @@ navigator.geolocation.getCurrentPosition(function(position) {
         <button class="locLoveBtn" onclick="location.href='${ pageContext.servletContext.contextPath }/plan/moveCreate.do';">
 			<img class="locLoveImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-love-black.png">
             <span class="locLoveText">찜하기</span> </button>
-        <button class="locPlanBtn" onclick="location.href='${ pageContext.servletContext.contextPath }/plan/moveCreate.do';">
+        <button class="locPlanBtn" onclick="planPopup()">
 			<img class="locPlanImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-plan-black.png">
             <span class="locPlanText">일정추가</span> </button>
-        <button class="locReviewBtn" onclick="location.href='${ pageContext.servletContext.contextPath }/plan/moveCreate.do';">
+        <button class="locReviewBtn" onclick="location.href='${ pageContext.servletContext.contextPath }/review/moveCreate.do?locationEnum=${locationEnum }&locId=${location.locId }';">
 			<img class="locReviewImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-review-black.png">
             <span class="locReviewText">리뷰작성</span> </button>
         <button class="locShareBtn" onclick="location.href='${ pageContext.servletContext.contextPath }/plan/moveCreate.do';">
@@ -210,9 +216,6 @@ navigator.geolocation.getCurrentPosition(function(position) {
 
 </div>
 </div>
-
-
-
 <hr>
 <c:import url="/WEB-INF/views/common/footer.jsp" />
 </body>
