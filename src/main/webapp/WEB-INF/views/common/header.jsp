@@ -72,8 +72,8 @@
     </ul>
 s
     <ul class="menu-section">
-        <c:url var="noti" value="notice/select.do">
-            <c:param name="noticeId" value="1" />
+        <c:url var="noti" value="notice/page.do">
+            <c:param name="page" value="1" />
         </c:url>
         <li><a href="${noti}">공지사항</a></li>
         <li><a href="#">FAQ</a></li>

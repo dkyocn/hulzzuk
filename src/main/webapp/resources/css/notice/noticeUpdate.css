@@ -1,0 +1,110 @@
+@charset "UTF-8";
+body {
+    font-family: 'Noto Sans', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 40px;
+}
+
+.notice-form {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 40px 30px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+.notice-form h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f90;
+    padding-bottom: 10px;
+}
+
+.noticeTitle {
+    display: flex;
+    align-items: center;
+}
+
+.pinned {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 20px;
+    margin-left: 15px;
+}
+
+.pinned > input[type="checkbox"]  {
+    margin-right: 5px;
+    margin-top: 0;
+}
+
+.pinned > p {
+    width: 60px;
+    margin: 0;
+}
+
+.noticeTitle input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+.noticeTitle input[type="text"]::placeholder {
+    color: #aaa;
+}
+
+
+
+/* Summernote 영역 */
+.note-editor.note-frame {
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+}
+
+.note-editable {
+    min-height: 250px; /* 작성 박스 높이 조정 */
+    font-size: 15px;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* 버튼 영역 */
+.notice-form .btn-wrapper {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.notice-form button {
+    padding: 12px 24px;
+    font-size: 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.notice-form .submit-btn {
+    background-color: #f90;
+    color: #fff;
+}
+
+.notice-form .submit-btn:hover {
+    background-color: #e88000;
+}
+
+.notice-form .cancel-btn {
+    background-color: #e0e0e0;
+    margin-left: 12px;
+}
+
+.notice-form .cancel-btn:hover {
+    background-color: #cfcfcf;
+}
