@@ -151,6 +151,13 @@ public class UserController {
 	    return userService.selectUser(mv, userId);
 	}
 	
+	// 마이 페이지 수정 페이지로 이동
+	@RequestMapping(value = "moveInfoUpdate.do")
+	public ModelAndView moveInfoUpdate(ModelAndView mv) {
+		mv.setViewName("user/infoUpdate");
+		return mv;
+	}
+	
 	// 회원 가입 페이지 이동
 	@RequestMapping(value = "moveJoin.do", method = RequestMethod.GET) 
 	public ModelAndView moveJoinPage(ModelAndView mv, UserVO user) {
