@@ -141,6 +141,7 @@ public class PlanController {
     @RequestMapping("LocDetailMovePlan.do")
     public ModelAndView getLocPlanList(ModelAndView mv, HttpServletRequest request) {
     	return planService.getLocPlanList(mv, request);
+    }
   
     @RequestMapping("moveSharePopUp.do")
     public ModelAndView moveShareUserPopUp(ModelAndView mv, @RequestParam(name = "planId") long planId) {
