@@ -1,0 +1,95 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #fff;
+    margin: 0;
+    padding: 20px;
+}
+
+.faq-container {
+    width: 90%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+h2 {
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+.write-button-wrapper {
+    text-align: right;
+    margin: 10px 0;
+}
+
+.write-button {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.write-button:hover {
+    background-color: #0056b3;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.panel-group{
+    display: flex;
+    flex-direction: column;
+}
+
+.faq-header{
+    margin-top: 5px;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid;
+    border-radius: 6px;
+}
+
+.faq-header > span {
+    margin-left: 1%;
+}
+
+.faqContent{
+    margin-right: 1%;
+}
+
+.faqContent > span {
+    margin-right: 5px;
+}
+
+.panel-collapse{
+    background-color: #f5deb382;
+    margin: 5px 0;
+    border: 1px solid #f5deb382;
+    border-radius: 5px;
+    text-align: justify;
+}
+
+.faq-Answer{
+    display: flex;
+    margin-left: 2%;
+    align-items: center;
+}
+
+.faq-Answer > p {
+    margin: 3px 5px;
+}
+
+.btn-primary {
+    color: #fff !important;
+    background-color: #4CAF50 !important;
+    border-color: #4CAF50 !important;
+}
+
+.btn-danger {
+    color: #fff !important;
+    background-color: #f90 !important;
+    border-color: #f90 !important;
+}

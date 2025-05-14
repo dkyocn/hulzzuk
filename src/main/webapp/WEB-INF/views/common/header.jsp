@@ -68,15 +68,12 @@
             <c:param name="locationEnum" value="ATTR"></c:param>
         </c:url>
         <li><a href="${location }">즐길거리</a></li>
-        <li><a href="${ pageContext.servletContext.contextPath }log/page.do?page=1">여행로그</a></li>
+        <li><a href="${ pageContext.servletContext.contextPath }/log/page.do?page=1">여행로그</a></li>
     </ul>
 s
     <ul class="menu-section">
-        <c:url var="noti" value="notice/page.do">
-            <c:param name="page" value="1" />
-        </c:url>
-        <li><a href="${noti}">공지사항</a></li>
-        <li><a href="#">FAQ</a></li>
+        <li><a href="${ pageContext.servletContext.contextPath }/notice/page.do?page=1">공지사항</a></li>
+        <li><a href="${ pageContext.servletContext.contextPath }/faq/page.do?page=1">FAQ</a></li>
         <li><a href="#">고객의 소리</a></li>
     </ul>
 

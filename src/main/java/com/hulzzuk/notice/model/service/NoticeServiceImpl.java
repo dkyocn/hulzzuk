@@ -2,6 +2,7 @@ package com.hulzzuk.notice.model.service;
 
 import com.hulzzuk.common.enumeration.ErrorCode;
 import com.hulzzuk.common.vo.Paging;
+import com.hulzzuk.notice.enummeration.Category;
 import com.hulzzuk.plan.model.vo.PlanVO;
 import com.hulzzuk.user.model.vo.UserVO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -62,7 +63,7 @@ public class NoticeServiceImpl implements NoticeService{
 			limit = Integer.parseInt(slimit);
 		}
 			// 검색결과가 적용된 총 목록 갯수 조회해서, 총 페이지 수 계산함
-			int listCount = noticeDao.getNoticeListCount(keyword, "NOTICE");
+			int listCount = noticeDao.getNoticeListCount(keyword, Category.NOTICE);
 			// 페이지 관련 항목들 계산 처리
 			Paging paging = new Paging(null, listCount, limit, currentPage, "page.do");
 			paging.calculate();
@@ -70,7 +71,7 @@ public class NoticeServiceImpl implements NoticeService{
 			// 마이바티스 매퍼에서 사용되는 메소드는 Object 1개만 전달할 수 있음
 
 			// 서비스 모델로 페이징 적용된 목록 조회 요청하고 결과받기
-			List<NoticeVO> noticePage = noticeDao.getNoticeList(keyword, paging,"NOTICE");
+			List<NoticeVO> noticePage = noticeDao.getNoticeList(keyword, paging,Category.NOTICE);
 			// ModelAndView : Model + View
 			mv.addObject("keyword", keyword);
 			mv.addObject("noticeList", noticePage);
@@ -100,7 +101,7 @@ public class NoticeServiceImpl implements NoticeService{
 
 	@Override
 	public ModelAndView updateNotice(NoticeVO noticeVO, ModelAndView mv) {
-
+		noticeVO.setCategory(Category.NOTICE);
 		if(noticeDao.updateNotice(noticeVO) == 0) {
 			throw new IllegalArgumentException(ErrorCode.NOTICE_UPDATE_ERROR.getMessage());
 		}
