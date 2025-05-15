@@ -86,14 +86,14 @@ document.addEventListener("DOMContentLoaded", async function () {
 <div class="loginBtn">
 <!-- 카카오 로그인 -->
 <button type="button" onclick="location.href='${kakaoUrl}'" class="submitId" id="kakaoLogin">
-	<img src="/hulzzuk/resources/images/kakao_logo.png" alt="카카오 로고">
+	<img src="${pageContext.request.contextPath}/resources/images/kakao_logo.png" alt="카카오 로고">
 	카카오로 로그인
 </button>
 <%-- <a href="${kakaoUrl}"><img src="/hulzzuk/resources/images/kakao_logo.png" alt="카카오 로고"></a> --%>
 
 <!-- 네이버 로그인 -->
 <button type="button" class="submitId" id="naverLogin">
-	<img src="/hulzzuk/resources/images/naver_logo.png" alt="네이버 로고">
+	<img src="${pageContext.request.contextPath}/resources/images/naver_logo.png" alt="네이버 로고">
 	네이버로 로그인
 </button>
 
