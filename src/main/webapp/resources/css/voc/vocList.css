@@ -16,6 +16,11 @@ h2 {
     margin-bottom: 20px;
 }
 
+.voc-title-link {
+    color: black;
+    text-decoration: none;
+}
+
 /* 중앙 정렬을 위한 wrapper */
 .search-wrapper {
     display: flex;
@@ -111,6 +116,15 @@ h2 {
 
 .voc-table th {
     background-color: #f5f5f5;
+}
+
+.voc-table a {
+    color: black;
+    text-decoration: none;
+}
+
+.voc-table a:hover {
+    text-decoration: underline; /* 원하지 않으면 none 으로 변경 가능 */
 }
 
 /* 카테고리 태그 색상 */

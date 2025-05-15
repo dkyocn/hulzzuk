@@ -113,6 +113,16 @@ h2 {
     background-color: #f5f5f5;
 }
 
+.notice-table a {
+    color: black;
+    text-decoration: none;
+}
+
+.notice-table a:hover {
+    text-decoration: underline; /* 원하지 않으면 none 으로 변경 가능 */
+}
+
+
 /* 카테고리 태그 색상 */
 .tag {
     padding: 4px 8px;
