@@ -104,7 +104,7 @@ public class LoveServiceImpl implements LoveService{
 	        case ATTR -> loveVO.setAttrId(locId);
 	    }
 
-	    // ✅ 기존 중복 확인 로직 그대로 사용
+	    // 기존 중복 확인 로직 그대로 사용
 	    boolean isLoved = loveDao.selectLoveExists(loveVO) > 0;
 	    result.put("loved", isLoved);
 
@@ -189,7 +189,7 @@ public class LoveServiceImpl implements LoveService{
 	    
 	    // 세션 없을 경우 로그인 페이지로 이동
 	    if(sessionUserId == null) {
-	    	mv.setViewName("user/socialLogin");
+	    	mv.setViewName("redirect:/user/loginSelect.do");
 	    	return mv;
 	    }
 	    
