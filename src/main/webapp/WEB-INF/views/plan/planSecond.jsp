@@ -668,6 +668,8 @@
                             alert("삭제에 실패했습니다. 다시 시도해주세요.");
                         }
                     }
+                } else if (e.target.classList.contains("shareBtn")) {
+                    window.open(contextPath + '/plan/moveSharePopUp.do?planId=${requestScope.plan.planId}', 'ShareUserPopup', 'width=350,height=160');
                 }
             });
 

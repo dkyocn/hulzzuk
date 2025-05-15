@@ -157,7 +157,7 @@ body {
     transform: translateY(-5px);
 }
 
-.location-image img {
+.galleryItem2 img {
     width: 100%;
     height: 100%;
     object-fit: cover;

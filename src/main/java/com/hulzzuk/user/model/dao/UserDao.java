@@ -28,6 +28,11 @@ public class UserDao {
 	public UserVO selectUser(String userId) {
 		return sqlSessionTemplate.selectOne("userMapper.selectUser", userId);
 	}
+
+	// 회원 정보 업데이트
+	public int updateUser(UserVO userVO) {
+		return sqlSessionTemplate.update("userMapper.updateUser", userVO);
+	}
 	
 	// 회원 가입
 	public int insertUser(UserVO user) {

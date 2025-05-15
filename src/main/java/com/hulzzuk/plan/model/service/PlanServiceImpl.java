@@ -8,6 +8,8 @@ import com.hulzzuk.plan.model.dao.PlanDao;
 import com.hulzzuk.plan.model.vo.PlanLocVO;
 import com.hulzzuk.plan.model.vo.PlanUserVO;
 import com.hulzzuk.plan.model.vo.PlanVO;
+import com.hulzzuk.user.model.dao.UserDao;
+import com.hulzzuk.user.model.service.UserService;
 import com.hulzzuk.user.model.vo.UserVO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -15,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.Date;
@@ -33,6 +36,13 @@ public class PlanServiceImpl implements PlanService {
 
     @Autowired
     private PlanDao planDao;
+
+    @Autowired
+    private UserDao userDao;
+
+    @Autowired
+    private UserService userService;
+
 
     @Override
     public ModelAndView getPlanPage(HttpServletRequest request, String page, String slimit, ModelAndView mv) {
@@ -126,72 +136,26 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    public ModelAndView createPlanSecond(ModelAndView mv, HttpServletRequest request, long planId, String day1Locations, String day2Locations) {
-
-        log.info("planId  : {}", planId);
-        log.info("day1Locations : {}", day1Locations);
-        log.info("day2Locations : {}", day2Locations);
-        try {
-            // JSON 파싱
-            ObjectMapper objectMapper = new ObjectMapper();
-            List<Map<String, Object>> day1 = objectMapper.readValue(day1Locations, List.class);
-            for (int i = 0; i < day1.size(); i++) {
-                Map<String, Object> map = day1.get(i);
-                log.info("locEnum : {}", map.get("locEnum"));
-                switch ((String) map.get("locEnum")) {
-                    case "ACCO":
-                        planDao.insertPlanLoc(new PlanLocVO(planId, (String) map.get("id"), null, null, 1, i + 1));
-                        break;
-                    case "REST":
-                        planDao.insertPlanLoc(new PlanLocVO(planId, null, null, (String) map.get("id"), 1, i + 1));
-                        break;
-                    case "ATTR":
-                        planDao.insertPlanLoc(new PlanLocVO(planId, null, (String) map.get("id"), null, 1, i + 1));
-                        break;
-                    default:
-                        throw new IllegalArgumentException(ErrorCode.PL_TRIP_INSERT_ERROR.getMessage());
-
-                }
-
-            }
-            if (!day2Locations.isEmpty()) {
-                List<Map<String, Object>> day2 = objectMapper.readValue(day2Locations, List.class);
-                for (int i = 0; i < day2.size(); i++) {
-                    Map<String, Object> map = day2.get(i);
-                    log.info("locEnum : {}", map.get("locEnum"));
-                    log.info("day2 : {}", map.get("day"));
-                    switch ((String) map.get("locEnum")) {
-                        case "ACCO":
-                            planDao.insertPlanLoc(new PlanLocVO(planId, (String) map.get("id"), null, null, 2, i + 1));
-                            break;
-                        case "REST":
-                            planDao.insertPlanLoc(new PlanLocVO(planId, null, null, (String) map.get("id"), 2, i + 1));
-                            break;
-                        case "ATTR":
-                            planDao.insertPlanLoc(new PlanLocVO(planId, null, (String) map.get("id"), null, 2, i + 1));
-                            break;
-                        default:
-                            throw new IllegalArgumentException(ErrorCode.PL_TRIP_INSERT_ERROR.getMessage());
-
-                    }
-                }
-            }
-
-            return getPlanPage(request, null, null, mv);
-        } catch (Exception e) {
-            throw new RuntimeException(ErrorCode.PLAN_INSERT_ERROR.getMessage());
-        }
-    }
-
-    @Override
     public Map<String, Object> addLocation(Map<String, Object> addLocation) {
-
+    	
+    	
         try {
+        	int seq;
             Long planId = Long.parseLong(addLocation.get("planId").toString());
             String locId = addLocation.get("locId").toString();
             String locEnum = addLocation.get("locEnum").toString();
             int planDay = Integer.parseInt(addLocation.get("planDay").toString());
-            int seq = Integer.parseInt(addLocation.get("seq").toString());
+            
+            System.out.println("넘어온 planId: " + planId);
+            System.out.println("넘어온 planDay: " + planDay);
+            
+            if(addLocation.get("seq")  ==  null) {
+            	int currentSeq = planDao.findseq(planId, planDay);
+            	System.out.println("현재 시퀀스 개수: " + currentSeq); // 또는 로그로 출력
+                seq = currentSeq + 1;
+            }else {
+            	seq = Integer.parseInt(addLocation.get("seq").toString());
+            }
 
             PlanLocVO planLocVO = new PlanLocVO();
 
@@ -339,5 +303,62 @@ public class PlanServiceImpl implements PlanService {
         if (successYN == 0) {
             throw new IllegalArgumentException(ErrorCode.PLAN_DELETE_ERROR.getMessage());
         }
+    }
+
+    // 상세페이지 일정 추가
+	@Override
+	public ModelAndView getLocPlanList(ModelAndView mv, HttpServletRequest request) {
+		UserVO loginUser = (UserVO) request.getSession().getAttribute("loginUser");
+		 if (loginUser != null) {
+			 List<PlanVO> planList = planDao.getLocPlanList(loginUser.getUserId());
+             // ModelAndView : Model + View
+             mv.addObject("planList", planList); // request.setAttribute("list", list) 와 같음
+             mv.setViewName("plan/locPlanList");
+		 }else {
+	            // 로그인 요청
+	            mv.addObject("fail", "Y");
+	            mv.setViewName("user/loginPage");
+	        }
+		return mv;
+	}
+
+    @Override
+    public  Map<String, String> shareUser(HttpSession httpSession, long planId, String userId) {
+
+        Map<String, String> map = new HashMap<>();
+
+        String authUserId = (String) httpSession.getAttribute("authUserId");
+
+        // 유저 조회
+        UserVO shareUserVO = userDao.selectUser(userId);
+        UserVO loginUserVO = userDao.selectUser(authUserId);
+        PlanVO planVO = planDao.getPlanById(planId);
+
+        PlanUserVO planUserVO = new PlanUserVO(userId, planId);
+
+
+
+        // 있으면 공유 없으면 다른 사용자 재 입력
+        if (shareUserVO == null) {
+            map.put("successYN", "false");
+        } else {
+            if(planDao.getPlanUser(planUserVO) != null) {
+                map.put("successYN", "share");
+            } else {
+                if(planVO == null) {
+                    throw new IllegalArgumentException(ErrorCode.PLAN_NOT_FOUND.getMessage());
+                } else {
+                    // 저장
+                    if(planDao.insertPlanUser(planUserVO) == 0 ) {
+                        throw new RuntimeException(ErrorCode.PL_USER_INSERT_ERROR.getMessage());
+                    }
+
+                    userService.sendMail(userId,"[HULZZUK] 일정 공유 안내", loginUserVO.getUserNick()+" 이(가) "+planVO.getPlanTitle()+" 일정을 공유하였습니다.\n\n(본 메일은 발신 전용입니다.)");
+
+                    map.put("successYN", "true");
+                }
+            }
+        }
+        return map;
     }
 }

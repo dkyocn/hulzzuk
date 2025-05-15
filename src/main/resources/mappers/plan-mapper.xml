@@ -53,4 +53,13 @@
         delete from TB_PLAN where plan_id = #{planId}
     </delete>
 
+	<!--  plan 리스트 조회 -->
+	<select id="getLocPlanList" parameterType="hashMap" resultMap="resultVO">
+	SELECT PLAN_ID, PLAN_TITLE, PLAN_PLACE, PLAN_START_DATE, PLAN_END_DATE
+        FROM (SELECT ROWNUM RNUM, PLAN_ID, PLAN_TITLE, PLAN_PLACE, PLAN_START_DATE, PLAN_END_DATE
+              FROM TB_PLAN
+              left join TB_USER_PL UP using(PLAN_ID)
+              where up.user_id = #{userId})
+        order by PLAN_START_DATE desc, PLAN_END_DATE desc
+	</select>
 </mapper>

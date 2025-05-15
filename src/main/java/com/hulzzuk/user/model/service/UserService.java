@@ -1,12 +1,16 @@
 package com.hulzzuk.user.model.service;
 
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.hulzzuk.user.model.vo.UserVO;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
+import java.util.Map;
 
 public interface UserService {
 	
@@ -17,8 +21,11 @@ public interface UserService {
 	ModelAndView logoutMethod(ModelAndView mv, HttpSession session, SessionStatus status);
 
 	// 이메일 인증번호 발송
-	ModelAndView sendMailMethod(ModelAndView mv, HttpSession session, HttpServletRequest request,
+	ModelAndView sendMailAuthMethod(ModelAndView mv, HttpSession session, HttpServletRequest request,
 			String mode, String userId, int width, int height);
+
+	// 이메일
+	void sendMail(String userId, String title, String message);
 	
 	// 인증번호 검증
 	ModelAndView verifyCode(String mode, String inputCode, String userId,
@@ -37,6 +44,8 @@ public interface UserService {
 	
 	// 내 정보 보기
 	ModelAndView selectUser(ModelAndView mv, String userId);
+
+	ModelAndView moveInfoUpdate(ModelAndView mv, String userId);
 	
 	// 회원 가입
 	ModelAndView insertUser(ModelAndView mv, HttpServletRequest request, UserVO user);
@@ -47,6 +56,10 @@ public interface UserService {
 	// 회원 탈퇴
 	String deleteUser(HttpServletRequest request, HttpSession session, SessionStatus status);
 
-	
+	// 프로필 사진 저장
+	Map<String, Object> profileUpload(MultipartFile mfile, HttpServletRequest request);
+
+	// 프로필 수정
+	Map<String, Object> updateProfile(HttpServletRequest request, UserVO userVO);
 	
 }
