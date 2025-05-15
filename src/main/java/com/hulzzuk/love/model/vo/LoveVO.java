@@ -7,7 +7,7 @@ public class LoveVO implements java.io.Serializable {
 	private String accoId;		// ACCO_ID	VARCHAR2(255 BYTE)
 	private String restId;		// REST_ID	VARCHAR2(255 BYTE)
 	private String attrId;		// ATTR_ID	VARCHAR2(255 BYTE)
-	private long logId;			// LOG_ID	NUMBER
+	private Long logId;			// LOG_ID	NUMBER
 	private String userId;		// USER_ID	VARCHAR2(30 BYTE)
 	
 	public LoveVO() {
@@ -15,7 +15,7 @@ public class LoveVO implements java.io.Serializable {
 	}
 
 
-	public LoveVO(long loveId, String accoId, String restId, String attrId, long logId, String userId) {
+	public LoveVO(long loveId, String accoId, String restId, String attrId, Long logId, String userId) {
 		super();
 		this.loveId = loveId;
 		this.accoId = accoId;
@@ -57,11 +57,11 @@ public class LoveVO implements java.io.Serializable {
 		this.attrId = attrId;
 	}
 
-	public long getLogId() {
+	public Long getLogId() {
 		return logId;
 	}
 
-	public void setLogId(long logId) {
+	public void setLogId(Long logId) {
 		this.logId = logId;
 	}
 

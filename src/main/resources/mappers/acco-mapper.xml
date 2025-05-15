@@ -74,7 +74,7 @@
         select * from TB_ACCO
         <where>
             <if test="keyword != null and keyword != ''">
-                (ACCO_PLACENAME LIKE '%' || #{keyword} || '%' OR ACCO_ROAD_ADDRESSNAME LIKE '%' || #{keyword} || '%')
+                (ACCO_PLACENAME LIKE '%' || #{keyword} || '%' OR ACCO_ADDRESSNAME LIKE '%' || #{keyword} || '%')
             </if>
         </where>
         order by ACCO_PLACENAME

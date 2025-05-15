@@ -14,6 +14,7 @@ import com.hulzzuk.location.model.dao.LocationDao;
 import com.hulzzuk.location.model.enumeration.LocationEnum;
 import com.hulzzuk.location.model.vo.LocationVO;
 import com.hulzzuk.log.model.service.LogService;
+import com.hulzzuk.love.model.service.LoveService;
 import com.hulzzuk.review.model.service.ReviewService;
 
 @Service("locationService")
@@ -26,6 +27,9 @@ public class LocationServiceImpl implements LocationService{
 	
 	@Autowired
 	private ReviewService reviewService;
+	
+	@Autowired
+	private LoveService loveService;
 	
 	@Autowired
 	private LogService logService;
@@ -46,9 +50,13 @@ public class LocationServiceImpl implements LocationService{
 			// 평균 평점 계산
 	        Double avgRating = reviewService.getAvgRating(locId, locationEnum);
 	        
+	        // 찜 개수 계산
+	        int loveCount = loveService.getLocLoveCount(locId, locationEnum);
+	        
 			mv.addObject("location", locationVO);
 			mv.addObject("locationEnum", locationEnum);
 			mv.addObject("avgRating", avgRating != null ? avgRating : 0.0);  // 평균 평점 추가
+			mv.addObject("loveCount", loveCount == 0 ? 0 : loveCount);	// 찜 개수 추가
 			mv.addObject("reviewCount", reviewService.reviewCount(locId, locationEnum));
 			mv.addObject("reviewList", reviewService.getReviewList(locId, locationEnum, null));
 			mv.addObject("userNicks", reviewService.getUserNicks(locId, locationEnum, null));

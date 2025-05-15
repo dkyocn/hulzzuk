@@ -72,7 +72,7 @@
 		select * from TB_ATTR
 		<where>
 			<if test="keyword != null and keyword != ''">
-				(ATTR_PLACENAME LIKE '%' || #{keyword} || '%' OR ATTR_ROAD_ADDRESSNAME LIKE '%' || #{keyword} || '%')
+				(ATTR_PLACENAME LIKE '%' || #{keyword} || '%' OR ATTR_ADDRESSNAME LIKE '%' || #{keyword} || '%')
 			</if>
 		</where>
 		order by ATTR_PLACENAME
