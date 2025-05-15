@@ -37,21 +37,24 @@
 	    <a href="${ pageContext.servletContext.contextPath }/page.do?locationEnum=ATTR&keyword=${ }&pageCriteria=${ }&sortEnum=${}">MY 리뷰</a>
     </c:if>
      --%>
-	<a href="#">여행로그</a>
+	<a href="${ pageContext.servletContext.contextPath }/log/page.do?page=1">여행로그</a>
     <a href="${ pageContext.servletContext.contextPath }/notice/page.do?page=1">공지사항</a>
     <a href="${ pageContext.servletContext.contextPath }/faq/page.do?page=1">FAQ</a>
     <a href="${ pageContext.servletContext.contextPath }/voc/page.do?vocEnum=ALL&page=1">고객의 소리</a>
     <c:if test="${ !empty sessionScope.loginUser }">
-	    <a href="#">My 여행</a>
-        <a href="${ pageContext.servletContext.contextPath }/plan/page.do?page=1">My 로그</a>
-	    <a href="#">My 찜</a>
-	    <a href="#">My 리뷰</a>
+	    <a href="#">My 여행로그</a>
+        <a href="${ pageContext.servletContext.contextPath }/plan/page.do?page=1">My 일정</a>
+	    <a href="${pageContext.request.contextPath}/love/moveLove.do">My 찜</a>
+	    <c:url var="myrev" value="review/select.do">
+            <c:param name="userId" value="${loginUser.userId}" />
+        </c:url>
+	    <a href="${ myrev }">My 리뷰</a>
     </c:if>
     <c:if test="${ empty sessionScope.loginUser }">
-	    <a href="#">My 여행 로그</a>
-	    <a href="#">My 일정</a>
-	    <a href="${pageContext.request.contextPath}/love/moveLove.do">My 찜</a>
-	    <a href="${ pageContext.servletContext.contextPath }/review/list.do?locId=13&locationEnum=ACCO&sortEnum=DATEDESC">My 리뷰</a>
+	    <a href="${pageContext.request.contextPath}/user/loginSelect.do">My 여행로그</a>
+	    <a href="${pageContext.request.contextPath}/user/loginSelect.do">My 일정</a>
+	    <a href="${pageContext.request.contextPath}/user/loginSelect.do">My 찜</a>
+	    <a href="${pageContext.request.contextPath}/user/loginSelect.do">My 리뷰</a>
 
     </c:if>
   </div>

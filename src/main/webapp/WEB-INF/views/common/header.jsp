@@ -63,15 +63,24 @@
     </ul>
 
     <ul class="menu-section">
-        <li><a href="${pageContext.request.contextPath}/user/select.do?userId=${loginUser.userId}">마이페이지</a></li>
-        <li class="mymenu"><a href="#">My 여행로그</a></li>
-        <li class="mymenu"><a href="${ pageContext.servletContext.contextPath }/plan/page.do?page=1">My 일정</a></li>
-        <li class="mymenu"><a href="${pageContext.request.contextPath}/love/moveLove.do">My 찜</a></li>
-        
-        <c:url var="myrev" value="review/select.do">
-            <c:param name="userId" value="${loginUser.userId}" />
-        </c:url>
-        <li class="mymenu"><a href="${ myrev }">My 리뷰</a></li>
+	    <c:if test="${ !empty sessionScope.loginUser }">
+    		<li><a href="${pageContext.request.contextPath}/user/select.do?userId=${loginUser.userId}">마이페이지</a></li>
+	        <li class="mymenu"><a href="#">My 여행로그</a></li>
+	        <li class="mymenu"><a href="${ pageContext.servletContext.contextPath }/plan/page.do?page=1">My 일정</a></li>
+	        <li class="mymenu"><a href="${pageContext.request.contextPath}/love/moveLove.do">My 찜</a></li>
+	        
+	        <c:url var="myrev" value="review/select.do">
+	            <c:param name="userId" value="${loginUser.userId}" />
+	        </c:url>
+	        <li class="mymenu"><a href="${ myrev }">My 리뷰</a></li>
+	    </c:if>
+	    <c:if test="${ empty sessionScope.loginUser }">
+	    	<li><a href="${pageContext.request.contextPath}/user/loginSelect.do">마이페이지</a></li>
+	        <li class="mymenu"><a href="${pageContext.request.contextPath}/user/loginSelect.do">My 여행로그</a></li>
+	        <li class="mymenu"><a href="${pageContext.request.contextPath}/user/loginSelect.do">My 일정</a></li>
+	        <li class="mymenu"><a href="${pageContext.request.contextPath}/user/loginSelect.do">My 찜</a></li>
+	        <li class="mymenu"><a href="${pageContext.request.contextPath}/user/loginSelect.do">My 리뷰</a></li>
+   		</c:if>
     </ul>
 </div>
 
