@@ -3,6 +3,7 @@ package com.hulzzuk.location.model.dao;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,4 +140,47 @@ public class LocationDao {
         return locationVOList;
     }
 
+    // 숙소 추가
+	public int  insertAcco(LocationVO acco) {
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("locId", acco.getLocId());
+		map.put("placeName", acco.getPlaceName());
+		map.put("addressName", acco.getAddressName());
+		map.put("phone", acco.getPhone());
+		map.put("x", acco.getX());
+		map.put("y", acco.getY());
+		map.put("category", acco.getCategory());
+		map.put("placeUrl", acco.getPlaceUrl());
+		map.put("imgPath", acco.getImgPath());
+		return sqlSessionTemplate.insert("accoMapper.insertAcco", map);
+	}
+	
+    // 맛집 추가
+	public int insertRest(LocationVO rest) {
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("locId", rest.getLocId());
+		map.put("placeName", rest.getPlaceName());
+		map.put("addressName", rest.getAddressName());
+		map.put("phone", rest.getPhone());
+		map.put("x", rest.getX());
+		map.put("y", rest.getY());
+		map.put("category", rest.getCategory());
+		map.put("restMenu", rest.getPlaceUrl());
+		map.put("imgPath", rest.getImgPath());
+		return sqlSessionTemplate.insert("restMapper.insertRest", map);
+	}    
+	
+    // 즐길거리 추가
+	public int insertAttr(LocationVO attr) {
+		HashMap<String, Object> map = new HashMap<>();
+        map.put("locId", attr.getLocId());
+        map.put("placeName", attr.getPlaceName());
+        map.put("addressName", attr.getAddressName());
+        map.put("phone", attr.getPhone());
+        map.put("x", attr.getX());
+        map.put("y", attr.getY());
+        map.put("category", attr.getCategory());
+        map.put("imgPath", attr.getImgPath());
+        return sqlSessionTemplate.insert("attrMapper.insertAttr", map);
+	}
 }

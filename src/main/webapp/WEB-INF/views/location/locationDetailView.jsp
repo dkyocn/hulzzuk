@@ -153,7 +153,7 @@ function clip() {
     document.execCommand("copy");
     document.body.removeChild(textarea);
     alert("링크가 복사되었습니다. 필요하신 곳에 붙여넣기 하세요!");
-}
+
 
 // 페이지 로딩 시 하트 상태 반영
 document.addEventListener("DOMContentLoaded", function () {

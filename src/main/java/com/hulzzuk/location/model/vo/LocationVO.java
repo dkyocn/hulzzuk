@@ -8,32 +8,39 @@ public class LocationVO {
 	private String placeName;
 	private String phone;
 	private String addressName;
-	private String roadAddressName;
 	private Double x;
 	private Double y;
+	private String category;
 	private String placeUrl;
 	private String restMenu;
 	private String imgPath;
-	private String mapPath;
 	private LocationEnum locationEnum;
 
 	// constructor
 	public LocationVO() {}
-	
-	public LocationVO(String locId, String placeName, String phone, String addressName, String roadAddressName,
-			Double x, Double y, String placeUrl, String restMenu, String imgPath, String mapPath) {
+
+	public LocationVO(String locId, String placeName, String phone, String addressName, Double x, Double y,
+			String category, String placeUrl, String restMenu, String imgPath, LocationEnum locationEnum) {
 		super();
 		this.locId = locId;
 		this.placeName = placeName;
 		this.phone = phone;
 		this.addressName = addressName;
-		this.roadAddressName = roadAddressName;
 		this.x = x;
 		this.y = y;
+		this.category = category;
 		this.placeUrl = placeUrl;
 		this.restMenu = restMenu;
 		this.imgPath = imgPath;
-		this.mapPath = mapPath;
+		this.locationEnum = locationEnum;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	// getters and setters
@@ -68,15 +75,7 @@ public class LocationVO {
 	public void setAddressName(String addressName) {
 		this.addressName = addressName;
 	}
-
-	public String getRoadAddressName() {
-		return roadAddressName;
-	}
-
-	public void setRoadAddressName(String roadAddressName) {
-		this.roadAddressName = roadAddressName;
-	}
-
+	
 	public Double getX() {
 		return x;
 	}
@@ -115,14 +114,6 @@ public class LocationVO {
 
 	public void setImgPath(String imgPath) {
 		this.imgPath = imgPath;
-	}
-
-	public String getMapPath() {
-		return mapPath;
-	}
-
-	public void setMapPath(String mapPath) {
-		this.mapPath = mapPath;
 	}
 
 	public LocationEnum getLocationEnum() {
