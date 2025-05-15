@@ -19,6 +19,7 @@ import com.hulzzuk.user.model.dao.UserDao;
 import com.hulzzuk.user.model.vo.UserVO;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Service("reviewService")
 public class ReviewServiceImpl implements ReviewService{
@@ -69,7 +70,15 @@ public class ReviewServiceImpl implements ReviewService{
 
 	// 내 리뷰 조회
 	@Override
-	public ModelAndView getMyReviewList(ModelAndView mv, String userId) {
+	public ModelAndView getMyReviewList(HttpSession session, ModelAndView mv, String userId) {
+		String sessionUserId = (String) session.getAttribute("authUserId");
+		
+		// 세션 없을 경우 로그인 페이지로 이동
+	    if(sessionUserId == null) {
+	    	mv.setViewName("redirect:/user/loginSelect.do");
+	    	return mv;
+	    }
+	    
 		UserVO user = userDao.selectUser(userId);
 		List<ReviewVO> reviewList = reviewDao.getMyReviewList(userId);
 		
