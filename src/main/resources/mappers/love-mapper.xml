@@ -37,11 +37,80 @@
 		values ( #{logId}, #{userId})
 	</insert>
 	
+	<!-- 찜 중복 확인용 쿼리 -->
+	<select id="selectLoveExists" parameterType="Love" resultType="int">
+	    select count(*)
+	    from tb_love
+	    where user_id = #{userId}
+	    <choose>
+	        <when test="accoId != null">AND acco_id = #{accoId}</when>
+	        <when test="restId != null">AND rest_id = #{restId}</when>
+	        <when test="attrId != null">AND attr_id = #{attrId}</when>
+	        <when test="logId != 0">AND log_id = #{logId}</when>
+	    </choose>
+	</select>
+	
+	<!-- 여행지 찜 개수 조회 -->
+	<select id="getLocLoveCount" resultType="int">
+    	select count(*) from tb_love
+	    <where>
+	        <choose>
+	            <when test="locationEnum.equals('ACCO')">acco_id = #{locId}</when>
+			    <when test="locationEnum.equals('REST')">rest_id = #{locId}</when>
+			    <when test="locationEnum.equals('ATTR')">attr_id = #{locId}</when>
+	        </choose>
+	    </where>
+	</select>	
+	
+	<!-- 로그 찜 개수 조회 -->
+	<!-- <select id="getLogLoveCount" resultType="int">
+    	select count(*) from tb_love
+	    where log_id = #{logId}
+	</select> 	 -->
 
 	<!-- 찜 삭제용 쿼리 -->
-	<delete id="deleteLove">
+	<delete id="deleteLoveByCondition" parameterType="Love">
 		delete from tb_love
-		where love_id = #{ loveId }
+		where user_id = #{ userId }
+		<choose>
+	        <when test="accoId != null">AND acco_id = #{accoId}</when>
+	        <when test="restId != null">AND rest_id = #{restId}</when>
+	        <when test="attrId != null">AND attr_id = #{attrId}</when>
+	        <when test="logId != 0">AND log_id = #{logId}</when>
+  		</choose>
 	</delete>
+	
+	<!-- 전체 찜 리스트 조회 -->
+    <select id="selectAllLoveList" resultMap="resultList" parameterType="string">
+        SELECT *
+        FROM tb_love
+        WHERE user_id = #{userId}
+          AND (
+              acco_id IS NOT NULL
+              OR rest_id IS NOT NULL
+              OR attr_id IS NOT NULL
+              OR log_id IS NOT NULL
+          )
+        ORDER BY love_id DESC
+    </select>
+	
+	<!-- 여행지 찜 리스트 조회용 쿼리 -->
+	<select id="selectPlaceLoveList" resultMap="resultList" parameterType="string">
+	    SELECT *
+	    FROM tb_love
+	    WHERE user_id = #{userId}
+	      AND (attr_id IS NOT NULL OR acco_id IS NOT NULL OR rest_id IS NOT NULL)
+	      ORDER BY love_id DESC
+	</select>
+
+	<!-- 로그 찜 리스트 조회용 쿼리 -->
+	<select id="selectLogLoveList" resultType="Love">
+	    SELECT *
+	    FROM tb_love
+	    WHERE user_id = #{userId}
+	    AND log_id IS NOT NULL
+	    ORDER BY love_id DESC
+	</select>
+	
 	
 </mapper>

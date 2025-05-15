@@ -25,6 +25,11 @@ public class LogDao {
     public List<LogVO> getLogList(Paging paging) {
         return sqlSession.selectList("logMapper.getLogList", paging);
     }
+    
+    
+    public List<LogVO> getLogListByIds(List<Long> logIds) {
+        return sqlSession.selectList("logMapper.getLogListByIds", logIds);
+    }
 
     // 전체 로그 수 조회
     public int getLogCount() {
