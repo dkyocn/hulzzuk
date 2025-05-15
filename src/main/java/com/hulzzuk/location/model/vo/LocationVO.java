@@ -15,12 +15,14 @@ public class LocationVO {
 	private String restMenu;
 	private String imgPath;
 	private LocationEnum locationEnum;
+	private int loveCount;
 
 	// constructor
 	public LocationVO() {}
 
 	public LocationVO(String locId, String placeName, String phone, String addressName, Double x, Double y,
-			String category, String placeUrl, String restMenu, String imgPath, LocationEnum locationEnum) {
+			String category, String placeUrl, String restMenu, String imgPath, LocationEnum locationEnum,
+			int loveCount) {
 		super();
 		this.locId = locId;
 		this.placeName = placeName;
@@ -33,6 +35,15 @@ public class LocationVO {
 		this.restMenu = restMenu;
 		this.imgPath = imgPath;
 		this.locationEnum = locationEnum;
+		this.loveCount = loveCount;
+	}
+
+	public int getLoveCount() {
+		return loveCount;
+	}
+
+	public void setLoveCount(int loveCount) {
+		this.loveCount = loveCount;
 	}
 
 	public String getCategory() {

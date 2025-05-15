@@ -157,6 +157,12 @@ public class LocationServiceImpl implements LocationService{
         	accoPaging.calculate();
         	List<LocationVO> accoList = locationDao.getLocationPage(locationEnum.ACCO, keyword, accoPaging, sortEnum);
 
+        	for(LocationVO vo : accoList) {
+        		// 찜 개수 계산
+                int loveCount = loveService.getLocLoveCount(vo.getLocId(), locationEnum.ACCO);
+                vo.setLoveCount(loveCount);
+        	}
+            
             mv.addObject("accoList", accoList);
             mv.addObject("accoPaging", accoPaging);
             
@@ -166,6 +172,12 @@ public class LocationServiceImpl implements LocationService{
         	restPaging.calculate();
         	List<LocationVO> restList = locationDao.getLocationPage(locationEnum.REST, keyword, restPaging, sortEnum);
 
+        	for(LocationVO vo : restList) {
+        		// 찜 개수 계산
+                int loveCount = loveService.getLocLoveCount(vo.getLocId(), locationEnum.REST);
+                vo.setLoveCount(loveCount);
+        	}
+            
             mv.addObject("restList", restList);
             mv.addObject("restPaging", restPaging);
             
@@ -175,6 +187,12 @@ public class LocationServiceImpl implements LocationService{
         	attrPaging.calculate();
         	List<LocationVO> attrList = locationDao.getLocationPage(locationEnum.ATTR, keyword, attrPaging, sortEnum);
 
+        	for(LocationVO vo : attrList) {
+        		// 찜 개수 계산
+                int loveCount = loveService.getLocLoveCount(vo.getLocId(), locationEnum.ATTR);
+                vo.setLoveCount(loveCount);
+        	}
+            
             mv.addObject("attrList", attrList);
             mv.addObject("attrPaging", attrPaging);
         	mv.setViewName("location/locationAllListView");
@@ -187,6 +205,11 @@ public class LocationServiceImpl implements LocationService{
 
             List<LocationVO> locationList = locationDao.getLocationPage(locationEnum, keyword, paging, sortEnum);
 
+            for(LocationVO vo : locationList) {
+                int loveCount = loveService.getLocLoveCount(vo.getLocId(), locationEnum);
+                vo.setLoveCount(loveCount);
+            }
+            
             mv.addObject("list", locationList);
             mv.addObject("paging", paging);
 			mv.addObject("locationEnum", locationEnum);
