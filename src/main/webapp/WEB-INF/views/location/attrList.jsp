@@ -33,7 +33,7 @@
             <div class="location-info">
                 <h3>${ location.placeName }</h3>
                 <p>❤️</p>
-                <p>${ location.roadAddressName }</p>
+                <p>${ location.addressName }</p>
             </div>
         </div>
     </c:forEach>

@@ -26,14 +26,21 @@
 
 /* 메인 이미지 */
 .main-image {
-    text-align: center;
-    margin: 20px 0;
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 9:16 비율 유지 */
+    overflow: hidden;
+    border-radius: 12px;
 }
 
 .main-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    max-width: 720px;
-    border-radius: 12px;
+    height: 100%;
+    object-fit: cover;
+    border: none;
 }
 
 /* 버튼 그룹 */
