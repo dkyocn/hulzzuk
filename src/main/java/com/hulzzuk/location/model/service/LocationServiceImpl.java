@@ -1,13 +1,25 @@
 package com.hulzzuk.location.model.service;
 
-import java.util.*;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hulzzuk.common.enumeration.SortEnum;
 import com.hulzzuk.common.vo.Paging;
 import com.hulzzuk.location.model.dao.LocationDao;
@@ -76,7 +88,55 @@ public class LocationServiceImpl implements LocationService{
         if (limit != null) {
             pageLimit = Integer.parseInt(limit);
         }
-
+        
+        if(keyword != null && !keyword.isEmpty()) {
+        	JsonNode kakaoloc = getLocationInfo(keyword, locationEnum);
+            JsonNode kakaolocList = kakaoloc.get("documents");
+            
+            if(kakaolocList != null && kakaolocList.isArray()) {
+            	kakaolocList.forEach(JsonNode  -> {
+                	String id = JsonNode.get("id").toString();
+    
+                	switch(locationEnum) {
+                	case ACCO : 
+                		LocationVO acco = locationDao.getAccoById(JsonNode.get("id").asText());
+                		if(acco == null) {
+                			acco = convertJsonToLocationVO(JsonNode, locationEnum);
+                			int result = locationDao.insertAcco(acco);
+                			if(result <= 0) {
+                				log.warn("숙소 insert 실패");
+                			}
+                		}
+                		break;
+                	case REST : 
+                		LocationVO rest = locationDao.getRestById(JsonNode.get("id").asText());	
+                		if(rest == null) {
+                			rest = convertJsonToLocationVO(JsonNode, locationEnum);
+                			int result = locationDao.insertRest(rest);
+                			if(result <= 0) {
+                				log.warn("맛집 insert 실패");
+                			}
+                		}
+                		break;
+                	case ATTR : 
+                		LocationVO attr = locationDao.getAttrById(JsonNode.get("id").asText());	
+                		if(attr == null) {
+                			attr = convertJsonToLocationVO(JsonNode, locationEnum);
+      
+                			int result = locationDao.insertAttr(attr);
+                			if(result <= 0) {
+                				log.warn("즐길거리 insert 실패");
+                			}
+                		}
+                		break;
+                	case ALL : locationDao.getAccoById(JsonNode.get("id").asText());	
+                						   locationDao.getRestById(JsonNode.get("id").asText());
+                						   locationDao.getAttrById(JsonNode.get("id").asText());	break;
+                	}
+                });
+            }
+        }
+        
         if(locationEnum .equals(LocationEnum.ALL)) {
         	// 숙소 리스트 조회
         	int accoListCount = getLocationListCount(keyword, sortEnum, locationEnum.ACCO);
@@ -225,4 +285,76 @@ public class LocationServiceImpl implements LocationService{
 		return Math.round(distance * 10) / 10.0;
 	}
 
+	 public JsonNode getLocationInfo(String keyword, LocationEnum locationEnum) {
+	        final String requestUrl = "https://dapi.kakao.com/v2/local/search/keyword.json?query="+ keyword;
+	        
+	        HttpClient client = HttpClientBuilder.create().build();
+	        HttpGet get = new HttpGet(requestUrl);
+	        
+	        get.setHeader("Authorization", "KakaoAK 7e7c827b84e5f3847ec771f158f01cdc");
+
+	        JsonNode returnNode = null;
+
+	        try {
+	            var response = client.execute(get);
+	            ObjectMapper mapper = new ObjectMapper();
+	            returnNode = mapper.readTree(response.getEntity().getContent());
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	        return returnNode;
+	    }
+	 
+	 public String convertJsonToLocationImage(String placeName) {
+		 placeName = URLEncoder.encode(placeName, StandardCharsets.UTF_8);
+		 
+		 final String requestUrl = "https://dapi.kakao.com/v2/search/image?query="+ placeName;
+		 
+		 HttpClient client = HttpClientBuilder.create().build();
+        HttpGet get = new HttpGet(requestUrl);
+        
+        get.setHeader("Authorization", "KakaoAK 7e7c827b84e5f3847ec771f158f01cdc");
+
+        JsonNode returnNode = null;
+        String imageUrl = new String();
+        try {
+            var response = client.execute(get);
+            ObjectMapper mapper = new ObjectMapper();
+            returnNode = mapper.readTree(response.getEntity().getContent());
+            JsonNode kakaolocList = returnNode.get("documents");
+            imageUrl = kakaolocList.get(0).get("image_url").asText();
+            if(imageUrl.split("type").length == 2) {
+            	imageUrl = "/hulzzuk/resources/images/logList/no_image.jpg";
+            }
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return imageUrl;
+	 }
+	 
+	 
+	 public LocationVO convertJsonToLocationVO(JsonNode jsonNode, LocationEnum locationEnum) {
+		 LocationVO vo = new LocationVO();
+	        vo.setLocId(jsonNode.get("id").asText());
+	        vo.setPlaceName(jsonNode.get("place_name").asText());
+	       String imageUrl = convertJsonToLocationImage(jsonNode.get("place_name").asText());
+	        vo.setImgPath(imageUrl);
+	        if(!(jsonNode.get("road_address_name").asText().isBlank())) {
+	        	vo.setAddressName(jsonNode.get("road_address_name").asText());
+	        }else {
+	        	vo.setAddressName(jsonNode.get("address_name").asText());
+	        }
+	        vo.setPhone(jsonNode.get("phone").asText());
+	        vo.setX(jsonNode.get("x").asDouble());
+	        vo.setY(jsonNode.get("y").asDouble());
+	        vo.setCategory(jsonNode.get("category_group_code").asText());
+	        if(locationEnum == LocationEnum.ACCO) {
+	        	vo.setPlaceUrl(jsonNode.get("place_url").asText());
+	        }
+			if(locationEnum == LocationEnum.REST) {
+				vo.setRestMenu(jsonNode.get("place_url").asText());
+			}
+	        return vo;
+	 }
 }

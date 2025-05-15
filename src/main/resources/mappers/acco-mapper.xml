@@ -79,5 +79,11 @@
         </where>
         order by ACCO_PLACENAME
     </select>
+    
+    <!--  숙소 추가  -->
+	<insert id="insertAcco" parameterType="hashMap" >
+		insert into TB_ACCO(ACCO_ID, ACCO_PLACENAME, ACCO_ADDRESSNAME, ACCO_PHONE, ACCO_X, ACCO_Y, ACCO_CATEGORY, ACCO_RESER, ACCO_IMAGE)
+		values(#{locId}, #{placeName}, #{addressName}, #{phone}, #{x}, #{y}, #{category}, #{placeUrl}, #{imgPath})
+	</insert>
 </mapper>
 	

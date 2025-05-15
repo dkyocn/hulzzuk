@@ -45,14 +45,19 @@
     overflow: hidden;
     background: #f9f9f9;
     border-radius: 10px;
-    overflow: hidden;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    aspect-ratio: 1/1; /* 정사각형 비율 */
-    transition: transform 0.2s;
+    aspect-ratio: 1 / 1; /* 정사각형 유지 */
+    display: flex;
+    flex-direction: column;
 }
 
 .location-card:hover {
     transform: translateY(-5px);
+}
+
+.location-image {
+    flex: 1 1 auto;  /* 남은 공간 다 차지 */
+    position: relative;
 }
 
 .location-image img {

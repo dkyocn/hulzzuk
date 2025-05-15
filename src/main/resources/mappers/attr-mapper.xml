@@ -77,5 +77,10 @@
 		</where>
 		order by ATTR_PLACENAME
 	</select>
-	
+
+	<!--  즐길거리 추가  -->
+	<insert id="insertAttr" parameterType="hashMap" >
+		insert into TB_ATTR(ATTR_ID, ATTR_PLACENAME, ATTR_ADDRESSNAME, ATTR_PHONE, ATTR_X, ATTR_Y, ATTR_CATEGORYS, ATTR_IMAGE)
+		values(#{locId}, #{placeName}, #{addressName}, #{phone}, #{x}, #{y}, #{category}, #{imgPath})
+	</insert>
 	</mapper>

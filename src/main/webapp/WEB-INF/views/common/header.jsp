@@ -50,31 +50,16 @@
     </div>
 
     <ul class="menu-section">
-
-     <c:url var="location" value="loc/select.do">
-            <c:param name="locationEnum" value="ACCO"></c:param>
-            <c:param name="locId" value="13" />
-        </c:url>
-        <li><a href="${location }">숙소</a></li>
-        
-        <c:url var="location" value="loc/select.do">
-            <c:param name="locId" value="16" />
-            <c:param name="locationEnum" value="REST"></c:param>
-        </c:url>
-        <li><a href="${location }">맛집</a></li>
-        
-        <c:url var="location" value="loc/select.do">
-            <c:param name="locId" value="30" />
-            <c:param name="locationEnum" value="ATTR"></c:param>
-        </c:url>
-        <li><a href="${location }">즐길거리</a></li>
+     <li><a href="${pageContext.servletContext.contextPath}/loc/page.do?locationEnum=ACCO&page=1&sortEnum=LOVEDESC">숙소</a></li>
+    <li><a href="${pageContext.servletContext.contextPath}/loc/page.do?locationEnum=REST&page=1&sortEnum=LOVEDESC">맛집</a></li>
+    <li><a href="${pageContext.servletContext.contextPath}/loc/page.do?locationEnum=ATTR&page=1&sortEnum=LOVEDESC">즐길거리</a></li>
         <li><a href="${ pageContext.servletContext.contextPath }/log/page.do?page=1">여행로그</a></li>
     </ul>
-s
+
     <ul class="menu-section">
         <li><a href="${ pageContext.servletContext.contextPath }/notice/page.do?page=1">공지사항</a></li>
         <li><a href="${ pageContext.servletContext.contextPath }/faq/page.do?page=1">FAQ</a></li>
-        <li><a href="#">고객의 소리</a></li>
+        <li><a href="${ pageContext.servletContext.contextPath }/voc/page.do?vocEnum=ALL&page=1">고객의 소리</a></li>
     </ul>
 
     <ul class="menu-section">

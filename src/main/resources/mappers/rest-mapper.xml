@@ -9,10 +9,10 @@
 	<result property="placeName" column="REST_PLACENAME" />
 	<result property="phone" column="REST_PHONE" />
 	<result property="addressName" column="REST_ADDRESSNAME" />
+	<result property="category" column="REST_CATEGORY" />
 	<result property="x" column="REST_X" />
 	<result property="y" column="REST_Y" />
 	 <result property="imgPath" column="REST_IMAGE"/>
-	  <result property="mapPath" column="MAP_PATH"/>
 	<result property="restMenu" column="REST_MENU" />
 	</resultMap>
 	
@@ -105,4 +105,10 @@
 		</where>
 		order by REST_PLACENAME
 	</select>
+	
+	<!--  맛집 추가  -->
+	<insert id="insertRest" parameterType="hashMap" >
+		insert into TB_REST(REST_ID, REST_PLACENAME, REST_ADDRESSNAME, REST_PHONE, REST_X, REST_Y, REST_CATEGORY, REST_MENU, REST_IMAGE)
+		values(#{locId}, #{placeName}, #{addressName}, #{phone}, #{x}, #{y}, #{category}, #{restMenu}, #{imgPath})
+	</insert>
   </mapper>

@@ -93,33 +93,14 @@
             <div class="location-info">
                 <h3>${ location.placeName }</h3>
                 <p>❤️</p>
-                <p>${ location.roadAddressName }</p>
+                <p>${ location.addressName }</p>
             </div>
         </div>
     </c:forEach>
 </div>
 </div>
 
- 
-<!-- <div id="logGallery"> -->
-<%--     <div class="galleryGrid">
-        <c:forEach var="log" items="${logs}">
-            <div class="galleryItem">
-                <img src="${pageContext.request.contextPath}/resources/images/search.png" alt="검색" style="border:none;">
-                <div class="overlay">
-                    <h3><c:out value="${location.placeName}"/></h3>
-                    <p>❤️</p>
-                    <p>${ location.roadAddressName }</p>
-                </div>
-            </div>
-        </c:forEach>
-    </div> --%>
-<!-- </div> -->
-
-
-
 <c:import url="/WEB-INF/views/common/pagination.jsp" />
-<hr>
 <c:import url="/WEB-INF/views/common/footer.jsp" />
 </body>
 </html>
