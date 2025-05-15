@@ -520,14 +520,14 @@ public class UserServiceImpl implements UserService {
 		}
 		return deleteYN;
  	}
-
+///hulzzuk_war/resources/images/user/jungdongju99@gmail.com/20250515181237.00.08.png
 	@Override
 	public Map<String, Object> profileUpload(MultipartFile mfile, HttpServletRequest request) {
 		HashMap<String, Object> map = new HashMap<>();
 
 		// 게시글 첨부파일저장폴더 경로 저장
-		String path = System.getProperty("user.dir");
 		String savePath = request.getSession().getServletContext().getRealPath("/resources/images/user/"+request.getSession().getAttribute("authUserId"));
+		String webPath = request.getSession().getServletContext().getContextPath()+"/resources/images/user/"+request.getSession().getAttribute("authUserId");
 
 		// 첨부파일이 있을 때
 		if (mfile != null && !mfile.isEmpty()) {
@@ -544,12 +544,14 @@ public class UserServiceImpl implements UserService {
 				java.io.File destFile = new java.io.File(savePath + "/" + renameFileName);
 				mfile.transferTo(destFile);
 				savePath = savePath + "/" + renameFileName;
+				webPath = webPath + "/" + renameFileName;
 
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
 		}
 		map.put("filePath", savePath);
+		map.put("webPath", webPath);
 		map.put("successYN", true);
 
 		return map;
