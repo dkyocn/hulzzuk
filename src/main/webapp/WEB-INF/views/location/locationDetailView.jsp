@@ -138,6 +138,27 @@ navigator.geolocation.getCurrentPosition(function(position) {
 });
 
 
+// 페이지 로딩 시 하트 상태 반영
+document.addEventListener("DOMContentLoaded", function () {
+    const locLoveBtn = document.querySelector(".locLoveBtn");
+    const locLoveImg = locLoveBtn.querySelector(".locLoveImg");
+
+    const locId = '${location.locId}';
+    const locationEnum = '${locationEnum}';
+
+    fetch('${pageContext.request.contextPath}/love/check.do?locId=' + encodeURIComponent(locId) + '&locationEnum=' + encodeURIComponent(locationEnum))
+        .then(response => response.json())
+        .then(data => {
+            const loved = data.loved === true;
+            locLoveBtn.dataset.loved = loved;
+            locLoveImg.src = loved
+                ? '${pageContext.request.contextPath}/resources/images/loc/loc-love-filled.png'
+                : '${pageContext.request.contextPath}/resources/images/loc/loc-love-black.png';
+        });
+});
+
+
+
 function planPopup(){
 	window.open('${ pageContext.servletContext.contextPath }/plan/LocDetailMovePlan.do','planList', 'width=700,height=700');
 }
@@ -152,6 +173,7 @@ function clip() {
     document.body.removeChild(textarea);
     alert("링크가 복사되었습니다. 필요하신 곳에 붙여넣기 하세요!");
 
+
 function toggleLove(button) {
     const userId = '${sessionScope.loginUser.userId}';
     
@@ -162,11 +184,11 @@ function toggleLove(button) {
         return;
     }
     
-    const loved = button.dataset.loved;
+    const loved = button.dataset.loved === 'true';
     const img = button.querySelector('.locLoveImg');
 
     const url = loved
-        ? '${pageContext.request.contextPath}/love/delete.do'
+        ? '${pageContext.request.contextPath}/love/delete.do?locId=' + ${requestScope.location.locId} + '&locationEnum=${requestScope.locationEnum}'
         : '${pageContext.request.contextPath}/love/create.do?locId=' + ${requestScope.location.locId} + '&locationEnum=${requestScope.locationEnum}';
 	/* fetch(contextPath + `/loc/getLocation.do?locId=` + ${requestScope.location.locId} + `&locationEnum=` + ${requestScope.locationEnum}); */
     fetch(url, {
@@ -203,7 +225,8 @@ function toggleLove(button) {
     <div class="title-section">
         <h1>${location.placeName}</h1>
         <div class="rating">
-    		★ <fmt:formatNumber value="${avgRating}" maxFractionDigits="1"/> / 5 &nbsp;&nbsp; ❤️ 20
+    		★ <fmt:formatNumber value="${avgRating}" maxFractionDigits="1"/> / 5 &nbsp;&nbsp; 
+    		❤️ <fmt:formatNumber value="${loveCount}"/>
 		</div>
     </div>
 

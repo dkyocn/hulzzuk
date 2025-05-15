@@ -34,7 +34,17 @@
         OFFSET #{start} ROWS FETCH NEXT #{amount} ROWS ONLY
     </select>
     
-      <select id="getLogCount" resultType="int">
+    <select id="getLogListByIds" parameterType="list" resultMap="logResultMap">
+	    SELECT *
+	    FROM tb_log
+	    WHERE log_id IN
+	    <foreach item="id" collection="list" open="(" separator="," close=")">
+	        #{id}
+	    </foreach>
+	</select>
+    
+    
+    <select id="getLogCount" resultType="int">
         SELECT COUNT(*) FROM TB_LOG
     </select>
     
