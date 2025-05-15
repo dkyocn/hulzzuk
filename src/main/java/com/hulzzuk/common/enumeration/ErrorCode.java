@@ -13,6 +13,7 @@ public enum ErrorCode {
     FAQ_UPDATE_ERROR(523,"FAQ를 수정하는데 실패하였습니다."),
     FAQ_DELETE_ERROR(524,"FAQ를 삭제하는데 실패하였습니다."),
     USER_NOT_FOUND(419,"해당 ID의 회원 정보가 존재하지 않습니다."),
+    USER_UPDATE_ERROR(422,"회원 정보 수정을 실패하였습니다."),
     USER_DELETE_ERROR(515, "회원 탈퇴에 실패하였습니다."),
     PLAN_OUT_OF_BOUNDS(452,"일정의 날짜가 잘못설정되었습니다."),
     PLAN_NOT_FOUND(521,"해당 아이디의 일정을 찾을 수 없습니다."),

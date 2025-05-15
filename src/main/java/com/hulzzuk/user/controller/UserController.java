@@ -1,15 +1,15 @@
 package com.hulzzuk.user.controller;
 
 
+import com.hulzzuk.common.vo.FileNameChange;
+import com.hulzzuk.log.model.vo.LogVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.hulzzuk.user.model.service.UserService;
@@ -17,6 +17,9 @@ import com.hulzzuk.user.model.vo.UserVO;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("user")
@@ -153,9 +156,8 @@ public class UserController {
 	
 	// 마이 페이지 수정 페이지로 이동
 	@RequestMapping(value = "moveInfoUpdate.do")
-	public ModelAndView moveInfoUpdate(ModelAndView mv) {
-		mv.setViewName("user/infoUpdate");
-		return mv;
+	public ModelAndView moveInfoUpdate(ModelAndView mv, @RequestParam("userId") String userId) {
+		return userService.moveInfoUpdate(mv, userId);
 	}
 	
 	// 회원 가입 페이지 이동
@@ -216,6 +218,20 @@ public class UserController {
     public String deleteUser(HttpServletRequest request, HttpSession session, SessionStatus status) { 
 	  return userService.deleteUser(request, session, status);
     }
+
+	@ResponseBody
+	@RequestMapping(value = "updateProfile.do", method = RequestMethod.POST)
+	public Map<String, Object> updateProfile(HttpServletRequest request,
+							  @RequestBody UserVO userVO) {
+
+		return userService.updateProfile(request, userVO);
+	}
+
+	@RequestMapping(value="profileUpload.do", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> profileUpload(@RequestParam(name="mfile", required=false) MultipartFile mfile, HttpServletRequest request) {
+		return userService.profileUpload(mfile, request);
+	}
 }
 
 

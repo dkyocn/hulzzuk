@@ -1,5 +1,7 @@
 package com.hulzzuk.user.model.service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 
@@ -11,12 +13,14 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.hulzzuk.common.vo.FileNameChange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.hulzzuk.common.enumeration.ErrorCode;
@@ -378,7 +382,21 @@ public class UserServiceImpl implements UserService {
 		
 		return mv;
 	}
-		
+
+	@Override
+	public ModelAndView moveInfoUpdate(ModelAndView mv, String userId) {
+
+		UserVO userVO = userDao.selectUser(userId);
+
+		if (userVO == null) {
+			throw new IllegalArgumentException(ErrorCode.USER_NOT_FOUND.getMessage());
+		}
+
+		mv.addObject("user",userVO);
+		mv.setViewName("user/infoUpdate");
+		return mv;
+	}
+
 	// 회원 가입
 	@Override
 	public ModelAndView insertUser(ModelAndView mv, HttpServletRequest request, UserVO user) {
@@ -502,6 +520,66 @@ public class UserServiceImpl implements UserService {
 		}
 		return deleteYN;
  	}
+
+	@Override
+	public Map<String, Object> profileUpload(MultipartFile mfile, HttpServletRequest request) {
+		HashMap<String, Object> map = new HashMap<>();
+
+		// 게시글 첨부파일저장폴더 경로 저장
+		String path = System.getProperty("user.dir");
+		String savePath = request.getSession().getServletContext().getRealPath("/resources/images/user/"+request.getSession().getAttribute("authUserId"));
+
+		// 첨부파일이 있을 때
+		if (mfile != null && !mfile.isEmpty()) {
+			try {
+				// 파일 이름 추출
+				String fileName = mfile.getOriginalFilename();
+				String renameFileName = FileNameChange.change(fileName, "yyyyMMddHHmmss");
+
+				// 폴더 없으면 생성
+				java.io.File dir = new java.io.File(savePath);
+				if (!dir.exists()) dir.mkdirs();
+
+				// 파일 실제 저장
+				java.io.File destFile = new java.io.File(savePath + "/" + renameFileName);
+				mfile.transferTo(destFile);
+				savePath = savePath + "/" + renameFileName;
+
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+		map.put("filePath", savePath);
+		map.put("successYN", true);
+
+		return map;
+	}
+
+	@Override
+	public Map<String, Object> updateProfile(HttpServletRequest request, UserVO userVO) {
+		HashMap<String, Object> map = new HashMap<>();
+		String authUserId = (String) request.getSession().getAttribute("authUserId");
+
+		UserVO loginUser = userDao.selectUser(authUserId);
+
+		if (loginUser == null) {
+			throw new IllegalArgumentException(ErrorCode.USER_NOT_FOUND.getMessage());
+		}
+
+		// vo 저장
+		loginUser.setUserProfile(userVO.getUserProfile());
+		loginUser.setUserNick(userVO.getUserNick());
+		loginUser.setGender(userVO.getGender());
+		loginUser.setUserAge(userVO.getUserAge());
+
+		if(userDao.updateUser(loginUser) == 0) {
+			throw new IllegalArgumentException(ErrorCode.USER_UPDATE_ERROR.getMessage());
+		}
+
+		map.put("success", true);
+
+		return map;
+	}
 }	
 
 

@@ -11,15 +11,17 @@
 <script type="text/javascript" src="${ pageContext.servletContext.contextPath }/resources/js/jquery-3.7.1.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
 <style type="text/css">
-table#infoProfile {
-	width: 700px;
+#infoProfile {
+	display: flex;
 	text-align: center;
-	border: 1px solid #585858;
-	margin-top: 0;
 	margin: 0 auto;
+	width: 700px;
+	border: 1px solid;
+	flex-direction: column;
+	align-items: center;
 }
 
-table#infoProfile img {
+.profileImg {
 	width: 250px;
 	height: 250px;
 	border: 1px solid #585858;
@@ -27,6 +29,28 @@ table#infoProfile img {
 	object-fit: cover;
 	margin-top: 20px;
 	margin-bottom: 20px;
+	position: relative;
+	background-size: 100% 100%;
+	background-image: url("${pageContext.request.contextPath}/resources/images/logo2.png");
+}
+
+#profileEditBtn {
+	left: 77%;
+	top: 83%;
+	background: none;
+	position: absolute;
+	border: none;
+	cursor: pointer;
+}
+.modifiedImg {
+	width: 32px;
+	height: 32px;
+}
+
+#userNick {
+	border: 1px solid;
+	text-align: center;
+	margin-bottom: 10px;
 }
 
 table#infoProfile td#nickname {
@@ -57,11 +81,21 @@ table#infoTable {
 	margin: 0 auto;
 }
 
-table#infoTable input.datailInput{
+table#infoTable input.detailInput{
 	border: none;
 	outline: none;
-	width: 93%; 
-	height: 100%;
+	padding: 0;
+	margin: 0;
+	font-size: 16px;
+	border: none;
+	outline: none;
+	box-sizing: border-box;
+}
+
+input.userId {
+	border: none;
+	outline: none;
+	width: 100%;
 	padding: 0;
 	margin: 0;
 	font-size: 16px;
@@ -113,85 +147,143 @@ div#topBtnArea {
 	color: #6d6d6d;
 }
 </style>
-<script type="text/javascript">
-window.onload = function(){
-	const photofile = document.getElementById('photofile');
+	<script type="text/javascript">
+		let uploadedFilePath = null; // 업로드된 파일 경로 저장
 
-    photofile.addEventListener('change', function (event) {
-        const file = event.target.files[0];
-        if (!file || !file.type.startsWith('image/')) {
-            alert('이미지 파일을 선택해주세요.');
-            return;
-        }
+		window.onload = function() {
+			const photofile = document.getElementById('photofile');
 
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            const photo1 = document.getElementById('photo1');
-            const photoDefault = document.getElementById('photoDefault');
-            const targetImg = photo1 || photoDefault;
+			photofile.addEventListener('change', function(event) {
+				const file = event.target.files[0];
+				if (!file || !file.type.startsWith('image/')) {
+					alert('이미지 파일을 선택해주세요.');
+					return;
+				}
 
-            if (targetImg) {
-                targetImg.setAttribute('src', e.target.result);
-                targetImg.setAttribute('data-file', file.name);
-            }
-        };
-        reader.readAsDataURL(file);
-    });
-};
-</script>
+				// 파일을 서버로 업로드
+				const formData = new FormData();
+				formData.append('mfile', file); // Controller의 @RequestParam("mfile")와 일치
+				formData.append('userId', document.getElementById('userId').value);
+
+				fetch('${pageContext.request.contextPath}/user/profileUpload.do', {
+					method: 'POST',
+					body: formData
+				})
+						.then(response => {
+							if (!response.ok) {
+								throw new Error('Network response was not ok: ' + response.statusText);
+							}
+							return response.json();
+						})
+						.then(data => {
+							console.log('Server response:', data);
+							if (data.successYN) {
+								uploadedFilePath = data.filePath; // 웹 경로 사용
+								console.log('Uploaded file path:', uploadedFilePath);
+
+								const photo1 = document.getElementById('photo1');
+								const photoDefault = document.getElementById('photoDefault');
+
+								if (photo1) {
+									photo1.setAttribute('src', ""+uploadedFilePath);
+									photo1.setAttribute('data-file', file.name);
+								} else if (photoDefault) {
+									photoDefault.style.backgroundImage = `url('`+uploadedFilePath+`')`;
+									photoDefault.setAttribute('data-file', file.name);
+									console.log('Updated background-image:', photoDefault.style.backgroundImage);
+								}
+							} else {
+								alert('이미지 업로드에 실패했습니다: ' + (data.message || ''));
+							}
+						})
+						.catch(error => {
+							console.error('Error:', error);
+							alert('이미지 업로드 중 오류가 발생했습니다. 콘솔을 확인하세요.');
+						});
+			});
+
+			document.getElementById('moveInfoUpdate').addEventListener('submit', function(event) {
+				event.preventDefault();
+
+				const data = {
+					userProfile: uploadedFilePath || '',
+					userNick: document.getElementById('userNick').value,
+					userId: document.getElementById('userId').value,
+					gender: document.querySelector('input[name="gender"]:checked')?.value || '',
+					userAge: document.querySelector('input[name="userAge"]').value
+				};
+
+				fetch('${pageContext.request.contextPath}/user/updateProfile.do', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(data)
+				})
+						.then(response => response.json())
+						.then(data => {
+							if (data.success) {
+								alert('프로필이 성공적으로 업데이트되었습니다.');
+								window.location.reload();
+							} else {
+								alert('업데이트에 실패했습니다.');
+							}
+						})
+						.catch(error => {
+							console.error('Error:', error);
+							alert('오류가 발생했습니다.');
+						});
+			});
+		};
+	</script>
 </head>
 <body>
 <c:import url="/WEB-INF/views/common/header.jsp" />
 <div id="topBtnArea">
 	<form name="moveInfoUpdate" id="moveInfoUpdate" action="${pageContext.request.contextPath}/user/#">
-	    <input type="hidden" name="userId" value="${sessionScope.authUserId}" />
-	   	<button type="submit" class="submitId">수정완료</button>
+		<input type="hidden" name="userId" value="${sessionScope.authUserId}" />
+		<button type="submit" class="submitId">수정완료</button>
 	</form>
 </div>
 <br>
 <form id="info" enctype="multipart/form-data">
-	<table id="infoProfile">
-		<tr><td>
-			<c:if test="${ !empty requestScope.user.userProfile }">
-				<div id="myphoto1">
-					<img src="${ requestScope.user.userProfile }" id="photo1">
-					<button id="profileEditBtn" type="button" onclick="document.getElementById('photoFile').click();">
-						<img src="/hulzzuk/resources/images/common/edit.png" alt="변경"></button>
-				</div>		
-			</c:if>
-			
-			<c:if test="${ empty requestScope.user.userProfile }">
-				<div id="myphoto2">
-					<img src="${pageContext.request.contextPath}/resources/images/logo2.png" id="photoDefault">
-					<button id="profileEditBtn" type="button" onclick="document.getElementById('photoFile').click();">
-					<img src="/hulzzuk/resources/images/common/edit.png" alt="변경"></button>
-				</div>
-			</c:if>
-			${ requestScope.ofile }<br>
+	<div id="infoProfile">
+		<c:if test="${ !empty requestScope.user.userProfile }">
+			<div id="myphoto1">
+				<img src="${ requestScope.user.userProfile }" id="photo1" class="profileImg">
+				<button id="profileEditBtn" type="button" onclick="document.getElementById('photofile').click();">
+					<img src="${pageContext.request.contextPath}/resources/images/common/edit.png" alt="변경"></button>
+			</div>
+		</c:if>
+
+		<c:if test="${ empty requestScope.user.userProfile }">
+			<div class="profileImg" id="photoDefault">
+				<button id="profileEditBtn" type="button" onclick="document.getElementById('photofile').click();">
+					<img class="modifiedImg" src="${pageContext.request.contextPath}/resources/images/common/edit.png" alt="변경"></button>
+			</div>
+		</c:if>
+		<div>
 			<!-- 숨김 파일 선택 input (공통) -->
-			<input type="file" id="photofile" name="photofile" style="display: none;" accept="image/*"></td></tr>
-		<tr><td id="nickname">
-			<input text-align="center" type="text" name="userNick" id="userNick" value="${ requestScope.user.userNick }"></td></tr>
-	</table>
+			<input type="file" id="photofile" name="photofile" style="display: none;" accept="image/*">
+			<input text-align="center" type="text" name="userNick" id="userNick" value="${ requestScope.user.userNick }">
+		</div>
+	</div>
 </form>
 <br>
 <div id="infoDetail">
 	<table id="infoTable">
 		<tr><th>아이디(이메일)</th>
-			<td><input type="email" name="userId" id="userId" class="datailInput"
-				value="${ requestScope.user.userId }" readonly></td></tr>
-		<tr><th>비밀번호</th><td>&nbsp; 버튼을 누르면 비밀번호 재설정 페이지로 이동합니다. &nbsp;
+			<td><input type="email" name="userId" id="userId" class="userId"
+					   value="${ requestScope.user.userId }" readonly></td></tr>
+		<tr><th>비밀번호</th><td> 버튼을 누르면 비밀번호 재설정 페이지로 이동합니다.
 			<button type="button" onclick="location.href='${pageContext.request.contextPath}/user/moveSendMail.do'">재설정</button></td></tr>
 		<tr><th>성별</th>
-			<td><c:if test="${ requestScope.user.gender eq 'M' }">
-				<input type="radio" name="gender" class="datailInput" value="M" checked> 남자 &nbsp;
-			<input type="radio" name="gender" class="datailInput" value="F"> 여자 
-		</c:if> <c:if test="${ requestScope.user.gender eq 'F' }">
-				<input type="radio" name="gender" class="datailInput" value="M"> 남자 &nbsp;
-			<input type="radio" name="gender" class="datailInput" value="F" checked> 여자 
-		</c:if></td></tr>
+			<td>
+				<input type="radio" name="gender" class="detailInput" value="M" ${requestScope.user.gender eq 'M' ? 'checked' : ''}> 남자
+				<input type="radio" name="gender" class="detailInput" value="F" ${requestScope.user.gender eq 'F' ? 'checked' : ''}> 여자
+			</td></tr>
 		<tr><th>생년월일</th>
-			<td><input type="date" name="userAge" class="datailInput" min="19" max="100" value="${ user.age }"></td></tr>
+			<td><input type="date" name="userAge" class="detailInput" value="${ user.userAge }"></td></tr>
 	</table>
 </div>
 

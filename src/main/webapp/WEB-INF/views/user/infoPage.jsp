@@ -198,7 +198,7 @@ window.onload = function () {
 			<c:if test="${ requestScope.user.gender eq 'M' }">남자</c:if> 
 			<c:if test="${ requestScope.user.gender eq 'F' }">여자</c:if>
 			</td></tr>
-		<tr><th>생년월일</th>
+		<tr><th>나이</th>
 			<td><input type="text" name="userAge" class="datailInput" min="19" max="100" value="${ user.age }"></td></tr>
 	</table>
 	<div id="btnArea">
