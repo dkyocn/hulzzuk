@@ -138,25 +138,6 @@ navigator.geolocation.getCurrentPosition(function(position) {
 });
 
 
-// 페이지 로딩 시 하트 상태 반영
-document.addEventListener("DOMContentLoaded", function () {
-    const locLoveBtn = document.querySelector(".locLoveBtn");
-    const locLoveImg = locLoveBtn.querySelector(".locLoveImg");
-
-    const locId = '${location.locId}';
-    const locationEnum = '${locationEnum}';
-
-    fetch('${pageContext.request.contextPath}/love/check.do?locId=' + encodeURIComponent(locId) + '&locationEnum=' + encodeURIComponent(locationEnum))
-        .then(response => response.json())
-        .then(data => {
-            const loved = data.loved === true;
-            locLoveBtn.dataset.loved = loved;
-            locLoveImg.src = loved
-                ? '${pageContext.request.contextPath}/resources/images/loc/loc-love-filled.png'
-                : '${pageContext.request.contextPath}/resources/images/loc/loc-love-black.png';
-        });
-});
-
 
 
 function planPopup(){
@@ -172,8 +153,29 @@ function clip() {
     document.execCommand("copy");
     document.body.removeChild(textarea);
     alert("링크가 복사되었습니다. 필요하신 곳에 붙여넣기 하세요!");
-}    
 
+
+// 페이지 로딩 시 하트 상태 반영
+document.addEventListener("DOMContentLoaded", function () {
+    const buttons = document.querySelectorAll(".locLoveBtn");
+
+    buttons.forEach(button => {
+        const locId = button.dataset.locId;
+        const locationEnum = button.dataset.locationEnum;
+        const img = button.querySelector(".locLoveImg");
+
+        fetch('${pageContext.request.contextPath}/love/check.do?locId=' + encodeURIComponent(locId) + '&locationEnum=' + encodeURIComponent(locationEnum))
+            .then(response => response.json())
+            .then(data => {
+                const loved = data.loved === true;
+                button.dataset.loved = loved;
+                img.src = loved
+                    ? '${pageContext.request.contextPath}/resources/images/loc/loc-love-filled.png'
+                    : '${pageContext.request.contextPath}/resources/images/loc/loc-love-black.png';
+            })
+            .catch(err => console.error("찜 상태 체크 실패:", err));
+    });
+});
 
 function toggleLove(button) {
     const userId = '${sessionScope.loginUser.userId}';
@@ -186,12 +188,14 @@ function toggleLove(button) {
     }
     
     const loved = button.dataset.loved === 'true';
+    const locId = button.dataset.locId;
+    const locationEnum = button.dataset.locationEnum;
     const img = button.querySelector('.locLoveImg');
 
     const url = loved
         ? '${pageContext.request.contextPath}/love/delete.do?locId=' + ${requestScope.location.locId} + '&locationEnum=${requestScope.locationEnum}'
         : '${pageContext.request.contextPath}/love/create.do?locId=' + ${requestScope.location.locId} + '&locationEnum=${requestScope.locationEnum}';
-	/* fetch(contextPath + `/loc/getLocation.do?locId=` + ${requestScope.location.locId} + `&locationEnum=` + ${requestScope.locationEnum}); */
+
     fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -238,7 +242,7 @@ function toggleLove(button) {
 
     <!-- 버튼 그룹 -->
     <div class="button-group">
-        <button class="locLoveBtn" data-loved="false" onclick="toggleLove(this)">
+        <button class="locLoveBtn" data-loved="false" data-loc-id="${location.locId}" data-location-enum="${locationEnum}" onclick="toggleLove(this)">
     		<img class="locLoveImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-love-black.png">
  			<span class="locLoveText">찜하기</span></button>
         <button class="locPlanBtn" onclick="planPopup()">
