@@ -15,6 +15,7 @@ import com.hulzzuk.review.model.service.ReviewService;
 import com.hulzzuk.review.model.vo.ReviewVO;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("review")
@@ -25,9 +26,9 @@ public class ReviewController {
 	
 	  // 마이 리뷰 조회
 	  @RequestMapping("select.do")
-	  public ModelAndView getMyReviewList(ModelAndView mv, 
+	  public ModelAndView getMyReviewList(HttpSession session, ModelAndView mv, 
 			  							@RequestParam(name = "userId") String userId) {
-		  return reviewService.getMyReviewList(mv,userId);
+		  return reviewService.getMyReviewList(session, mv,userId);
 	  }
 		
 	  // 리뷰 생성 => 생성 페이지로 이동

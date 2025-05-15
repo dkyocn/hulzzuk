@@ -24,10 +24,10 @@
     <a href="${ pageContext.servletContext.contextPath }/faq/page.do?page=1">FAQ</a>
     <a href="${ pageContext.servletContext.contextPath }/voc/page.do?vocEnum=ALL&page=1">고객의 소리</a>
     <c:if test="${ empty sessionScope.loginUser }">
-	    <a href="${ pageContext.servletContext.contextPath }/user/login.do">MY 여행 로그</a>
-	    <a href="${ pageContext.servletContext.contextPath }/user/login.do">MY 일정</a>
-	    <a href="${ pageContext.servletContext.contextPath }/user/login.do">MY 찜</a>
-	    <a href="${ pageContext.servletContext.contextPath }/user/login.do">MY 리뷰</a>
+	    <a href="${pageContext.request.contextPath}/user/loginSelect.do">My 여행로그</a>
+	    <a href="${pageContext.request.contextPath}/user/loginSelect.do">My 일정</a>
+	    <a href="${pageContext.request.contextPath}/user/loginSelect.do">My 찜</a>
+	    <a href="${pageContext.request.contextPath}/user/loginSelect.do">My 리뷰</a>
     </c:if>
     <c:if test="${ !empty sessionScope.loginUser }">
 	    <a href="#">My 여행 로그</a>
