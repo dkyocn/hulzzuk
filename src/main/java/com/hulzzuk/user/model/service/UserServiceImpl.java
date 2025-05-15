@@ -1,5 +1,9 @@
 package com.hulzzuk.user.model.service;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -23,8 +27,8 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.hulzzuk.common.enumeration.ErrorCode;
-import com.hulzzuk.user.controller.KakaoLoginAuth;
 import com.hulzzuk.user.model.dao.UserDao;
 import com.hulzzuk.user.model.vo.UserVO;
 
@@ -42,6 +46,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private KakaoLoginAuth kakaoLoginAuth;
+	
+	@Autowired
+	private NaverLoginAuth naverLoginAuth;
 	
 	// 패스워드 암호화 처리
 	private static final PasswordEncryptor passwordEncryptor = new PasswordEncryptor();
@@ -69,6 +76,7 @@ public class UserServiceImpl implements UserService {
 	// 로그아웃
 	@Override
 	public ModelAndView logoutMethod(ModelAndView mv, HttpSession session, SessionStatus status) {
+		String redirectUrl = "/main.do";
 		
 		// 해당 세션 객체가 있으면 리턴받고, 없으면 null 리턴받음
 		if (session != null) {
@@ -77,6 +85,8 @@ public class UserServiceImpl implements UserService {
 	        UserVO user = (UserVO) session.getAttribute("loginUser");
 	        String sns = user.getUserPath();
 	        String accessToken = (String) session.getAttribute("accessToken");
+	        OAuth2AccessToken token = (OAuth2AccessToken) session.getAttribute("oauthToken");
+	        String accessTokenNaver = token.getAccessToken();
 
 	        if (sns != null && accessToken != null) {
 	            switch (sns) {
@@ -84,21 +94,35 @@ public class UserServiceImpl implements UserService {
 	                	kakaoLoginAuth.logOut(accessToken);
 	                	//kakaoLoginAuth.disconnect(accessToken); 
 	                    break;
-	                /*
 	                case "naver":
-	                    naverLoginAuth.logOut(accessToken); // Naver 로그아웃 호출
+	                	//naverLoginAuth.logOut(accessTokenNaver);
+	                	// 1. 네이버 AccessToken 삭제
+                        try {
+                            String deleteUrl = NaverLoginAuth.buildTokenDeleteUrl(accessTokenNaver);
+                            URL url = new URL(deleteUrl);
+                            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                            conn.setRequestMethod("POST");
+                            conn.setDoOutput(true);
+                            conn.getResponseCode(); // 강제 실행
+                            conn.disconnect();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        // 2. 사용자 브라우저를 네이버 로그아웃 페이지로 리디렉션
+                        redirectUrl = "https://nid.naver.com/nidlogin.logout";
+						 
 	                    break;
-	                */
 	            }
 	        }
 			
 			// 해당 세션객체가 있다면, 세션 객체를 없앰
 			session.invalidate();
 			status.setComplete();
-			mv.setViewName("redirect:/main.do");
+			mv.setViewName("redirect:" + redirectUrl);
 		} else {
 			mv.addObject("message", "로그인 세션이 존재하지 않습니다.");
-			mv.setViewName("redirect:/main.do");
+			mv.setViewName("redirect:" + redirectUrl);
 		}
 		
 		return mv;
@@ -496,13 +520,10 @@ public class UserServiceImpl implements UserService {
 	            switch (sns) {
 	                case "kakao":
 	                	kakaoLoginAuth.disconnect(accessToken);
-	                	//kakaoLoginAuth.disconnect(accessToken); 
 	                    break;
-	                /*
 	                case "naver":
-	                    naverLoginAuth.logOut(accessToken); // Naver 로그아웃 호출
+	                  //  naverLoginAuth.logOut(accessToken); // Naver 로그아웃 호출
 	                    break;
-	                */
 	            }
 	        }
 			// 세션 없애기

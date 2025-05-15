@@ -68,7 +68,7 @@ button.submitId img {
 </style>
 <script type="text/javascript">
 document.addEventListener("DOMContentLoaded", async function () {
-	console.log("아무거나 나와랏 : ${requestScope.kakaoUrl}");
+	console.log("아무거나 나와랏 : ${requestScope.naverUrl}");
 });
 </script>
 </head>

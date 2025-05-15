@@ -2,7 +2,6 @@ package com.hulzzuk.user.model.vo;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.ZoneId;
 import java.sql.Date;
 
 public class UserVO implements java.io.Serializable {

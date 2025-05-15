@@ -3,7 +3,7 @@ package com.hulzzuk.user.model.vo;
 import java.sql.Date;
 import java.util.Map;
 
-public class SocialUserVO implements java.io.Serializable {
+public class KakaoUserVO implements java.io.Serializable {
 	private static final long serialVersionUID = -1962768785117036477L;
 	
 	private Long id;
@@ -14,11 +14,11 @@ public class SocialUserVO implements java.io.Serializable {
 	private KakaoAccountVO kakaoAccount;
 	private Map<String, String> forPartner;
 	
-	public SocialUserVO() {
+	public KakaoUserVO() {
 		super();
 	}
 	
-	public SocialUserVO(Long id, Boolean hasSignedUp, Date connectedAt, Date synchedAt, Map<String, String> properties,
+	public KakaoUserVO(Long id, Boolean hasSignedUp, Date connectedAt, Date synchedAt, Map<String, String> properties,
 			KakaoAccountVO kakaoAccount, Map<String, String> forPartner) {
 		super();
 		this.id = id;
