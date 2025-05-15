@@ -109,20 +109,24 @@ public class LocationServiceImpl implements LocationService{
                 	case ACCO : 
                 		LocationVO acco = locationDao.getAccoById(JsonNode.get("id").asText());
                 		if(acco == null) {
-                			acco = convertJsonToLocationVO(JsonNode, locationEnum);
-                			int result = locationDao.insertAcco(acco);
-                			if(result <= 0) {
-                				log.warn("숙소 insert 실패");
+                			if("AD5".equals(JsonNode.get("category_group_code").asText())) {
+	                			acco = convertJsonToLocationVO(JsonNode, locationEnum);
+	                			int result = locationDao.insertAcco(acco);
+	                			if(result <= 0) {
+	                				log.warn("숙소 insert 실패");
+	                			}
                 			}
                 		}
                 		break;
                 	case REST : 
                 		LocationVO rest = locationDao.getRestById(JsonNode.get("id").asText());	
                 		if(rest == null) {
-                			rest = convertJsonToLocationVO(JsonNode, locationEnum);
-                			int result = locationDao.insertRest(rest);
-                			if(result <= 0) {
-                				log.warn("맛집 insert 실패");
+                			if("CE7".equals(JsonNode.get("category_group_code").asText()) || "FD6".equals(JsonNode.get("category_group_code").asText())) {
+	                			rest = convertJsonToLocationVO(JsonNode, locationEnum);
+	                			int result = locationDao.insertRest(rest);
+	                			if(result <= 0) {
+	                				log.warn("맛집 insert 실패");
+	                			}
                 			}
                 		}
                 		break;
@@ -130,10 +134,11 @@ public class LocationServiceImpl implements LocationService{
                 		LocationVO attr = locationDao.getAttrById(JsonNode.get("id").asText());	
                 		if(attr == null) {
                 			attr = convertJsonToLocationVO(JsonNode, locationEnum);
-      
-                			int result = locationDao.insertAttr(attr);
-                			if(result <= 0) {
-                				log.warn("즐길거리 insert 실패");
+                			if("CT1".equals(JsonNode.get("category_group_code").asText()) || "AT4".equals(JsonNode.get("category_group_code").asText())) {
+	                			int result = locationDao.insertAttr(attr);
+	                			if(result <= 0) {
+	                				log.warn("즐길거리 insert 실패");
+	                			}
                 			}
                 		}
                 		break;

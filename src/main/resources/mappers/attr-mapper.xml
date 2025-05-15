@@ -9,6 +9,7 @@
 	<result property="placeName" column="ATTR_PLACENAME" />
 	<result property="phone" column="ATTR_PHONE" />
 	<result property="addressName" column="ATTR_ADDRESSNAME" />
+	<result property="category" column="ATTR_CATEGORY" />
 	<result property="x" column="ATTR_X" />
 	<result property="y" column="ATTR_Y" />
 	<result property="imgPath" column="ATTR_IMAGE"/>
@@ -80,7 +81,7 @@
 
 	<!--  즐길거리 추가  -->
 	<insert id="insertAttr" parameterType="hashMap" >
-		insert into TB_ATTR(ATTR_ID, ATTR_PLACENAME, ATTR_ADDRESSNAME, ATTR_PHONE, ATTR_X, ATTR_Y, ATTR_CATEGORYS, ATTR_IMAGE)
+		insert into TB_ATTR(ATTR_ID, ATTR_PLACENAME, ATTR_ADDRESSNAME, ATTR_PHONE, ATTR_X, ATTR_Y, ATTR_CATEGORY, ATTR_IMAGE)
 		values(#{locId}, #{placeName}, #{addressName}, #{phone}, #{x}, #{y}, #{category}, #{imgPath})
 	</insert>
 	</mapper>

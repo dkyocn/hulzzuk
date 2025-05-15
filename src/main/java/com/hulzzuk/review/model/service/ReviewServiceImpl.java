@@ -83,7 +83,7 @@ public class ReviewServiceImpl implements ReviewService{
 				 result.put(reviewVO.getReviewId(), locationDao.getRestName(reviewVO.getRestId()));
 			 } 
 			 if( reviewVO.getAttrId() != null) {
-				 result.put(reviewVO.getReviewId(), locationDao.getAccoName(reviewVO.getAttrId()));
+				 result.put(reviewVO.getReviewId(), locationDao.getAttrName(reviewVO.getAttrId()));
 			 } 			 
 		 }
 		 mv.addObject("locName", result);		 

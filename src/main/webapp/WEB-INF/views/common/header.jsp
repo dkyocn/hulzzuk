@@ -71,7 +71,7 @@
         <c:url var="myrev" value="review/select.do">
             <c:param name="userId" value="${loginUser.userId}" />
         </c:url>
-        <li class="mymenu"><a href="${ myrev }">My 리뷰</a></li>
+        <li class="mymenu"><a href="${ pageContext.servletContext.contextPath }/review/select.do?userId=${loginUser.userId}">My 리뷰</a></li>
     </ul>
 </div>
 
