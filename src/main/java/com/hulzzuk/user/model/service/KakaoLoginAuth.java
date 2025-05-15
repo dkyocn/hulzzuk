@@ -1,4 +1,4 @@
-package com.hulzzuk.user.controller;
+package com.hulzzuk.user.model.service;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hulzzuk.user.model.vo.SocialUserVO;
+import com.hulzzuk.user.model.vo.KakaoUserVO;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -37,7 +37,7 @@ public class KakaoLoginAuth {
     }
 
     // accessToken 획득 (step 2)
-    public JsonNode getAccessToken(String authorizeCode) {
+    public JsonNode getKakaoAccessToken(String authorizeCode) {
         final String requestUrl = "https://kauth.kakao.com/oauth/token";
         final List<NameValuePair> postParams = new ArrayList<>();
 
@@ -81,7 +81,7 @@ public class KakaoLoginAuth {
 	 */
     
     // 사용자 정보 획득
-    public SocialUserVO getKakaoUserInfo(String accessToken) {
+    public KakaoUserVO getKakaoUserInfo(String accessToken) {
         final String requestUrl = "https://kapi.kakao.com/v2/user/me";
 
         HttpClient client = HttpClientBuilder.create().build();
@@ -92,7 +92,7 @@ public class KakaoLoginAuth {
 
         List<NameValuePair> params = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
-        SocialUserVO user = null;
+        KakaoUserVO kUser = null;
 
         try {
             params.add(new BasicNameValuePair("property_keys",
@@ -123,15 +123,15 @@ public class KakaoLoginAuth {
             JsonNode kakaoAcc = root.path("kakao_account");
             JsonNode profile = kakaoAcc.path("profile");
 
-            SocialUserVO.KakaoAccountVO.ProfileVO profileVO =
-                    new SocialUserVO().new KakaoAccountVO().new ProfileVO(
+            KakaoUserVO.KakaoAccountVO.ProfileVO profileVO =
+                    new KakaoUserVO().new KakaoAccountVO().new ProfileVO(
                             profile.path("nickname").asText(null),
                             profile.path("thumbnail_image_url").asText(null),
                             profile.path("profile_image_url").asText(null),
                             profile.path("is_default_image").asBoolean(false)
                     );
 
-            SocialUserVO.KakaoAccountVO kakaoAccount = new SocialUserVO().new KakaoAccountVO(
+            KakaoUserVO.KakaoAccountVO kakaoAccount = new KakaoUserVO().new KakaoAccountVO(
                     kakaoAcc.path("profile_needs_agreement").asBoolean(false),
                     profileVO,
                     kakaoAcc.path("has_email").asBoolean(false),
@@ -144,35 +144,38 @@ public class KakaoLoginAuth {
                     kakaoAcc.path("birthday_type").asText(null)
             );
 
-            user = new SocialUserVO(id, hasSignedUp, connectedAt, synchedAt, properties, kakaoAccount, new HashMap<>());
+            kUser = new KakaoUserVO(id, hasSignedUp, connectedAt, synchedAt, properties, kakaoAccount, new HashMap<>());
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return user;
+        return kUser;
     }
 
     
     // 로그아웃
-	
-	  public JsonNode logOut(String accessToken) { 
-		  final String requestUrl = "https://kapi.kakao.com/v1/user/logout";
+    public JsonNode logOut(String accessToken) {
+    	final String requestUrl = "https://kapi.kakao.com/v1/user/logout";
+  
+    	HttpClient client = HttpClientBuilder.create().build(); 
+    	HttpPost post = new HttpPost(requestUrl); 
+    	post.addHeader("Authorization", "Bearer " + accessToken);
 	  
-	  HttpClient client = HttpClientBuilder.create().build(); HttpPost post = new
-	  HttpPost(requestUrl); post.addHeader("Authorization", "Bearer " +
-	  accessToken);
+    	JsonNode returnNode = null;
+  
+	   try { 
+		  var response = client.execute(post); 
+		  ObjectMapper mapper = new ObjectMapper(); 
+		  returnNode = mapper.readTree(response.getEntity().getContent());
+		  
+		  System.out.println("카카오 로그아웃 성공: " + returnNode);
+	   } catch (IOException e) {
+		  e.printStackTrace(); 
+	   }
 	  
-	  JsonNode returnNode = null;
-	  
-	  try { var response = client.execute(post); ObjectMapper mapper = new
-	  ObjectMapper(); returnNode =
-	  mapper.readTree(response.getEntity().getContent());
-	  
-	  System.out.println("카카오 로그아웃 성공: " + returnNode); } catch (IOException e) {
-	  e.printStackTrace(); }
-	  
-	  return returnNode; }
+	   return returnNode; 
+    }
 	 
     
     // 카카오 계정 연결 해제 (unlink)

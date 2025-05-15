@@ -1,10 +1,6 @@
 package com.hulzzuk.user.controller;
 
 
-import com.hulzzuk.common.vo.FileNameChange;
-import com.hulzzuk.log.model.vo.LogVO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -12,19 +8,19 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.hulzzuk.user.model.service.KakaoLoginAuth;
+import com.hulzzuk.user.model.service.NaverLoginAuth;
 import com.hulzzuk.user.model.service.UserService;
 import com.hulzzuk.user.model.vo.UserVO;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Controller
 @RequestMapping("user")
 public class UserController {
-	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	
 	@Autowired
 	private UserService userService;
@@ -32,19 +28,19 @@ public class UserController {
 	@Autowired
 	private KakaoLoginAuth kakaoLoginAuth;
 	
-	/*
-	 * @Autowired private NaverLoginAuth naverLoginAuth;
-	 */
+	@Autowired 
+	private NaverLoginAuth naverLoginAuth;
+	 
 	
 	// 로그인 방법 선택
 	@RequestMapping(value = "loginSelect.do", method = RequestMethod.GET)
 	public ModelAndView loginSelect(ModelAndView mv, HttpSession session) {
 		// 소셜 로그인 접속을 위한 인증 url 정보 생성 
     	String kakaoAuthUrl = kakaoLoginAuth.getAuthorizationUrl(session);
-    	//String naverAuthUrl = naverLoginAuth.getAuthorizationUrl(session);
+    	String naverAuthUrl = naverLoginAuth.getAuthorizationUrl(session);
 	  
 		// mv에 각각의 url 정보 저장 
-    	//mv.addObject("naverUrl", naverAuthUrl);
+    	mv.addObject("naverUrl", naverAuthUrl);
 		mv.addObject("kakaoUrl", kakaoAuthUrl);
 		mv.setViewName("user/socialLogin");
 		

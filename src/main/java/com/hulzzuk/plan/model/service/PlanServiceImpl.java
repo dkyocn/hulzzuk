@@ -80,7 +80,7 @@ public class PlanServiceImpl implements PlanService {
         } else {
             // 로그인 요청
             mv.addObject("fail", "Y");
-            mv.setViewName("user/loginPage");
+            mv.setViewName("redirect:/user/loginSelect.do");
         }
 
 
