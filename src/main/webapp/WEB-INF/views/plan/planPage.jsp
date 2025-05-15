@@ -113,12 +113,8 @@
                     <img class="planImg" src="${pageContext.request.contextPath}/resources/images/plan/jeolla.jpeg" alt="">
                 </c:when>
             </c:choose>
-            <div class="planContentTitle2">
-                <c:url var="bd" value="select.do">
-                    <c:param name="planId" value="${ plan.planId }" />
-                    <c:param name="page" value="${ nowpage }" />
-                </c:url>
-                <a class="planName" href="${ bd }">${ plan.planTitle }</a>
+            <div class="planContentTitle">
+                <a class="planName" href="${ pageContext.servletContext.contextPath }/plan/select.do?planId=${plan.planId}">${ plan.planTitle }</a>
                 <p class="planDate">${ plan.planStartDate } ~ ${ plan.planEndDate }</p>
             </div>
         </div>

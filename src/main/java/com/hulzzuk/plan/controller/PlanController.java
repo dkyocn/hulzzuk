@@ -38,9 +38,8 @@ public class PlanController {
 
     @RequestMapping("select.do")
     public ModelAndView getPlanById(ModelAndView mv,
-                                    @RequestParam(name = "planId") long planId,
-                                    @RequestParam(name = "page", required = false) String page) {
-        return mv;
+                                    @RequestParam(name = "planId") long planId) {
+        return planService.getSecondPlan(mv,planId);
     }
 
     @RequestMapping("moveUpdate.do")
