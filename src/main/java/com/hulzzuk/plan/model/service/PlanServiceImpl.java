@@ -79,7 +79,6 @@ public class PlanServiceImpl implements PlanService {
                 mv.setViewName("plan/planPage");
         } else {
             // 로그인 요청
-            mv.addObject("fail", "Y");
             mv.setViewName("redirect:/user/loginSelect.do");
         }
 
@@ -293,6 +292,22 @@ public class PlanServiceImpl implements PlanService {
 
         modelAndView.addObject("plan", planVO);
         modelAndView.setViewName("plan/updatePlanFirst");
+        return modelAndView;
+    }
+
+    @Override
+    public ModelAndView getSecondPlan(ModelAndView modelAndView, long planId) {
+
+        PlanVO planVO = planDao.getPlanById(planId);
+
+        if (planVO == null) {
+            throw new IllegalArgumentException(ErrorCode.PLAN_NOT_FOUND.getMessage());
+        }
+
+
+        modelAndView.addObject("planLoc", planDao.getPlanLocByPlanId(planId));
+        modelAndView.addObject("plan", planVO);
+        modelAndView.setViewName("plan/planSecond");
         return modelAndView;
     }
 

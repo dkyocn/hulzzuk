@@ -70,9 +70,9 @@
 	        <li class="mymenu"><a href="${pageContext.request.contextPath}/love/moveLove.do">My 찜</a></li>
 	        
 	        <c:url var="myrev" value="review/select.do">
-	            <c:param name="userId" value="${loginUser.userId}" />
-	        </c:url>
-	        <li class="mymenu"><a href="${ myrev }">My 리뷰</a></li>
+            <c:param name="userId" value="${loginUser.userId}" />
+        </c:url>
+        <li class="mymenu"><a href="${ pageContext.servletContext.contextPath }/review/select.do?userId=${loginUser.userId}">My 리뷰</a></li>
 	    </c:if>
 	    <c:if test="${ empty sessionScope.loginUser }">
 	    	<li><a href="${pageContext.request.contextPath}/user/loginSelect.do">마이페이지</a></li>

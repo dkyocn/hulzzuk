@@ -21,7 +21,7 @@
 	align-items: center;
 }
 
-.profileImg {
+.profileImg, .notProfileImg {
 	width: 250px;
 	height: 250px;
 	border: 1px solid #585858;
@@ -31,7 +31,15 @@
 	margin-bottom: 20px;
 	position: relative;
 	background-size: 100% 100%;
+
+}
+
+.profileImg {
 	background-image: url("${pageContext.request.contextPath}/resources/images/logo2.png");
+}
+
+.notProfileImg {
+	background-image: url("${requestScope.user.userProfile}");
 }
 
 #profileEditBtn {
@@ -178,7 +186,7 @@ div#topBtnArea {
 						.then(data => {
 							console.log('Server response:', data);
 							if (data.successYN) {
-								uploadedFilePath = data.filePath; // 웹 경로 사용
+								uploadedFilePath = data.webPath; // 웹 경로 사용
 								console.log('Uploaded file path:', uploadedFilePath);
 
 								const photo1 = document.getElementById('photo1');
@@ -206,7 +214,7 @@ div#topBtnArea {
 				event.preventDefault();
 
 				const data = {
-					userProfile: uploadedFilePath || '',
+					userProfile: uploadedFilePath,
 					userNick: document.getElementById('userNick').value,
 					userId: document.getElementById('userId').value,
 					gender: document.querySelector('input[name="gender"]:checked')?.value || '',
@@ -224,7 +232,7 @@ div#topBtnArea {
 						.then(data => {
 							if (data.success) {
 								alert('프로필이 성공적으로 업데이트되었습니다.');
-								window.location.reload();
+								window.location.href = '${pageContext.request.contextPath}/user/select.do?userId=${requestScope.user.userId}';
 							} else {
 								alert('업데이트에 실패했습니다.');
 							}
@@ -240,7 +248,7 @@ div#topBtnArea {
 <body>
 <c:import url="/WEB-INF/views/common/header.jsp" />
 <div id="topBtnArea">
-	<form name="moveInfoUpdate" id="moveInfoUpdate" action="${pageContext.request.contextPath}/user/#">
+	<form name="moveInfoUpdate" id="moveInfoUpdate" action="${pageContext.request.contextPath}/user/select.do">
 		<input type="hidden" name="userId" value="${sessionScope.authUserId}" />
 		<button type="submit" class="submitId">수정완료</button>
 	</form>
@@ -248,13 +256,12 @@ div#topBtnArea {
 <br>
 <form id="info" enctype="multipart/form-data">
 	<div id="infoProfile">
-		<c:if test="${ !empty requestScope.user.userProfile }">
-			<div id="myphoto1">
-				<img src="${ requestScope.user.userProfile }" id="photo1" class="profileImg">
-				<button id="profileEditBtn" type="button" onclick="document.getElementById('photofile').click();">
-					<img src="${pageContext.request.contextPath}/resources/images/common/edit.png" alt="변경"></button>
-			</div>
-		</c:if>
+	<c:if test="${ !empty requestScope.user.userProfile }">
+		<div class="notProfileImg" id="photoDefault">
+			<button id="profileEditBtn" type="button" onclick="document.getElementById('photofile').click();">
+				<img class="modifiedImg" src="${pageContext.request.contextPath}/resources/images/common/edit.png" alt="변경"></button>
+		</div>
+	</c:if>
 
 		<c:if test="${ empty requestScope.user.userProfile }">
 			<div class="profileImg" id="photoDefault">

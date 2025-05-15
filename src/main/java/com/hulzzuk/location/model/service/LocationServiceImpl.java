@@ -109,20 +109,24 @@ public class LocationServiceImpl implements LocationService{
                 	case ACCO : 
                 		LocationVO acco = locationDao.getAccoById(JsonNode.get("id").asText());
                 		if(acco == null) {
-                			acco = convertJsonToLocationVO(JsonNode, locationEnum);
-                			int result = locationDao.insertAcco(acco);
-                			if(result <= 0) {
-                				log.warn("숙소 insert 실패");
+                			if("AD5".equals(JsonNode.get("category_group_code").asText())) {
+	                			acco = convertJsonToLocationVO(JsonNode, locationEnum);
+	                			int result = locationDao.insertAcco(acco);
+	                			if(result <= 0) {
+	                				log.warn("숙소 insert 실패");
+	                			}
                 			}
                 		}
                 		break;
                 	case REST : 
                 		LocationVO rest = locationDao.getRestById(JsonNode.get("id").asText());	
                 		if(rest == null) {
-                			rest = convertJsonToLocationVO(JsonNode, locationEnum);
-                			int result = locationDao.insertRest(rest);
-                			if(result <= 0) {
-                				log.warn("맛집 insert 실패");
+                			if("CE7".equals(JsonNode.get("category_group_code").asText()) || "FD6".equals(JsonNode.get("category_group_code").asText())) {
+	                			rest = convertJsonToLocationVO(JsonNode, locationEnum);
+	                			int result = locationDao.insertRest(rest);
+	                			if(result <= 0) {
+	                				log.warn("맛집 insert 실패");
+	                			}
                 			}
                 		}
                 		break;
@@ -130,10 +134,11 @@ public class LocationServiceImpl implements LocationService{
                 		LocationVO attr = locationDao.getAttrById(JsonNode.get("id").asText());	
                 		if(attr == null) {
                 			attr = convertJsonToLocationVO(JsonNode, locationEnum);
-      
-                			int result = locationDao.insertAttr(attr);
-                			if(result <= 0) {
-                				log.warn("즐길거리 insert 실패");
+                			if("CT1".equals(JsonNode.get("category_group_code").asText()) || "AT4".equals(JsonNode.get("category_group_code").asText())) {
+	                			int result = locationDao.insertAttr(attr);
+	                			if(result <= 0) {
+	                				log.warn("즐길거리 insert 실패");
+	                			}
                 			}
                 		}
                 		break;
@@ -152,6 +157,12 @@ public class LocationServiceImpl implements LocationService{
         	accoPaging.calculate();
         	List<LocationVO> accoList = locationDao.getLocationPage(locationEnum.ACCO, keyword, accoPaging, sortEnum);
 
+        	for(LocationVO vo : accoList) {
+        		// 찜 개수 계산
+                int loveCount = loveService.getLocLoveCount(vo.getLocId(), locationEnum.ACCO);
+                vo.setLoveCount(loveCount);
+        	}
+            
             mv.addObject("accoList", accoList);
             mv.addObject("accoPaging", accoPaging);
             
@@ -161,6 +172,12 @@ public class LocationServiceImpl implements LocationService{
         	restPaging.calculate();
         	List<LocationVO> restList = locationDao.getLocationPage(locationEnum.REST, keyword, restPaging, sortEnum);
 
+        	for(LocationVO vo : restList) {
+        		// 찜 개수 계산
+                int loveCount = loveService.getLocLoveCount(vo.getLocId(), locationEnum.REST);
+                vo.setLoveCount(loveCount);
+        	}
+            
             mv.addObject("restList", restList);
             mv.addObject("restPaging", restPaging);
             
@@ -170,6 +187,12 @@ public class LocationServiceImpl implements LocationService{
         	attrPaging.calculate();
         	List<LocationVO> attrList = locationDao.getLocationPage(locationEnum.ATTR, keyword, attrPaging, sortEnum);
 
+        	for(LocationVO vo : attrList) {
+        		// 찜 개수 계산
+                int loveCount = loveService.getLocLoveCount(vo.getLocId(), locationEnum.ATTR);
+                vo.setLoveCount(loveCount);
+        	}
+            
             mv.addObject("attrList", attrList);
             mv.addObject("attrPaging", attrPaging);
         	mv.setViewName("location/locationAllListView");
@@ -182,6 +205,11 @@ public class LocationServiceImpl implements LocationService{
 
             List<LocationVO> locationList = locationDao.getLocationPage(locationEnum, keyword, paging, sortEnum);
 
+            for(LocationVO vo : locationList) {
+                int loveCount = loveService.getLocLoveCount(vo.getLocId(), locationEnum);
+                vo.setLoveCount(loveCount);
+            }
+            
             mv.addObject("list", locationList);
             mv.addObject("paging", paging);
 			mv.addObject("locationEnum", locationEnum);

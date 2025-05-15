@@ -19,7 +19,9 @@
 <c:import url="/WEB-INF/views/common/header.jsp" />
 
 <div class="voc-container">
-    <h2>고객의 소리</h2>
+    <h2>
+    <a href="${pageContext.request.contextPath}/voc/page.do?vocEnum=ALL&page=1" class="voc-title-link">고객의 소리</a>
+	</h2>
     
     <!-- 검색 영역 -->
     <div class="search-wrapper">
@@ -46,7 +48,7 @@
             <a href="${pageContext.request.contextPath}/voc/create.do" class="write-button">작성하기</a>
         </c:when>
         <c:otherwise>
-            <a href="${pageContext.request.contextPath}/user/login.do?redirect=${pageContext.request.contextPath}/review/moveCreate.do?locationEnum=${locationEnum}&locId=${location.locId}" class="write-review-btn">리뷰 작성하기</a>
+            <a href="${pageContext.request.contextPath}/user/login.do?redirect=${pageContext.request.contextPath}/review/moveCreate.do?locationEnum=${locationEnum}&locId=${location.locId}" class="write-button">리뷰 작성하기</a>
         </c:otherwise>
     </c:choose>
 </div>

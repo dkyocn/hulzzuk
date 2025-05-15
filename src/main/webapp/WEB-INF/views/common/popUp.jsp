@@ -24,9 +24,26 @@
             if (action === 'redirect' && moveUrl) {
                 if (window.opener) {
                     window.opener.location.href = moveUrl;
+                    window.close();
                 }
+            } else if(action === 'close') {
+                window.close();
+            } else {
+                fetch('${actionUrl}', {
+                    method: 'GET'
+                })
+                    .then(response => response.text())
+                    .then(data => {
+                        if (data === 'success') {
+                            if (window.opener) window.opener.location.reload();
+                            window.close();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('작업 중 오류가 발생했습니다.');
+                    });
             }
-            window.close();
         }
 
         function cancelAction() {

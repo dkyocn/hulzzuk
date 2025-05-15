@@ -15,6 +15,8 @@ public interface PlanService {
 
     // 일정 단일 조회
     ModelAndView getPlanById(ModelAndView modelAndView ,long planId);
+    // 일정 단일 조회 - 제목
+    ModelAndView getSecondPlan(ModelAndView modelAndView ,long planId);
     // 일정 페이지 조회
     ModelAndView getPlanPage(HttpServletRequest request, String page, String limit, ModelAndView modelAndView);
     // 일정 생성 - 시퀀스 1

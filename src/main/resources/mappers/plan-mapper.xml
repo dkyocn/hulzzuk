@@ -15,12 +15,18 @@
     <!-- plan 페이지 조회 -->
     <select id="getPlanPage" parameterType="hashMap" resultMap="resultVO">
         SELECT PLAN_ID, PLAN_TITLE, PLAN_PLACE, PLAN_START_DATE, PLAN_END_DATE
-        FROM (SELECT ROWNUM RNUM, PLAN_ID, PLAN_TITLE, PLAN_PLACE, PLAN_START_DATE, PLAN_END_DATE
-              FROM TB_PLAN
-              left join TB_USER_PL UP using(PLAN_ID)
-              where up.user_id = #{userId})
-        WHERE RNUM BETWEEN #{ paging.startRow } AND #{ paging.endRow }
-        order by PLAN_START_DATE desc, PLAN_END_DATE desc
+        FROM (
+        SELECT ROWNUM RNUM, A.*
+        FROM (
+        SELECT PLAN_ID, PLAN_TITLE, PLAN_PLACE, PLAN_START_DATE, PLAN_END_DATE
+        FROM TB_PLAN
+        <![CDATA[
+           order by PLAN_START_DATE desc, PLAN_END_DATE desc
+        ) A
+        WHERE ROWNUM <= #{paging.endRow}
+    )
+    WHERE RNUM >= #{paging.startRow}
+    ]]>
     </select>
 
     <!-- plan 개수 조회 -->
