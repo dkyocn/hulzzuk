@@ -13,6 +13,7 @@ import com.hulzzuk.location.model.enumeration.LocationEnum;
 import com.hulzzuk.review.model.vo.ReviewVO;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Service("reviewService")
 public interface ReviewService {
@@ -25,7 +26,7 @@ public interface ReviewService {
 	 // 리뷰 별점 평균 조회
 	Double getAvgRating(String locId, LocationEnum locationEnum);
 	// 내리뷰 조회
-	ModelAndView getMyReviewList(ModelAndView mv, String userId);
+	ModelAndView getMyReviewList(HttpSession session, ModelAndView mv, String userId);
 	// 리뷰 한 개 조회
 	ReviewVO getReviewById(long reviewId);
 	// 리뷰 생성
