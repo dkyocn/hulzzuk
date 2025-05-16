@@ -111,4 +111,18 @@
 		insert into TB_REST(REST_ID, REST_PLACENAME, REST_ADDRESSNAME, REST_PHONE, REST_X, REST_Y, REST_CATEGORY, REST_MENU, REST_IMAGE)
 		values(#{locId}, #{placeName}, #{addressName}, #{phone}, #{x}, #{y}, #{category}, #{restMenu}, #{imgPath})
 	</insert>
+	
+	<!-- 맛집 top3 조회 -->
+	<select id="getTop3REST" parameterType="hashMap" resultMap="resultList">
+		SELECT R.REST_ID, R.REST_PLACENAME, R.REST_ADDRESSNAME, R.REST_IMAGE
+  		FROM TB_REST R
+  		LEFT JOIN (
+   			SELECT REST_ID, COUNT(*) AS LOVE_CNT
+    		FROM TB_LOVE
+  			GROUP BY REST_ID
+  		) L ON R.REST_ID = L.REST_ID
+  		ORDER BY NVL(L.LOVE_CNT, 0) DESC
+  		FETCH FIRST 3 ROWS ONLY
+	</select>
+	
   </mapper>

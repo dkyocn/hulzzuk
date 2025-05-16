@@ -85,5 +85,19 @@
 		insert into TB_ACCO(ACCO_ID, ACCO_PLACENAME, ACCO_ADDRESSNAME, ACCO_PHONE, ACCO_X, ACCO_Y, ACCO_CATEGORY, ACCO_RESER, ACCO_IMAGE)
 		values(#{locId}, #{placeName}, #{addressName}, #{phone}, #{x}, #{y}, #{category}, #{placeUrl}, #{imgPath})
 	</insert>
+	
+	<!-- 숙소 top3 조회 -->
+	<select id="getTop3Acco" parameterType="hashMap" resultMap="resultList">
+		SELECT A.ACCO_ID, A.ACCO_PLACENAME, A.ACCO_ADDRESSNAME, A.ACCO_IMAGE
+  		FROM TB_ACCO A
+  		LEFT JOIN (
+   			SELECT ACCO_ID, COUNT(*) AS LOVE_CNT
+    		FROM TB_LOVE
+  			GROUP BY ACCO_ID
+  		) L ON A.ACCO_ID = L.ACCO_ID
+  		ORDER BY NVL(L.LOVE_CNT, 0) DESC
+  		FETCH FIRST 3 ROWS ONLY
+	</select>
+	
 </mapper>
 	
