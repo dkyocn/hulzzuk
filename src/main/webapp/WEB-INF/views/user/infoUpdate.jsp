@@ -35,7 +35,7 @@
 }
 
 .profileImg {
-	background-image: url("${pageContext.request.contextPath}/resources/images/logo2.png");
+	background-image: url("${pageContext.request.contextPath}/resources/images/common/default_profile.png");
 }
 
 .notProfileImg {
@@ -156,9 +156,10 @@ div#topBtnArea {
 }
 </style>
 	<script type="text/javascript">
-		let uploadedFilePath = null; // 업로드된 파일 경로 저장
+		let uploadedFilePath =  null; // 업로드된 파일 경로 저장
 
 		window.onload = function() {
+			uploadedFilePath = "${requestScope.user.userProfile != null ? requestScope.user.userProfile : ''}";
 			const photofile = document.getElementById('photofile');
 
 			photofile.addEventListener('change', function(event) {
