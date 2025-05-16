@@ -16,14 +16,14 @@
 
 	<typeAliases>		
 
-		<typeAlias type="com.hulzzuk.log.model.vo.LogVO" alias="log"/>
+		<typeAlias type="com.hulzzuk.log.model.vo.LogVO" alias="LogVO"/>
 		<typeAlias type="com.hulzzuk.user.model.vo.UserVO" alias="User" />
 		<typeAlias type="com.hulzzuk.notice.model.vo.NoticeVO" alias="Notice" />	
 		<typeAlias type="com.hulzzuk.location.model.vo.LocationVO" alias="Location" />	
 		<typeAlias type="com.hulzzuk.review.model.vo.ReviewVO" alias="Review" />				
 		<typeAlias type="com.hulzzuk.plan.model.vo.PlanVO" alias="Plan" />
-		<typeAlias type="com.hulzzuk.log.model.vo.LogReviewVO" alias="logReview"/>
-		<typeAlias type="com.hulzzuk.log.model.vo.LogPlaceVO" alias="logPlace"/>
+		<typeAlias type="com.hulzzuk.log.model.vo.LogReviewVO" alias="logReviewVO"/>
+		<typeAlias type="com.hulzzuk.log.model.vo.LogCommentVO" alias="LogCommentVO"/>
 		<typeAlias type="com.hulzzuk.plan.model.vo.PlanUserVO" alias="PlanUser"/>
 		<typeAlias type="com.hulzzuk.plan.model.vo.PlanLocVO" alias="PlanLoc"/>
 		<typeAlias type="com.hulzzuk.common.vo.Paging" alias="Paging"/>

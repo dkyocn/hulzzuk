@@ -5,7 +5,7 @@ import java.sql.Date;
 public class LogVO {
 
  
-	private long logId;
+	private Long logId;
     private String imagePath;
     private String logTitle;
     private Date logStartDate;
@@ -18,21 +18,16 @@ public class LogVO {
     private int loveCount; // 추가: 좋아요 수
     
 
-
-    
+    private long planId;
     
 
 
 	public LogVO() {
 		super();
 	}
-
-
-
 	
 	
-	
-	public LogVO(long logId, String imagePath, String logTitle, Date logStartDate, Date logEndDate, int planDay,
+	public LogVO(Long logId, String imagePath, String logTitle, Date logStartDate, Date logEndDate, int planDay,
 			String userId, Date createdAt, Date updatedAt, int loveCount, Integer accoId, Integer restId,
 			Integer attrId, String logContent) {
 		super();
@@ -54,30 +49,14 @@ public class LogVO {
 
 
 
-	public LogVO(long logId, String imagePath, String logTitle, Date logStartDate, Date logEndDate, int planDay,
-			String userId, Date createdAt, Date updatedAt, int loveCount) {
-		super();
-		this.logId = logId;
-		this.imagePath = imagePath;
-		this.logTitle = logTitle;
-		this.logStartDate = logStartDate;
-		this.logEndDate = logEndDate;
-		this.planDay = planDay;
-		this.userId = userId;
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
-		this.loveCount = loveCount;
-	}
 
-
-
-	public long getLogId() {
+	public Long getLogId() {
 		return logId;
 	}
 
 
 
-	public void setLogId(long logId) {
+	public void setLogId(Long logId) {
 		this.logId = logId;
 	}
 
@@ -179,22 +158,36 @@ public class LogVO {
     
 	
 	
-    public int getLoveCount() { return loveCount; }
-    public void setLoveCount(int loveCount) { this.loveCount = loveCount; }
+    public int getLoveCount() { 
+    	return loveCount; }
+    
+    public void setLoveCount(int loveCount) { 
+    	this.loveCount = loveCount; }
 
 
 
+	public long getPlanId() {
+		return planId;
+	}
+
+	public void setPlanId(long planId) {
+		this.planId = planId;
+	}
+	
+    
    
-    
-    
-
 	@Override
 	public String toString() {
 		return "LogVO [logId=" + logId + ", imagePath=" + imagePath + ", logTitle=" + logTitle + ", logStartDate="
 				+ logStartDate + ", logEndDate=" + logEndDate + ", planDay=" + planDay + ", userId=" + userId
 				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", loveCount=" + loveCount + "]";
 	}
-	
+
+
+
+
+
+
 	
    
     

@@ -70,7 +70,7 @@
         <li><a href="${location }">즐길거리</a></li>
         <li><a href="${ pageContext.servletContext.contextPath }log/page.do?page=1">여행로그</a></li>
     </ul>
-s
+
     <ul class="menu-section">
         <c:url var="noti" value="notice/select.do">
             <c:param name="noticeId" value="1" />
@@ -82,7 +82,7 @@ s
 
     <ul class="menu-section">
         <li><a href="#">마이페이지</a></li>
-        <li class="mymenu"><a href="#">My 여행로그</a></li>
+        <li class="mymenu"><a href="${ pageContext.servletContext.contextPath }/log/myTripLog.do?">My 여행로그</a></li>
         <li class="mymenu"><a href="${ pageContext.servletContext.contextPath }/plan/page.do?page=1">My 일정</a></li>
         <li class="mymenu"><a href="#">My 찜</a></li>
         
