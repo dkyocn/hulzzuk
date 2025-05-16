@@ -128,9 +128,6 @@ function deleteGuidePopUp(){
 <form name ="deleteGuide" id="deleteGuidePopUp" action="deleteGuidePopUp.do" method="post">
 	<div id="deleteGuideInfo">
 		<h4>1. 현재 사용 중인 계정 정보가 삭제되며 복구할 수 없습니다.</h4>
-			<ul>
-				<li>같은 아이디로 재가입은 탈퇴 후 24시간 이후부터 가능합니다.</li>
-			</ul>
 		<h4>2. 작성한 이용 후기(리뷰)는 삭제되지 않습니다.</h4>
 			<ul>
 				<li>탈퇴 전 삭제해야 하는 이용후기가 있는지 확인해 주세요.</li>

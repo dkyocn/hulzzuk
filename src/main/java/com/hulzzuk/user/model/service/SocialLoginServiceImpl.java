@@ -134,7 +134,9 @@ public class SocialLoginServiceImpl implements SocialLoginService{
 		        // 로그인 처리
 		        session.setAttribute("loginUser", loginUser);
 		        session.setAttribute("authUserId", user.getUserId());
+		        logger.info("============네이버 토큰 : " + oauthToken);
 		        mv.setViewName("redirect:/main.do");
+		       
 		    } else {
 		        // 회원가입 처리 (간편 로그인 방식)
 		        
@@ -142,6 +144,7 @@ public class SocialLoginServiceImpl implements SocialLoginService{
 		         if (result > 0) {
 		             session.setAttribute("loginUser", user);
 		 	         session.setAttribute("authUserId", user.getUserId());
+				     logger.info("============네이버 토큰 : " + oauthToken);
 		             mv.setViewName("redirect:/main.do");
 		         } else {
 		             mv.addObject("message", "회원가입 중 오류가 발생했습니다.");
