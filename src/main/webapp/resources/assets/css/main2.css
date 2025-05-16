@@ -655,6 +655,7 @@ input[type="submit"].disabled, input[type="submit"]:disabled, input[type="reset"
 }
 
 .tiles article>.image {
+	height: 277px;
 	-moz-transition: -moz-transform 0.5s ease;
 	-webkit-transition: -webkit-transform 0.5s ease;
 	-ms-transition: -ms-transform 0.5s ease;
@@ -667,6 +668,7 @@ input[type="submit"].disabled, input[type="submit"]:disabled, input[type="reset"
 }
 
 .tiles article>.image img {
+	height: 100%;
 	display: block;
 	width: 100%;
 }
@@ -1002,10 +1004,6 @@ hr.titlehr {
 	flex-direction: column; /* 수직 레이아웃 */
 	justify-content: center; /* 수직 가운데 정렬 */
 	align-items: center; /* 수평 가운데 정렬(필요 시) */
-}
-
-.sliderTrack article a {
-	margin: 5px 15px 5px 15px;
 }
 
 .sliderOuter {

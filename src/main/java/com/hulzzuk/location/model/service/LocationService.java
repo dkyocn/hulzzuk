@@ -21,5 +21,5 @@ public interface LocationService {
 	ModelAndView getLocationList(String keyword, LocationEnum locationEnum, ModelAndView mv);
 	Map<String, Object> getLocation(LocationEnum locationEnum, String locId);
 	Map<String, Double> getDistance(Map<String, String> locationMap);
-	Map<String, List<LocationVO>> getTop3LocList();
+	ModelAndView getTop3LocList(ModelAndView mv);
 }
