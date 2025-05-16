@@ -2,8 +2,8 @@ package com.hulzzuk.log.model.service;
 
 import java.util.List;
 
-import com.hulzzuk.log.model.vo.LogPlaceVO;
 import com.hulzzuk.log.model.vo.LogReviewVO;
+import com.hulzzuk.log.model.vo.LogVO;
 
 
 public interface LogReviewService {
@@ -29,9 +29,13 @@ public interface LogReviewService {
      * @param planId 플랜 ID
      * @return 단일 플랜 정보 객체
      */
-	LogPlaceVO fetchPlanForLog(int planId);  // 후기페이지상단용 플
+	LogReviewVO fetchPlanForLog(int planId);  // 후기페이지상단용 플
 
 	 //List<LogPlaceVO> selectByPlanDay(int planId, int planDay); // ←테스트용 추가
 	
 	 //List<LogPlaceVO> getPlacesByPlanDay(Long planId, int i);   // 로그데이터 탭 안의 내용 불러오기 
+	
+	
+	long insertLog(LogVO log); // log 저장 후 ID 반환
+	int insertLogReviews(List<LogReviewVO> reviewList);
 }

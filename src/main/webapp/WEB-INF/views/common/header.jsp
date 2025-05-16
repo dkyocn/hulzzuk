@@ -65,7 +65,7 @@
     <ul class="menu-section">
 	    <c:if test="${ !empty sessionScope.loginUser }">
     		<li><a href="${pageContext.request.contextPath}/user/select.do?userId=${loginUser.userId}">마이페이지</a></li>
-	        <li class="mymenu"><a href="#">My 여행로그</a></li>
+	         <li class="mymenu"><a href="${ pageContext.servletContext.contextPath }/log/myTripLog.do?">My 여행로그</a></li>
 	        <li class="mymenu"><a href="${ pageContext.servletContext.contextPath }/plan/page.do?page=1">My 일정</a></li>
 	        <li class="mymenu"><a href="${pageContext.request.contextPath}/love/moveLove.do">My 찜</a></li>
 	        

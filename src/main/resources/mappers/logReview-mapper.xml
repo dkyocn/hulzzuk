@@ -1,75 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="logReviewMapper">
 
-    <insert id="insertLogReview" parameterType="com.hulzzuk.log.model.vo.LogReviewVO">
-        INSERT INTO TB_TRIP_LOG (
-            LOG_ID,
-            ACCO_ID,
-            REST_ID,
-            ATTR_ID,
-            LOG_CONTENT,
-            PLAN_DAY,
-            CREATED_AT,
-            UPDATED_AT
-        ) VALUES (
-            #{logId},
-            #{accoId},
-            #{restId},
-            #{attrId},
-            #{logContent},
-            #{planDay},
-            SYSDATE,
-            SYSDATE
-        )
-    </insert>
-    
-    <!-- 선택적: 특정 로그의 후기 조회 -->
-    <select id="selectLogReviewList" parameterType="long" resultType="com.hulzzuk.log.model.vo.LogReviewVO">
-        SELECT 
-            LOG_ID,
-            ACCO_ID,
-            REST_ID,
-            ATTR_ID,
-            LOG_CONTENT,
-            PLAN_DAY
-        FROM TB_TRIP_LOG
-        WHERE LOG_ID = #{logId}
-        ORDER BY PLAN_DAY, ACCO_ID, ATTR_ID, REST_ID
-    </select>
-    
-    <!--  장소별 로그 갯수 조회용 쿼리 -->
-	<select id="logCount" resultType="_int" parameterType="Long">
-	 	SELECT COUNT(*) 
-	    FROM TB_TRIP_LOG g
-	    <choose>
-	        <when test="locationEnum == 'ACCO'">
-	            WHERE g.ACCO_ID = #{locId}
-	        </when>
-	        <when test="locationEnum == 'REST'">
-	            WHERE g.REST_ID = #{locId}
-	        </when>
-	        <when test="locationEnum == 'ATTR'">
-	            WHERE g.ATTR_ID = #{locId}
-	        </when>
-	    </choose>
-	</select>
-	
-	<!--  로그id로 리스트 조회 -->
-	<select id="getLogId" resultType="Long" parameterType="Long">
-		SELECT LOG_ID
-	    FROM TB_TRIP_LOG g
-	    <choose>
-	        <when test="locationEnum == 'ACCO'">
-	            WHERE g.ACCO_ID = #{locId}
-	        </when>
-	        <when test="locationEnum == 'REST'">
-	            WHERE g.REST_ID = #{locId}
-	        </when>
-	        <when test="locationEnum == 'ATTR'">
-	            WHERE g.ATTR_ID = #{locId}
-	        </when>
-	    </choose>
-	</select>
+  <!-- LogReviewVO에 대한 명시적 매핑 -->
+  <resultMap id="logReviewPlaceResultMap" type="com.hulzzuk.log.model.vo.LogReviewVO">
+    <result property="placeName" column="placename"/>
+    <result property="category" column="category"/>
+    <result property="seq" column="seq"/>
+    <result property="planDay" column="planday"/>
+    <result property="latitude" column="latitude"/>
+    <result property="longitude" column="longitude"/>
+    <result property="accoId" column="accoid"/>
+    <result property="restId" column="restid"/>
+    <result property="attrId" column="attrid"/>
+</resultMap>
+
+<select id="getPlanById" resultType="com.hulzzuk.plan.model.vo.PlanVO" parameterType="int">
+    SELECT PLAN_ID, PLAN_TITLE, PLAN_PLACE, PLAN_START_DATE, PLAN_END_DATE
+    FROM TB_PLAN
+    WHERE PLAN_ID = #{planId}
+</select>
+
+<select id="selectByPlanDay" resultType="com.hulzzuk.log.model.vo.LogReviewVO">
+  SELECT * FROM TB_PLACE
+  WHERE PLAN_ID = #{planId}
+  AND PLAN_DAY = #{day}
+  ORDER BY SEQ
+</select>
+
+
+ 
+  
+  
+  <!-- 중계테이블 저장 -->
+
+<insert id="insertLogReview" parameterType="LogReviewVO">
+  INSERT INTO TB_TRIP_LOG (
+    LOG_ID,
+    ACCO_ID,
+    REST_ID,
+    ATTR_ID,
+    LOG_CONTENT,
+    PLAN_DAY
+  ) VALUES (
+    #{logId},
+    #{accoId},
+    #{restId},
+    #{attrId},
+    #{logContent},
+    #{planDay}
+  )
+</insert>
+
+
+  <!-- 특정 로그의 후기 리스트 조회 -->
+  <select id="selectLogReviewList" parameterType="long" resultType="com.hulzzuk.log.model.vo.LogReviewVO">
+    SELECT 
+      LOG_ID      AS logId,
+      ACCO_ID     AS accoId,
+      REST_ID     AS restId,
+      ATTR_ID     AS attrId,
+      LOG_CONTENT AS logContent,
+      PLAN_DAY    AS planDay
+    FROM TB_TRIP_LOG
+    WHERE LOG_ID = #{logId}
+    ORDER BY PLAN_DAY, ACCO_ID, ATTR_ID, REST_ID
+  </select>
+
+  <!-- 특정 planId, planDay에 대한 장소 목록 조회 -->
+<select id="selectPlacesByPlanDay" parameterType="map" resultMap="logReviewPlaceResultMap">
+	  SELECT
+	  TP.SEQ AS seq,
+	  TP.PLAN_DAY AS planDay,
+	  NVL(A.ACCO_PLACENAME, NVL(R.REST_PLACENAME, T.ATTR_PLACENAME)) AS placeName,
+	  NVL(A.ACCO_CATEGORY, NVL(R.REST_CATEGORY, T.ATTR_CATEGORY)) AS category,
+	  NVL(A.ACCO_Y, NVL(R.REST_Y, T.ATTR_Y)) AS latitude,
+	  NVL(A.ACCO_X, NVL(R.REST_X, T.ATTR_X)) AS longitude,
+	  TO_CHAR(TP.ACCO_ID) AS accoId,    
+	  TO_CHAR(TP.REST_ID) AS restId,    
+	  TO_CHAR(TP.ATTR_ID) AS attrId     
+	FROM TB_TRIP_PL TP
+  LEFT JOIN TB_ACCO A ON TP.ACCO_ID = A.ACCO_ID
+  LEFT JOIN TB_REST R ON TP.REST_ID = R.REST_ID
+  LEFT JOIN TB_ATTR T ON TP.ATTR_ID = T.ATTR_ID
+  WHERE TP.PLAN_ID = #{planId}
+    AND TP.PLAN_DAY = #{planDay}
+  ORDER BY TP.SEQ
+</select>
+
+
+
+
 
 </mapper>

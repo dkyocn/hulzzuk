@@ -25,8 +25,17 @@
 	    <result property="planStartDate" column="PLAN_START_DATE"/>
 	    <result property="planEndDate" column="PLAN_END_DATE"/>
 	</resultMap>
-
-
+	
+	<resultMap id="logReviewPlaceMap" type="com.hulzzuk.log.model.vo.LogReviewVO">
+	    <result property="planId" column="PLAN_ID"/>
+	    <result property="accoId" column="ACCO_ID"/>
+	    <result property="attrId" column="ATTR_ID"/>
+	    <result property="restId" column="REST_ID"/>
+	    <result property="seq" column="SEQ"/>
+	    <result property="planDay" column="PLAN_DAY"/>  
+	    <result property="placeName" column="PLACE_NAME"/>
+	</resultMap>
+		
     <!-- 전체 로그 리스트 조회 -->
     <select id="getLogList" resultMap="logResultMap" >
         SELECT * FROM TB_LOG
@@ -71,21 +80,68 @@
     OFFSET #{start} ROWS FETCH NEXT #{amount} ROWS ONLY
 </select>
     
+<!-- 로그 후기 저장 (3단계로: insertLog > selectRecentLogId 조회 > insertTripLog 등록) -->
+  
+<insert id="insertLog" parameterType="LogVO"  useGeneratedKeys="true" keyColumn="LOG_ID" keyProperty="logId">
+	INSERT INTO TB_LOG (
+    LOG_TITLE,
+    IMAGE_PATH,
+    LOG_START_DATE,
+    LOG_END_DATE,
+    PLAN_DAY,
+    USER_ID,
+    CREATED_AT,
+    UPDATED_AT
+  )
+  VALUES (
+    #{logTitle},
+    #{imagePath},
+    #{logStartDate},
+    #{logEndDate},
+    #{planDay},
+    #{userId},
+    #{createdAt},
+    #{updatedAt}
+  )
+</insert>
 
-	<insert id="createLog" parameterType="com.hulzzuk.log.model.vo.LogVO">
-	    <selectKey keyProperty="logId" resultType="long" order="BEFORE">
-	     <!-- logId를 insert 전에 시퀀스로 미리 채움 -->
-	        SELECT TB_LOG_SEQ.NEXTVAL FROM DUAL
-	    </selectKey>
-	    
-	    INSERT INTO TB_LOG (
-	        LOG_ID, IMAGE_PATH, LOG_TITLE, LOG_START_DATE, LOG_END_DATE, PLAN_DAY, USER_ID, CREATED_AT, UPDATED_AT
-	    ) VALUES (
-	        #{logId}, #{imagePath}, #{logTitle}, #{logStartDate}, #{logEndDate}, #{planDay}, #{userId}, SYSDATE, SYSDATE
-	    )
-	</insert>
+<!-- 로그 insert 구조변경을 위해 추가 -->
+<select id="selectRecentLogId" resultType="com.hulzzuk.log.model.vo.LogVO">
+    SELECT 
+        LOG_ID, LOG_TITLE, IMAGE_PATH, LOG_START_DATE, LOG_END_DATE
+    FROM 
+        TB_LOG
+    ORDER BY LOG_ID DESC
+    FETCH FIRST 1 ROWS ONLY
+</select>
+
+<insert id="insertTripLog" parameterType="com.hulzzuk.log.model.vo.LogReviewVO">
+    INSERT INTO TB_TRIP_LOG (
+        LOG_ID,
+        ACCO_ID,
+        REST_ID,
+        ATTR_ID,
+        LOG_CONTENT,
+        PLAN_DAY
+    ) VALUES (
+        #{logId},  <!-- 상위에서 받아온 logId -->
+        #{accoId},
+        #{restId},
+        #{attrId},
+        #{logContent},
+        #{planDay}
+    )
+</insert>
+
+<update id="updateLogImage" parameterType="map">
+    UPDATE TB_TRIP_LOG
+    SET IMAGE_PATH = #{imagePath},
+        UPDATED_AT = SYSDATE
+    WHERE LOG_ID = #{logId}
+</update>
 
 
+<!-- 사용자(userId)의 여행 일정 리스트를 시작일 내림차순으로 조회 -->
 	<select id="selectPlanIdList" resultMap="planResultMap">
 		SELECT 
 		    P.PLAN_ID,
@@ -98,15 +154,206 @@
 		WHERE UP.USER_ID = #{userId} 
 		ORDER BY PLAN_START_DATE DESC
 	</select>
-
-
-
-<!-- 로그 단일 조회 -->
- <select id="getLogSelectOne" parameterType="HashMap" resultMap="logResultMap">
-    SELECT IMAGE_PATH, LOG_TITLE, LOG_START_DATE, LOG_END_DATE, PLAN_DAY, USER_ID, CREATED_AT
-    FROM TB_LOG
-    where LOG_ID = #{logId} 
+	
+	
+<!-- PLAN_ID와 PLAN_DAY에 해당하는 장소 리스트 조회 (숙소 > 식당 > 관광지 이름 우선순위) -->
+<select id="getPlacesByPlanDay" parameterType="map" resultMap="logReviewPlaceMap">
+    SELECT 
+        TP.PLAN_ID,
+        TP.ACCO_ID,
+        TP.ATTR_ID,
+        TP.REST_ID,
+        TP.SEQ,
+        TP.PLAN_DAY,
+        NVL(A.ACCO_PLACENAME, NVL(R.REST_PLACENAME, AT.ATTR_PLACENAME)) AS PLACE_NAME
+    FROM TB_TRIP_PL TP
+    LEFT JOIN TB_ACCO A ON TP.ACCO_ID = A.ACCO_ID
+    LEFT JOIN TB_REST R ON TP.REST_ID = R.REST_ID
+    LEFT JOIN TB_ATTR AT ON TP.ATTR_ID = AT.ATTR_ID
+    WHERE TP.PLAN_ID = #{planId}
+      AND TP.PLAN_DAY = #{planDay}
+    ORDER BY TP.SEQ ASC
 </select>
 
 
+<!--  로그 insert를 위한 -->
+<select id="getPlaceListByPlanId" resultType="com.hulzzuk.log.model.vo.LogReviewVO">
+    SELECT *
+    FROM TB_TRIP_PL
+    WHERE PLAN_ID = #{planId}
+    AND PLAN_DAY = #{planDay}
+    ORDER BY PLAN_DAY ASC, SEQ ASC
+</select>	
+
+<!--  로그 insert를 위한 :: 메소드분리확인을 위해서 임시로 넣음 -->
+<select id="getReviewList" parameterType="long" resultType="com.hulzzuk.log.model.vo.LogReviewVO">
+    SELECT * FROM TB_TRIP_LOG WHERE LOG_ID = #{logId}
+</select>
+
+
+<!--  로그 insert를 위한 :: 메소드분리확인을 위해서 임시로 넣음 -->
+
+	<select id="getPlanById" parameterType="long" resultMap="planResultMap">
+    SELECT PLAN_ID, PLAN_TITLE, PLAN_PLACE, PLAN_START_DATE, PLAN_END_DATE
+    FROM TB_PLAN
+    WHERE PLAN_ID = #{planId}
+	</select>
+	
+	
+ <!-- ************ 로그 상세 조회 1 *************-->
+    <select id="getLogById" parameterType="long" resultMap="logResultMap">
+        SELECT 
+            LOG_ID,
+            IMAGE_PATH,
+            LOG_TITLE,
+            LOG_START_DATE,
+            LOG_END_DATE,
+            PLAN_DAY,
+            USER_ID,
+            CREATED_AT,
+            UPDATED_AT,
+            0 AS LOVE_COUNT
+        FROM TB_LOG
+        WHERE LOG_ID = #{logId}
+    </select>
+    
+    
+<!-- ************로그 상세보기 조회 2 : 	getContentByLogId() 였음 ************************ -->
+<select id="getReviewsByLogId" resultType="com.hulzzuk.log.model.vo.LogReviewVO">
+    SELECT *
+    FROM TB_TRIP_LOG
+    WHERE LOG_ID = #{logId}
+    ORDER BY PLAN_DAY ASC
+</select>
+    
+    <!-- 로그 좋아요순 조 -->
+    <select id="getLogListByLove" resultMap="logResultMap">
+    SELECT 
+        l.LOG_ID,
+        l.IMAGE_PATH,
+        l.LOG_TITLE,
+        l.LOG_START_DATE,
+        l.LOG_END_DATE,
+        l.PLAN_DAY,
+        l.USER_ID,
+        l.CREATED_AT,
+        l.UPDATED_AT,
+        NVL(COUNT(lv.LOVE_ID), 0) AS LOVE_COUNT
+    FROM TB_LOG l
+    LEFT JOIN TB_LOVE lv ON l.LOG_ID = lv.LOG_ID
+    GROUP BY 
+        l.LOG_ID, l.IMAGE_PATH, l.LOG_TITLE, l.LOG_START_DATE, 
+        l.LOG_END_DATE, l.PLAN_DAY, l.USER_ID, l.CREATED_AT, l.UPDATED_AT
+    ORDER BY LOVE_COUNT DESC
+</select>
+
+
+
+<!-- ************  댓글포함로그디테일 조회  ************ -->
+	<select id="getCommentsByLogId" parameterType="map" resultType="LogCommentVO">
+  	SELECT 
+        COMMENT_ID,
+        CONTENT,
+        USER_ID,
+        TO_CHAR(CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT
+    FROM TB_COMMENT
+    WHERE LOG_ID = #{logId}
+    ORDER BY CREATED_AT DESC
+</select>
+
+<select id="getRepliesByCommentIds" parameterType="list" resultType="com.hulzzuk.log.model.vo.LogCommentVO">
+    SELECT
+        RECO_ID AS COMMENT_ID,
+        COMMENT_ID AS PARENT_ID,
+        USER_ID,
+        CONTENT,
+        TO_CHAR(CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT,
+        TO_CHAR(UPDATE_AT, 'YYYY-MM-DD HH24:MI') AS UPDATED_AT
+    FROM TB_RECOMMENT
+    WHERE COMMENT_ID IN
+    <foreach item="id" index="index" collection="list" open="(" separator="," close=")">
+        #{id}
+    </foreach>
+    ORDER BY CREATED_AT ASC
+</select>
+
+	<!-- 최상위 댓글 조회 -->
+   <!-- 댓글 조회 -->
+  <select id="getTopLevelComments" resultType="com.hulzzuk.log.model.vo.LogCommentVO">
+    SELECT
+      COMMENT_ID,
+      LOG_ID,
+      USER_ID,
+      CONTENT,
+      TO_CHAR(CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT
+    FROM TB_COMMENT
+    WHERE LOG_ID = #{logId}
+    ORDER BY CREATED_AT ASC
+  </select>
+
+  <!-- 대댓글 조회 -->
+  <select id="getRepliesByParentId" resultType="com.hulzzuk.log.model.vo.LogCommentVO">
+    SELECT
+      RECO_ID AS COMMENT_ID,
+      COMMENT_ID AS PARENT_ID,
+      USER_ID,
+      CONTENT,
+      TO_CHAR(CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT,
+      TO_CHAR(UPDATE_AT, 'YYYY-MM-DD HH24:MI') AS UPDATED_AT
+    FROM TB_RECOMMENT
+    WHERE COMMENT_ID = #{commentId}
+    ORDER BY CREATED_AT ASC
+  </select>
+
+  <!-- 댓글 저장 -->
+  <insert id="insertTopLevelComment" parameterType="com.hulzzuk.log.model.vo.LogCommentVO">
+    INSERT INTO TB_COMMENT (
+      COMMENT_ID,
+      LOG_ID,
+      USER_ID,
+      CONTENT,
+      CREATED_AT
+    ) VALUES (
+      SEQ_COMMENT_ID.NEXTVAL,
+      #{logId},
+      #{userId},
+      #{content},
+      SYSDATE
+    )
+  </insert>
+
+  <!-- 대댓글 저장 -->
+  <insert id="insertReplyComment" parameterType="com.hulzzuk.log.model.vo.LogCommentVO">
+    INSERT INTO TB_RECOMMENT (
+      RECO_ID,
+      COMMENT_ID,
+      USER_ID,
+      CONTENT,
+      CREATED_AT,
+      UPDATE_AT
+    ) VALUES (
+      SEQ_RECOMMENT_ID.NEXTVAL,
+      #{parentId},
+      #{userId},
+      #{content},
+      SYSDATE,
+      SYSDATE
+    )
+  </insert>
+	<!--MyTripLog 조회 resultType="LogVO" 못찾아서 풀로 써-->
+<select id="selectLogsByUser" parameterType="string" resultMap="logResultMap">
+    SELECT 
+        LOG_ID,
+        LOG_TITLE,
+        USER_ID,
+        IMAGE_PATH,
+        CREATED_AT
+    FROM 
+        TB_LOG
+    WHERE 
+        USER_ID = #{userId}
+    ORDER BY 
+        CREATED_AT DESC
+</select>
+  
 </mapper>
