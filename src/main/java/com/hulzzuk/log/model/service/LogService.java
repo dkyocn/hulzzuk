@@ -26,11 +26,7 @@ public interface LogService {
     
     List<LogVO> getLogPage(int start, int amount);
     
-    
-    // 상세페이지 리뷰 갯수 조회
- 	int logCount(String locId, LocationEnum locationEnum);
- 	// 상세페이지 리뷰 리스트 조회
- 	List<LogVO> getLocLogList(String locId, LocationEnum locationEnum);
+
  	
 	PlanVO getPlanById(Long planId);
 
