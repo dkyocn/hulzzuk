@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.hulzzuk.common.vo.Paging;
 import com.hulzzuk.log.model.vo.LogCommentVO;
-imoirt com.hulzzuk.location.model.enumeration.LocationEnum;
+import com.hulzzuk.location.model.enumeration.LocationEnum;
 import com.hulzzuk.log.model.vo.LogReviewVO;
 import com.hulzzuk.log.model.vo.LogVO;
 import com.hulzzuk.plan.model.vo.PlanVO;
