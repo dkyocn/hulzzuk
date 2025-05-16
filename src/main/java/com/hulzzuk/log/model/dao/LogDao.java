@@ -197,4 +197,9 @@ public class LogDao {
 			sqlSession.insert("logMapper.insertTopLevelComment", comment); //정상 처리
 		}
 
+
+		 public void insertReply(LogCommentVO reply) {
+		        sqlSession.insert("logMapper.insertReply", reply);
+		 }
+
 }

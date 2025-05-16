@@ -24,32 +24,12 @@
   <!-- Bootstrap 4 -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-
-  <!-- Summernote (Bootstrap 4용) -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.css" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/lang/summernote-ko-KR.min.js"></script>
-
-  <!-- Summernote 초기화 -->
-  <script>
-    $(document).ready(function () {
-      $('.summernote').summernote({
-        placeholder: '여행 후기를 입력해주세요.',
-        lang: 'ko-KR',
-        height: 50,
-        toolbar: [
-          ['style', ['bold', 'italic', 'underline', 'clear']],
-          ['para', ['ul', 'ol', 'paragraph']],
-          ['insert', ['link', 'picture']],
-          ['view', ['codeview']]
-        ]
-      });
-    });
-  </script>
 </head>
 
 <body>
 <c:import url="/WEB-INF/views/common/header.jsp"/>
+
+ 
 
 <div class="container main-panel">
 
@@ -58,7 +38,7 @@
   <div class="row align-items-center">
   
     <!-- 대표 이미지 -->
-    <div class="col-md-6">
+    <div class="col-md-10">
       <c:choose>
         <c:when test="${not empty log.imagePath && !log.imagePath.endsWith('/resources/images/logList/no_image.jpg')}">
           <img id="preview" class="img-fluid rounded" src="${log.imagePath}" alt="대표 이미지" />
@@ -94,41 +74,84 @@
       </c:if>
     </c:forEach>
   </div>
-  
+
+ 
 <!-- 네모 아이콘 + 좋아요 수 + 댓글 수 -->
+<div class="log-meta-wrapper">
 <div class="log-meta">
     <span class="lov-count">❤️ ${log.loveCount}</span>
-    <span class="icon-box"></span> ${comments.size()} 댓글
+    <span class="icon-box">💬 ${comments.size()} </span>
+</div>
+<button class="btn-back" onclick="history.back()"> 목록</button>
 </div>
 
-  <!-- 댓글 섹션 -->
-  <div class="log-comments mt-5">
-    <h4>댓글 <span class="badge badge-secondary">${fn:length(comments)}</span></h4>
-    <c:forEach var="comment" items="${comments}">
-      <div class="comment-block">
-        <strong>${comment.userId}</strong> <small>${comment.createdAt}</small>
-        <p>${comment.content}</p>
+<!-- 댓글 전체 영역 -->
+<div class="comments-container">
+  <c:forEach var="comment" items="${comments}">
+    <div class="comment-wrapper mb-4 p-3 border rounded">
 
-        <!-- 대댓글 -->
-        <c:forEach var="reply" items="${replies}">
-          <c:if test="${reply.parentId == comment.commentId}">
-            <div class="reply-block ml-4">
-              <strong>${reply.userId}</strong> <small>${reply.createdAt}</small>
-              <p>${reply.content}</p>
+      <!-- 댓글 상단 메타 -->
+      <div class="d-flex justify-content-between align-items-center flex-wrap">
+        <div class="d-flex align-items-center mb-3">
+          <img src="${pageContext.request.contextPath}/resources/images/user-icon.png" class="profile-icon mr-3" >
+          <strong class="comment-author mr-4">${comment.userNick}</strong>
+          <span class="text-muted small">
+            <fmt:formatDate value="${comment.createdAt}" pattern="yyyy-MM-dd HH:mm" />
+          </span>
+        </div>
+
+        <!-- 수정/삭제 -->
+        <c:if test="${loginUser.userId == comment.userId}">
+          <div class="comment-actions mb-2">
+            <a href="#" class="edit-link text-primary mr-2" onclick="editComment(${comment.commentId})">수정</a>
+            <a href="#" class="delete-link text-danger" onclick="deleteComment(${comment.commentId})">삭제</a>
+          </div>
+        </c:if>
+      </div>
+
+      <!-- 댓글 본문 -->
+      <div class="comment-content mb-3">
+        <p class="mb-0">${comment.content}</p>
+      </div>
+
+      <!-- 대댓글 목록 -->
+      <div class="reply-blocks ml-3">
+        <c:forEach var="reply" items="${comment.replies}">
+          <div class="reply-block mb-2 p-2 bg-light border rounded">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+              <div>
+                <strong class="reply-author mr-2">${reply.userNick}</strong>
+                <span class="text-muted small">
+                  <fmt:formatDate value="${reply.createdAt}" pattern="yyyy-MM-dd HH:mm" />
+                </span>
+              </div>
             </div>
-          </c:if>
+            <div class="reply-content mt-1">${reply.content}</div>
+          </div>
         </c:forEach>
       </div>
-    </c:forEach>
-  </div>
+
+      <!-- 대댓글 입력창 -->
+      <div class="reply-input mt-3">
+        <form method="post" action="/hulzzuk/log/comment/replyInsert.do">
+          <input type="hidden" name="parentId" value="${comment.commentId}" />
+          <input type="hidden" name="logId" value="${log.logId}" />
+          <div class="form-group">
+            <textarea name="content" class="form-control" rows="2" placeholder="답글을 입력하세요"></textarea>
+          </div>
+          <button type="submit" class="btn btn-sm btn-outline-secondary">답글 등록</button>
+        </form>
+      </div>
+
+    </div> <!-- .comment-wrapper -->
+  </c:forEach>
+</div>
 
 </div>
-    <!-- 목록으로 돌아가기 버튼 -->
-    <div class="btn-back">
-        <button onclick="window.history.back();">목록</button>
-    </div>
+
     
 <c:import url="/WEB-INF/views/common/footer.jsp" />
+
 
 
 </body>

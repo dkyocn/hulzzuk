@@ -35,7 +35,8 @@
 	    <result property="planDay" column="PLAN_DAY"/>  
 	    <result property="placeName" column="PLACE_NAME"/>
 	</resultMap>
-		
+	
+
     <!-- 전체 로그 리스트 조회 -->
     <select id="getLogList" resultMap="logResultMap" >
         SELECT * FROM TB_LOG
@@ -249,17 +250,21 @@
 
 
 
-<!-- ************  댓글포함로그디테일 조회  ************ -->
-	<select id="getCommentsByLogId" parameterType="map" resultType="LogCommentVO">
-  	SELECT 
-        COMMENT_ID,
-        CONTENT,
-        USER_ID,
-        TO_CHAR(CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT
-    FROM TB_COMMENT
-    WHERE LOG_ID = #{logId}
-    ORDER BY CREATED_AT DESC
+<!-- ************  댓글포함로그디테일 조회  (닉네임.프로필표시) ************ -->
+<select id="getCommentsByLogId" parameterType="long" resultType="LogCommentVO">
+    SELECT 
+        c.COMMENT_ID,
+        c.CONTENT,
+        c.USER_ID,
+        TO_CHAR(c.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT,
+        u.USER_NICK,
+        u.USER_PROFILE
+    FROM TB_COMMENT c
+    JOIN TB_USER u ON c.USER_ID = u.USER_ID
+    WHERE c.LOG_ID = #{logId}
+    ORDER BY c.CREATED_AT DESC
 </select>
+
 
 <select id="getRepliesByCommentIds" parameterType="list" resultType="com.hulzzuk.log.model.vo.LogCommentVO">
     SELECT
@@ -323,7 +328,7 @@
   </insert>
 
   <!-- 대댓글 저장 -->
-  <insert id="insertReplyComment" parameterType="com.hulzzuk.log.model.vo.LogCommentVO">
+  <!--<insert id="insertReplyComment" parameterType="com.hulzzuk.log.model.vo.LogCommentVO">
     INSERT INTO TB_RECOMMENT (
       RECO_ID,
       COMMENT_ID,
@@ -339,7 +344,25 @@
       SYSDATE,
       SYSDATE
     )
-  </insert>
+  </insert>-->
+  
+  <insert id="insertReply" parameterType="LogCommentVO">
+  INSERT INTO TB_RECOMMENT (
+    RECO_ID,
+    COMMENT_ID,
+    USER_ID,
+    CONTENT,
+    CREATED_AT
+  )
+  VALUES (
+    TB_RECOMMENT_SEQ.NEXTVAL,
+    #{parentCommentId},
+    #{userId},
+    #{content},
+    SYSDATE
+  )
+</insert>
+
 	<!--MyTripLog 조회 resultType="LogVO" 못찾아서 풀로 써-->
 <select id="selectLogsByUser" parameterType="string" resultMap="logResultMap">
     SELECT 
@@ -355,5 +378,7 @@
     ORDER BY 
         CREATED_AT DESC
 </select>
-  
+
+<!--UserNick 표시  -->
+
 </mapper>

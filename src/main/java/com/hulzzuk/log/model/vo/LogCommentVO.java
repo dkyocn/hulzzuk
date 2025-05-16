@@ -3,6 +3,8 @@ package com.hulzzuk.log.model.vo;
 import java.sql.Date;
 import java.util.List;
 
+import com.hulzzuk.user.model.vo.UserVO;
+
 public class LogCommentVO {
 
 	
@@ -19,20 +21,20 @@ public class LogCommentVO {
 
 	    //댓글관련 추가
 	    
-	    private List<LogCommentVO> replies;
+	    private List<LogCommentVO> replies; //대댓글리스트   
 
 	 
-
+		private String userNick;      // UserVO
+	    private String userProfile;   // UserVO
 
 		public LogCommentVO() {
 			super();
 			// TODO Auto-generated constructor stub
 		}
 
-
-
 		public LogCommentVO(Long commentId, Long recoId, String content, Date createdAt, Date updatedAt, Long logId,
-				Long vocId, String userId, boolean isReply, Long parentCommentId) {
+				Long vocId, String userId, boolean isReply, Long parentCommentId, List<LogCommentVO> replies,
+				String userNick, String userProfile) {
 			super();
 			this.commentId = commentId;
 			this.recoId = recoId;
@@ -44,6 +46,9 @@ public class LogCommentVO {
 			this.userId = userId;
 			this.isReply = isReply;
 			this.parentCommentId = parentCommentId;
+			this.replies = replies;
+			this.userNick = userNick;
+			this.userProfile = userProfile;
 		}
 
 
@@ -53,11 +58,9 @@ public class LogCommentVO {
 		}
 
 
-
 		public void setCommentId(Long commentId) {
 			this.commentId = commentId;
 		}
-
 
 
 		public Long getRecoId() {
@@ -65,17 +68,13 @@ public class LogCommentVO {
 		}
 
 
-
 		public void setRecoId(Long recoId) {
 			this.recoId = recoId;
 		}
 
-
-
 		public String getContent() {
 			return content;
 		}
-
 
 
 		public void setContent(String content) {
@@ -83,17 +82,14 @@ public class LogCommentVO {
 		}
 
 
-
 		public Date getCreatedAt() {
 			return createdAt;
 		}
 
 
-
 		public void setCreatedAt(Date createdAt) {
 			this.createdAt = createdAt;
 		}
-
 
 
 		public Date getUpdatedAt() {
@@ -178,13 +174,40 @@ public class LogCommentVO {
 		}
 
 
+	    public String getUserNick() {
+			return userNick;
+		}
+
+
+
+		public void setUserNick(String userNick) {
+			this.userNick = userNick;
+		}
+
+
+
+		public String getUserProfile() {
+			return userProfile;
+		}
+
+
+
+		public void setUserProfile(String userProfile) {
+			this.userProfile = userProfile;
+		}
+
+
+
 		@Override
 		public String toString() {
 			return "LogCommentVO [commentId=" + commentId + ", recoId=" + recoId + ", content=" + content
 					+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", logId=" + logId + ", vocId=" + vocId
-					+ ", userId=" + userId + ", isReply=" + isReply + ", parentCommentId=" + parentCommentId + "]";
+					+ ", userId=" + userId + ", isReply=" + isReply + ", parentCommentId=" + parentCommentId
+					+ ", replies=" + replies + ", userNick=" + userNick + ", userProfile=" + userProfile + "]";
 		}
 
-	    
+
+
+	
 	
 }
