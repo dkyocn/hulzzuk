@@ -66,6 +66,29 @@ public class LogServiceImpl implements LogService {
         return logDao.getLogPage(start, amount);
     }
 
+	// 상세페이지 로그 갯수 조회
+ 	@Override
+ 	public int logCount(String locId, LocationEnum locationEnum) {
+ 		int logCount = logDao.logCount(locId, locationEnum);
+
+         return logCount;
+ 	}
+
+ 	// 상세페이지 로그 리스트 조회
+ 	public List<LogVO> getLocLogList(String locId, LocationEnum locationEnum) {
+ 		// 로그 id 조회
+ 		List<Long> logIdList = logDao.getLogId(locId, locationEnum);
+ 		// 로그 조회 + 리스트
+ 		List<LogVO> logList = new ArrayList<>();
+ 		for(Long logId : logIdList  ) {
+ 			List<LogVO> singleLog = logDao.getLogSelectOne(logId.longValue());
+ 			if(singleLog != null && !singleLog.isEmpty()) {
+ 				logList.addAll(singleLog);
+ 			}
+        }
+         return logList;
+ 	}
+	
 	@Override
 	public PlanVO getPlanById(Long planId) {
 		return logDao.getPlanById(planId);
