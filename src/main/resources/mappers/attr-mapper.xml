@@ -86,7 +86,7 @@
 	</insert>
 	
 	<!-- 즐길거리 top3 조회 -->
-	<select id="getTop3ATTR" parameterType="hashMap" resultMap="resultList">
+	<select id="getTop3Attr" parameterType="hashMap" resultMap="resultList">
 		SELECT A.ATTR_ID, A.ATTR_PLACENAME, A.ATTR_ADDRESSNAME, A.ATTR_IMAGE
   		FROM TB_ATTR A
   		LEFT JOIN (
