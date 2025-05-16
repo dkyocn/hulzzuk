@@ -85,7 +85,7 @@
 
     <!-- 목록 버튼 -->
     <div class="back-to-list">
-        <a href="${pageContext.request.contextPath}/voc/page.do?vocEnum=${vocVO.category}&page=1" class="list-btn">목록</a>
+        <a href="${pageContext.request.contextPath}/voc/page.do?vocEnum=ALL&page=1" class="list-btn">목록</a>
     </div>
 
 </div>

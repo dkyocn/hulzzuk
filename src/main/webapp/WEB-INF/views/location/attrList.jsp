@@ -32,7 +32,7 @@
 	            </div>
             <div class="location-info">
                 <h3>${ location.placeName }</h3>
-                <p>❤️</p>
+                <p>❤️<fmt:formatNumber value="${location.loveCount}"/></p>
                 <p>${ location.addressName }</p>
             </div>
         </div>

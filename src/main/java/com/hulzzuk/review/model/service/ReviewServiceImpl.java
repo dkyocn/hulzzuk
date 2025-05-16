@@ -130,14 +130,12 @@ public class ReviewServiceImpl implements ReviewService{
 	            reviewVO.setRestId(locId);
 	            reviewVO.setUserId(((UserVO)request.getSession().getAttribute("loginUser")).getUserId());
 	            reviewVO.setCreateAt(new java.sql.Date(System.currentTimeMillis()));
-	            reviewVO.setUserRev(0);
 	            successYN = reviewDao.insertRestReview(reviewVO);
 	            break;
 	        case ATTR:
 	            reviewVO.setAttrId(locId);
 	            reviewVO.setUserId(((UserVO)request.getSession().getAttribute("loginUser")).getUserId());
 	            reviewVO.setCreateAt(new java.sql.Date(System.currentTimeMillis()));
-	            reviewVO.setUserRev(0);
 	            successYN =  reviewDao.insertAttrReview(reviewVO);
 	            break;
 	        default:

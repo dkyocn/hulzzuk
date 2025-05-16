@@ -44,7 +44,7 @@
 	<c:when test="${ locationEnum == 'ACCO' }">
 		<div class="section-title">
 				<h1>
-						<a href="${pageContext.request.contextPath}/loc/page.do?locationEnum=ACCO&page=1">숙소</a>
+						<a href="${pageContext.request.contextPath}/loc/page.do?locationEnum=ACCO&page=1&sortEnum=LOVEDESC">숙소</a>
 				</h1>
 				<div class="underline"></div>
 			</div>
@@ -52,7 +52,7 @@
 	<c:when test="${ locationEnum == 'REST' }">
 		<div class="section-title">
 				<h1>
-						<a href="${pageContext.request.contextPath}/loc/page.do?locationEnum=REST&page=1">맛집</a>
+						<a href="${pageContext.request.contextPath}/loc/page.do?locationEnum=REST&page=1&sortEnum=LOVEDESC">맛집</a>
 				</h1>
 				<div class="underline"></div>
 		</div>
@@ -60,7 +60,7 @@
 	<c:when test="${ locationEnum == 'ATTR' }">
 		<div class="section-title">
 			<h1>
-					<a href="${pageContext.request.contextPath}/loc/page.do?locationEnum=ATTR&page=1">즐길거리</a>
+					<a href="${pageContext.request.contextPath}/loc/page.do?locationEnum=ATTR&page=1&sortEnum=LOVEDESC">즐길거리</a>
 			</h1>
 			<div class="underline"></div>
 		</div>

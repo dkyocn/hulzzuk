@@ -248,9 +248,22 @@ function toggleLove(button) {
         <button class="locPlanBtn" onclick="planPopup()">
 			<img class="locPlanImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-plan-black.png">
             <span class="locPlanText">일정추가</span> </button>
-        <button class="locReviewBtn" onclick="location.href='${ pageContext.servletContext.contextPath }/review/moveCreate.do?locationEnum=${locationEnum }&locId=${location.locId }';">
-			<img class="locReviewImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-review-black.png">
-            <span class="locReviewText">리뷰작성</span> </button>
+       <c:choose>
+		    <c:when test="${not empty sessionScope.loginUser}">
+		        <button class="locReviewBtn"
+		            onclick="location.href='${pageContext.servletContext.contextPath}/review/moveCreate.do?locationEnum=${locationEnum}&locId=${location.locId}';">
+		            <img class="locReviewImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-review-black.png">
+		            <span class="locReviewText">리뷰작성</span>
+		        </button>
+		    </c:when>
+		    <c:otherwise>
+		        <button class="locReviewBtn"
+		            onclick="location.href='${pageContext.servletContext.contextPath}/user/login.do';">
+		            <img class="locReviewImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-review-black.png">
+		            <span class="locReviewText">리뷰작성</span>
+		        </button>
+		    </c:otherwise>
+		</c:choose>
         <button class="locShareBtn" onclick="clip()">
 			<img class="locShareImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-share-black.png">
 		    <span class="locShareText">공유하기</span> 

@@ -17,25 +17,21 @@
 	<!--  고객의 소리 총 갯수 조회용 쿼리 -->
 	<select id="getVocListCount" resultType="_int" parameterType="Long">
 		select count(*) from TB_VOC
-		<where>
-	        <if test="keyword != null and keyword != ''">
-	          (TITLE LIKE '%' || #{keyword} || '%')
-	        </if>
-	</where>
-		 <choose>
-	        <when test="vocEnum == 'INQRY'">
-	            WHERE CATEGORY = #{vocEnum}
-	        </when>
-	        <when test="vocEnum == 'PRAISE'">
-	            WHERE CATEGORY = #{vocEnum}
-	        </when>
-	        <when test="vocEnum == 'COMPLAINT'">
-	            WHERE CATEGORY = #{vocEnum}
-	        </when>
-	        <when test="vocEnum == 'IMPROVEMENTS'">
-	            WHERE CATEGORY = #{vocEnum}
-	        </when>
-        </choose>
+											    <where>
+											    <choose>
+											    <when test="vocEnum == 'ALL'">
+											    <if test="keyword != null and keyword != ''">
+												         (TITLE LIKE '%' || #{keyword} || '%')
+												  </if>
+											    </when>
+											    <when test="vocEnum != 'ALL'">
+												  category=#{vocEnum} 
+												<if test="keyword != null and keyword != ''">
+												         and  (TITLE LIKE '%' || #{keyword} || '%')
+												  </if>
+												  </when>
+											    </choose>
+											    </where>
 	</select>
 	
 	<!-- 리스트 조회 -->
@@ -44,24 +40,20 @@
 								FROM (SELECT v.VOC_ID, v.TITLE, v.CONTENT, v.CATEGORY, v.CREATED_AT, v.UPDATED_AT, v.USER_ID
 											    FROM TB_VOC v
 											    <where>
-												        <if test="keyword != null and keyword != ''">
-												          (TITLE LIKE '%' || #{keyword} || '%')
-												        </if>
-												</where>
-											     <choose>
-											        <when test="vocEnum == 'INQRY'">
-											            WHERE v.CATEGORY = #{vocEnum}
-											        </when>
-											        <when test="vocEnum == 'PRAISE'">
-											            WHERE v.CATEGORY = #{vocEnum}
-											        </when>
-											        <when test="vocEnum == 'COMPLAINT'">
-											            WHERE v.CATEGORY = #{vocEnum}
-											        </when>
-											        <when test="vocEnum == 'IMPROVEMENTS'">
-											            WHERE v.CATEGORY = #{vocEnum}
-											        </when>
+											    <choose>
+											    <when test="vocEnum == 'ALL'">
+											    <if test="keyword != null and keyword != ''">
+												         (TITLE LIKE '%' || #{keyword} || '%')
+												  </if>
+											    </when>
+											    <when test="vocEnum != 'ALL'">
+												  v.category=#{vocEnum} 
+												<if test="keyword != null and keyword != ''">
+												         and  (TITLE LIKE '%' || #{keyword} || '%')
+												  </if>
+												  </when>
 											    </choose>
+											    </where>
 											       ORDER BY v.CREATED_AT DESC
 											     ) A
 										)
@@ -70,32 +62,7 @@
 		   WHERE RNUM BETWEEN #{paging.startRow} AND #{paging.endRow}
 	</if>
    </select>
-											    
-	  <!-- SELECT v.VOC_ID, v.TITLE, v.CONTENT, v.CATEGORY, v.CREATED_AT, v.UPDATED_AT, v.USER_ID,
-           u.USER_NICK  UserVO 정보 추가
-    FROM TB_VOC v
-    JOIN TB_USER u ON v.USER_ID = u.USER_ID USER_ID로 JOIN
-    <where>
-	        <if test="keyword != null and keyword != ''">
-	          (TITLE LIKE '%' || #{keyword} || '%')
-	        </if>
-	</where>
-     <choose>
-        <when test="vocEnum == 'INQRY'">
-            WHERE v.CATEGORY = #{vocEnum}
-        </when>
-        <when test="vocEnum == 'PRAISE'">
-            WHERE v.CATEGORY = #{vocEnum}
-        </when>
-        <when test="vocEnum == 'COMPLAINT'">
-            WHERE v.CATEGORY = #{vocEnum}
-        </when>
-        <when test="vocEnum == 'IMPROVEMENTS'">
-            WHERE v.CATEGORY = #{vocEnum}
-        </when>
-    </choose>
-    AND RNUM BETWEEN #{paging.startRow} AND #{paging.endRow}
-    -->
+
 	
 	<!--  리스트 한 개 조회 -->
 	<select id="getVocById" parameterType="Long" resultMap="resultList">

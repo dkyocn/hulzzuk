@@ -31,20 +31,6 @@
     </form>
 </div>
 
-<%-- <div class="sort-box">
-    <form method="get" action="page.do">
-        <input type="hidden" name="locationEnum" value="${param.locationEnum}" />
-        <input type="hidden" name="keyword" value="${param.keyword}" />
-        <input type="hidden" name="page" value="${param.page}" />
-        <select name="sortEnum" onchange="this.form.submit()">
-            <option value="LOVEDESC" ${param.sortEnum == 'LOVEDESC' ? 'selected' : ''}>찜 많은 순</option>
-            <option value="REVIEWDESC" ${param.sortEnum == 'REVIEWDESC' ? 'selected' : ''}>리뷰 많은 순</option>
-            <option value="NAMEDESC" ${param.sortEnum == 'NAMEDESC' ? 'selected' : ''}>이름 내림차순</option>
-            <option value="NAMEASC" ${param.sortEnum == 'NAMEASC' ? 'selected' : ''}>이름 오름차순</option>
-        </select>
-    </form>
-</div> --%>
-
 <!-- 즐길거리 -->
 <c:import url="/WEB-INF/views/location/attrList.jsp" />
 
