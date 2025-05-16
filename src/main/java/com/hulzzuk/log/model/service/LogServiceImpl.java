@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hulzzuk.common.vo.Paging;
+import com.hulzzuk.location.model.enumeration.LocationEnum;
 import com.hulzzuk.log.model.dao.LogDao;
 import com.hulzzuk.log.model.dao.LogReviewDao;
 import com.hulzzuk.log.model.vo.LogCommentVO;
