@@ -10,10 +10,9 @@
     <result property="placeName" column="ACCO_PLACENAME"/>
     <result property="phone" column="ACCO_PHONE"/>
     <result property="addressName" column="ACCO_ADDRESSNAME"/>
-    <result property="roadAddressName" column="ACCO_ROAD_ADDRESSNAME"/>
     <result property="x" column="ACCO_X"/>
     <result property="y" column="ACCO_Y"/>
-     <result property="imgPath" column="IMAGE_PATH"/>
+     <result property="imgPath" column="ACCO_IMAGE"/>
 	  <result property="mapPath" column="MAP_PATH"/>
     <result property="placeUrl" column="ACCO_RESER"/>
   </resultMap>
@@ -23,44 +22,19 @@
     SELECT COUNT(*) FROM TB_ACCO
     <where>
       <if test="keyword != null and keyword != ''">
-        (ACCO_PLACENAME LIKE '%' || #{keyword} || '%' OR ACCO_ROAD_ADDRESSNAME LIKE '%' || #{keyword} || '%')
+        (ACCO_PLACENAME LIKE '%' || #{keyword} || '%' OR ACCO_ADDRESSNAME LIKE '%' || #{keyword} || '%')
       </if>
     </where>
   </select>
   
 	<!-- 숙소 리스트 조회: keyword 검색 + 정렬 -->
-<!--   <select id="getAccoList" parameterType="hashMap" resultMap="resultList">
-    SELECT A.ACCO_PLACENAME, A.ACCO_ROAD_ADDRESSNAME
-    FROM TB_ACCO A
-    <where>
-	      <if test="keyword != null and keyword != ''">
-	        (ACCO_PLACENAME LIKE '%' || #{keyword} || '%' OR ACCO_ROAD_ADDRESSNAME LIKE '%' || #{keyword} || '%')
-	      </if>
-    </where>
-    <choose>
-	      <when test="sortEnum == 'LOVEDESC'">
-	        ORDER BY (SELECT COUNT(*) FROM TB_LOVE L WHERE L.ACCO_ID = A.ACCO_ID) DESC
-	      </when>
-	      <when test="sortEnum == 'REVIEWDESC'">
-	        ORDER BY (SELECT COUNT(*) FROM TB_REVIEW R WHERE R.ACCO_ID = A.ACCO_ID) DESC
-	      </when>
-	      <when test="sortEnum == 'NAMEDESC'">
-	        ORDER BY ACCO_PLACENAME DESC
-	      </when>
-	      <otherwise>
-	        ORDER BY ACCO_PLACENAME ASC
-	      </otherwise>
-    </choose>
-     WHERE RNUM BETWEEN #{ paging.startRow } AND #{ paging.endRow }
-  </select> -->
-  
    <select id="getAccoPage" parameterType="hashMap" resultMap="resultList">
   SELECT * FROM ( SELECT ROWNUM AS RNUM, A.*
-    								FROM ( SELECT A.ACCO_ID, A.ACCO_PLACENAME, A.ACCO_ROAD_ADDRESSNAME
+    								FROM ( SELECT A.ACCO_ID, A.ACCO_PLACENAME, ACCO_ADDRESSNAME,  ACCO_IMAGE
       												FROM TB_ACCO A
 												      <where>
 												        <if test="keyword != null and keyword != ''">
-												          (ACCO_PLACENAME LIKE '%' || #{keyword} || '%' OR ACCO_ROAD_ADDRESSNAME LIKE '%' || #{keyword} || '%')
+												          (ACCO_PLACENAME LIKE '%' || #{keyword} || '%' OR ACCO_ADDRESSNAME LIKE '%' || #{keyword} || '%')
 												        </if>
 												      </where>
 												      <choose>
@@ -88,15 +62,28 @@
     FROM TB_ACCO
     WHERE ACCO_ID = #{accoId}
   </select>
+ 
+ <!--  숙소명 조회 -->
+ <select id="getAccoName" parameterType="string" resultType="string">
+    SELECT ACCO_PLACENAME
+    FROM TB_ACCO
+    WHERE ACCO_ID = #{accoId}
+  </select>
 
     <select id="getAccoList" parameterType="hashMap" resultMap="resultList">
         select * from TB_ACCO
         <where>
             <if test="keyword != null and keyword != ''">
-                (ACCO_PLACENAME LIKE '%' || #{keyword} || '%' OR ACCO_ROAD_ADDRESSNAME LIKE '%' || #{keyword} || '%')
+                (ACCO_PLACENAME LIKE '%' || #{keyword} || '%' OR ACCO_ADDRESSNAME LIKE '%' || #{keyword} || '%')
             </if>
         </where>
         order by ACCO_PLACENAME
     </select>
+    
+    <!--  숙소 추가  -->
+	<insert id="insertAcco" parameterType="hashMap" >
+		insert into TB_ACCO(ACCO_ID, ACCO_PLACENAME, ACCO_ADDRESSNAME, ACCO_PHONE, ACCO_X, ACCO_Y, ACCO_CATEGORY, ACCO_RESER, ACCO_IMAGE)
+		values(#{locId}, #{placeName}, #{addressName}, #{phone}, #{x}, #{y}, #{category}, #{placeUrl}, #{imgPath})
+	</insert>
 </mapper>
 	

@@ -8,6 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <c:set var="nowpage" value="1" />
 <c:if test="${ !empty requestScope.paging.currentPage }">
     <c:set var="nowpage" value="${ requestScope.paging.currentPage }" />
@@ -84,40 +85,36 @@
     <div class="planList">
         <div class="planContent">
             <c:choose>
-                <c:when test="${ plan.planPlace == '부산' }">
+                <c:when test="${ fn:split(plan.planPlace, ',')[0] == '부산' }">
                     <img class="planImg" src="${pageContext.request.contextPath}/resources/images/plan/busan.jpeg" alt="">
                 </c:when>
-                <c:when test="${ plan.planPlace == '강원' }">
+                <c:when test="${ fn:split(plan.planPlace, ',')[0] == '강원' }">
                     <img class="planImg" src="${pageContext.request.contextPath}/resources/images/plan/gangwon.jpeg" alt="">
                 </c:when>
-                <c:when test="${ plan.planPlace == '제주' }">
+                <c:when test="${ fn:split(plan.planPlace, ',')[0] == '제주' }">
                     <img class="planImg" src="${pageContext.request.contextPath}/resources/images/plan/jeju.jpeg" alt="">
                 </c:when>
-                <c:when test="${ plan.planPlace == '서울' }">
+                <c:when test="${ fn:split(plan.planPlace, ',')[0] == '서울' }">
                     <img class="planImg" src="${pageContext.request.contextPath}/resources/images/plan/seoul.jpg" alt="">
                 </c:when>
-                <c:when test="${ plan.planPlace == '충청' }">
+                <c:when test="${ fn:split(plan.planPlace, ',')[0] == '충청' }">
                     <img class="planImg" src="${pageContext.request.contextPath}/resources/images/plan/chungcheong.jpeg" alt="">
                 </c:when>
-                <c:when test="${ plan.planPlace == '경기' }">
+                <c:when test="${ fn:split(plan.planPlace, ',')[0] == '경기' }">
                     <img class="planImg" src="${pageContext.request.contextPath}/resources/images/plan/gyeonggi.jpeg" alt="">
                 </c:when>
-                <c:when test="${ plan.planPlace == '인천' }">
+                <c:when test="${ fn:split(plan.planPlace, ',')[0] == '인천' }">
                     <img class="planImg" src="${pageContext.request.contextPath}/resources/images/plan/incheon.jpeg" alt="">
                 </c:when>
-                <c:when test="${ plan.planPlace == '경상' }">
+                <c:when test="${ fn:split(plan.planPlace, ',')[0] == '경상' }">
                     <img class="planImg" src="${pageContext.request.contextPath}/resources/images/plan/gyeongsang.jpeg" alt="">
                 </c:when>
-                <c:when test="${ plan.planPlace == '전라' }">
+                <c:when test="${ fn:split(plan.planPlace, ',')[0] == '전라' }">
                     <img class="planImg" src="${pageContext.request.contextPath}/resources/images/plan/jeolla.jpeg" alt="">
                 </c:when>
             </c:choose>
             <div class="planContentTitle">
-                <c:url var="bd" value="select.do">
-                    <c:param name="planId" value="${ plan.planId }" />
-                    <c:param name="page" value="${ nowpage }" />
-                </c:url>
-                <a class="planName" href="${ bd }">${ plan.planTitle }</a>
+                <a class="planName" href="${ pageContext.servletContext.contextPath }/plan/select.do?planId=${plan.planId}">${ plan.planTitle }</a>
                 <p class="planDate">${ plan.planStartDate } ~ ${ plan.planEndDate }</p>
             </div>
         </div>
@@ -133,13 +130,14 @@
             <div class="delete" onclick="openDeletePopup('${delete}')"></div>
             <c:url var="edit" value="/plan/moveUpdate.do">
                 <c:param name="planId" value="${ plan.planId }" />
-                <c:param name="page" value="${ nowpage }" />
             </c:url>
             <div class="edit" onclick="window.location.href='${edit}'"></div>
         </div>
     </div>
 </c:forEach>
-<c:import url="/WEB-INF/views/common/pagination.jsp" />
+<c:if test="${not empty requestScope.list}">
+    <c:import url="/WEB-INF/views/common/pagination.jsp" />
+</c:if>
 <c:import url="/WEB-INF/views/common/footer.jsp" />
 </body>
 </html>

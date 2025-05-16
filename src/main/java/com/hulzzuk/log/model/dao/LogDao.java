@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import com.hulzzuk.common.vo.Paging;
 import com.hulzzuk.log.model.vo.LogCommentVO;
+import com.hulzzuk.location.model.enumeration.LocationEnum;
+import com.hulzzuk.log.model.vo.LogPlaceVO;
 import com.hulzzuk.log.model.vo.LogReviewVO;
 import com.hulzzuk.log.model.vo.LogVO;
 import com.hulzzuk.plan.model.vo.PlanVO;
@@ -23,6 +25,11 @@ public class LogDao {
     // 페이징 처리된 로그 리스트 조회
     public List<LogVO> getLogList(Paging paging) {
         return sqlSession.selectList("logMapper.getLogList", paging);
+    }
+    
+    
+    public List<LogVO> getLogListByIds(List<Long> logIds) {
+        return sqlSession.selectList("logMapper.getLogListByIds", logIds);
     }
 
     // 전체 로그 수 조회
@@ -67,11 +74,38 @@ public class LogDao {
     public List<PlanVO> selectPlanIdList(String userId) {
         return sqlSession.selectList("logMapper.selectPlanIdList", userId);
     }
+  
+    
+ // 로그갯수 조회
+ 	public int logCount(String locId, LocationEnum locationEnum) {
+ 		HashMap<String, String> map = new HashMap<>();
+         map.put("locId", locId);
+         map.put("locationEnum",  locationEnum != null ? locationEnum.name() : null);
+         return sqlSession.selectOne("logReviewMapper.logCount", map);
+ 	}
+ 	
+ 	// 로그 id로 로그 조회
+ 	public List<Long> getLogId(String locId, LocationEnum locationEnum) {
+ 		HashMap<String, Object> map = new HashMap<>();
+ 		map.put("locId", locId);
+         map.put("locationEnum",  locationEnum != null ? locationEnum.name() : null);
+
+         return sqlSession.selectList("logReviewMapper.getLogId", map);
+     }
+ 	
+ 	// 로그 리스트 조회
+ 	public List<LogVO> getLogSelectOne(Long logId) {
+ 		HashMap<String, Object> map = new HashMap<>();
+ 		map.put("logId", logId);
+ 		
+         return sqlSession.selectList("logMapper.getLogSelectOne", map);
+     }
 
     //로그 작성을 위한 여행일정조회 
     public PlanVO getPlanById(Long planId) {
         return sqlSession.selectOne("logMapper.getPlanById", planId);
     }
+
 //CommentsByPlaceId라서지워도 될텐데.....추후확인  //////////////////////////////////////////////////////////////////////////////////////
 	public List<LogReviewVO> getReviewsByLogId(Long logId) {
 		 return sqlSession.selectList("logMapper.getCommentsByPlaceId", logId);
@@ -164,21 +198,4 @@ public class LogDao {
 			sqlSession.insert("logMapper.insertTopLevelComment", comment); //정상 처리
 		}
 
-
-
-
-/**메소드 분리방식 적용해보기 **/
-	
-//	public int insertLog(LogVO log) {
-//	    return sqlSession.insert("logMapper.insertLog", log); // selectKey로 채워진 logId 리턴
-//	}
-//	
-//	public void insertLogBasicInfo(LogVO logVO) {
-//		  sqlSession.insert("logMapper.insertLog", logVO);
-//    }
-//		/** 장소별 콘텐츠 저장 (TripLog) */
-//    public void insertTripLog(LogReviewVO review) {
-//        sqlSession.insert("logMapper.insertTripLog", review);
-//    }
-/**메소드 분리방식 적용해보기 **/
 }

@@ -9,7 +9,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <c:set var="queryParams"
-       value="action=${ requestScope.action }&keyword=${ requestScope.keyword }&begin=${ requestScope.begin }&end=${ end }&locationEnum=${requestScope.locationEnum }&sortEnum=${requestScope.sortEnum }" />
+       value="action=${ requestScope.action }&keyword=${ requestScope.keyword }&begin=${ requestScope.begin }&end=${ end }&locationEnum=${requestScope.locationEnum }&sortEnum=${requestScope.sortEnum }&vocEnum=${requestScope.vocEnum}" />
 <html>
 <head>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/common/pagination.css">

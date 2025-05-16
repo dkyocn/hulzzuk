@@ -17,6 +17,14 @@ public class ReviewDao {
 	@Autowired
 	private SqlSessionTemplate sqlSessionTemplate;
 	
+	// 리뷰갯수 조회
+	public int reviewCount(String locId, LocationEnum locationEnum) {
+		HashMap<String, String> map = new HashMap<>();
+        map.put("locId", locId);
+        map.put("locationEnum",  locationEnum != null ? locationEnum.name() : null);
+        return sqlSessionTemplate.selectOne("reviewMapper.getReviewCount", map);
+	}
+	
 	// 리뷰 리스트 조회
 	public List<ReviewVO> getReviewList(String locId, LocationEnum locationEnum, SortEnum sortEnum) {
 		HashMap<String, Object> map = new HashMap<>();
@@ -37,6 +45,15 @@ public class ReviewDao {
         return map;
     }
 	
+	// 리뷰 평점 조회
+	public Double getAvgRating(String locId, LocationEnum locationEnum) {
+	    HashMap<String, String> map = new HashMap<>();
+	    map.put("locId", locId);
+	    map.put("locationEnum", locationEnum != null ? locationEnum.name() : null);
+
+	    return sqlSessionTemplate.selectOne("reviewMapper.getAvgRating", map);
+	}
+	
 	// 내 리뷰 조회
 	public List<ReviewVO> getMyReviewList(String userId) {
 		 HashMap<String, Object> map = new HashMap<>();
@@ -52,9 +69,23 @@ public class ReviewDao {
 		return sqlSessionTemplate.selectOne("reviewMapper.getReviewById", map);
 	}
 	
-	// 리뷰 생성
-	
-	
+	// 리뷰 생성_ 숙소 리뷰
+	public int insertAccoReview(ReviewVO reviewVO) {
+		return sqlSessionTemplate.insert("reviewMapper.insertAccoReview", reviewVO);
+		
+	}
+
+	// 리뷰 생성_ 맛집 리뷰
+	public int insertRestReview(ReviewVO reviewVO) {
+		return sqlSessionTemplate.insert("reviewMapper.insertRestReview", reviewVO);
+		
+	}
+
+	// 리뷰 생성_ 즐길거리 리뷰
+	public int insertAttrReview(ReviewVO reviewVO) {
+		return sqlSessionTemplate.insert("reviewMapper.insertAttrReview", reviewVO);
+		
+	}
 	
 	// 리뷰 삭제
 	public int deleteReview(long id) {

@@ -102,6 +102,23 @@
                 };
             })());
 
+            // 선택된 날짜를 모든 달력에 재적용하는 함수
+            function applySelectedDates() {
+                [calendar1, calendar2].forEach(cal => {
+                    // 기존 선택된 클래스 제거
+                    const allDays = cal.el.querySelectorAll('.fc-day-selected');
+                    allDays.forEach(day => day.classList.remove('fc-day-selected'));
+
+                    // 선택된 날짜에 클래스 추가
+                    selectedDates.forEach(date => {
+                        const dayEl = cal.el.querySelector(`[data-date="`+date+`"]`);
+                        if (dayEl) {
+                            dayEl.classList.add('fc-day-selected');
+                        }
+                    });
+                });
+            }
+
             // 날짜 선택 로직
             function handleDateClick(info, calendar) {
                 const clickedDate = info.dateStr;
@@ -143,7 +160,7 @@
                 [calendar1, calendar2].forEach(cal => {
                     cal.getEvents().forEach(event => event.remove());
                     selectedDates.forEach(date => {
-                        const dayEl = cal.el.querySelector(`[data-date="${date}"]`);
+                        const dayEl = cal.el.querySelector(`[data-date="`+date+`"]`);
                         if (dayEl) {
                             dayEl.classList.add('fc-day-selected');
                         }
@@ -160,6 +177,7 @@
                         isSyncing = true;
                         calendar1.prev();
                         calendar2.prev();
+                        applySelectedDates(); // 달 이동 후 선택 상태 복원
                         isSyncing = false;
                     }
                 },
@@ -170,6 +188,7 @@
                         isSyncing = true;
                         calendar1.next();
                         calendar2.next();
+                        applySelectedDates(); // 달 이동 후 선택 상태 복원
                         isSyncing = false;
                     }
                 }
@@ -206,13 +225,8 @@
                     nextMonth.setMonth(currentDate.getMonth() + 1); // 다음 달
                     calendar2.gotoDate(nextMonth); // calendar2를 다음 달로 이동
 
-                    // 선택된 날짜 유지
-                    selectedDates.forEach(date => {
-                        const dayEl = calendar1El.querySelector(`[data-date="${date}"]`);
-                        if (dayEl) {
-                            dayEl.classList.add('fc-day-selected');
-                        }
-                    });
+                    // 선택된 날짜 재적용
+                    applySelectedDates();
 
                     isSyncing = false;
                 }
@@ -249,13 +263,8 @@
                     prevMonth.setMonth(currentDate.getMonth() - 1); // 이전 달
                     calendar1.gotoDate(prevMonth); // calendar1을 이전 달로 이동
 
-                    // 선택된 날짜 유지
-                    selectedDates.forEach(date => {
-                        const dayEl = calendar2El.querySelector(`[data-date="${date}"]`);
-                        if (dayEl) {
-                            dayEl.classList.add('fc-day-selected');
-                        }
-                    });
+                    // 선택된 날짜 재적용
+                    applySelectedDates();
 
                     isSyncing = false;
                 }

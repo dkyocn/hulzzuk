@@ -1,36 +1,57 @@
 package com.hulzzuk.location.model.vo;
 
+import com.hulzzuk.location.model.enumeration.LocationEnum;
+
 public class LocationVO {
 
 	private String locId;
 	private String placeName;
 	private String phone;
 	private String addressName;
-	private String roadAddressName;
 	private Double x;
 	private Double y;
+	private String category;
 	private String placeUrl;
 	private String restMenu;
 	private String imgPath;
-	private String mapPath;
+	private LocationEnum locationEnum;
+	private int loveCount;
 
 	// constructor
 	public LocationVO() {}
-	
-	public LocationVO(String locId, String placeName, String phone, String addressName, String roadAddressName,
-			Double x, Double y, String placeUrl, String restMenu, String imgPath, String mapPath) {
+
+	public LocationVO(String locId, String placeName, String phone, String addressName, Double x, Double y,
+			String category, String placeUrl, String restMenu, String imgPath, LocationEnum locationEnum,
+			int loveCount) {
 		super();
 		this.locId = locId;
 		this.placeName = placeName;
 		this.phone = phone;
 		this.addressName = addressName;
-		this.roadAddressName = roadAddressName;
 		this.x = x;
 		this.y = y;
+		this.category = category;
 		this.placeUrl = placeUrl;
 		this.restMenu = restMenu;
 		this.imgPath = imgPath;
-		this.mapPath = mapPath;
+		this.locationEnum = locationEnum;
+		this.loveCount = loveCount;
+	}
+
+	public int getLoveCount() {
+		return loveCount;
+	}
+
+	public void setLoveCount(int loveCount) {
+		this.loveCount = loveCount;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	// getters and setters
@@ -65,15 +86,7 @@ public class LocationVO {
 	public void setAddressName(String addressName) {
 		this.addressName = addressName;
 	}
-
-	public String getRoadAddressName() {
-		return roadAddressName;
-	}
-
-	public void setRoadAddressName(String roadAddressName) {
-		this.roadAddressName = roadAddressName;
-	}
-
+	
 	public Double getX() {
 		return x;
 	}
@@ -114,13 +127,11 @@ public class LocationVO {
 		this.imgPath = imgPath;
 	}
 
-	public String getMapPath() {
-		return mapPath;
+	public LocationEnum getLocationEnum() {
+		return locationEnum;
 	}
 
-	public void setMapPath(String mapPath) {
-		this.mapPath = mapPath;
+	public void setLocationEnum(LocationEnum locationEnum) {
+		this.locationEnum = locationEnum;
 	}
-	
-	
 }

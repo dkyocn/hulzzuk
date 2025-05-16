@@ -79,15 +79,14 @@
 	<c:import url="/WEB-INF/views/common/header.jsp" />
 	<div class="inner">
 		<img id="logo" src="resources/images/hulzzuk01.png"> <br>
-		<form class="search-box" action="" method="get">
-			<select class="category" id="category">
-				<option value="">전체</option>
-				<option value="acco">숙소</option>
-				<option value="rest">맛집</option>
-				<option value="attr">즐길거리</option>
+		<form class="search-box" action="loc/page.do" method="get" id="searchForm">
+			<select class="category" id="category" name="locationEnum" onchange="document.getElementById('searchForm').submit();">
+				<option value="ALL">전체</option>
+				<option value="ACCO">숙소</option>
+				<option value="REST">맛집</option>
+				<option value="ATTR">즐길거리</option>
 			</select> 
-			<input class="search-txt" type="text" name=""
-				placeholder="검색어를 입력하세요.">
+			<input class="search-txt" type="text" name="keyword" placeholder="검색어를 입력하세요.">
 			<button class="search-btn" type="submit"><img src="resources/images/search.png" style="border:none;"></button>
 		</form>
 	</div>
@@ -170,7 +169,7 @@
 
 			<div id="accoDiv">
 				<div class="title">
-					<button class="title" >숙소</button>
+					<button class="title"  onclick="location.href='${pageContext.request.contextPath}/loc/page.do?locationEnum=ATTR&page=1&sortEnum=LOVEDESC'" >즐길거리</button>
 					<hr class="titlehr">
 				</div>
 				<div class="carouselWrapper" data-track="accoTop">
@@ -241,7 +240,7 @@
 
 			<div id="restDiv">
 				<div class="title">
-					<button class="title" >식당</button>
+					<button class="title" onclick="location.href='${pageContext.request.contextPath}/loc/page.do?locationEnum=REST&page=1&sortEnum=LOVEDESC'" >맛집</button>
 					<hr class="titlehr">
 				</div>
 				<div class="carouselWrapper" data-track="restTop">
@@ -312,7 +311,7 @@
 
 			<div id="attrDiv">
 				<div class="title">
-					<button class="title" >즐길거리</button>
+					<button class="title" onclick="location.href='${pageContext.request.contextPath}/loc/page.do?locationEnum=ACCO&page=1&sortEnum=LOVEDESC'"  >숙소</button>
 					<hr class="titlehr">
 				</div>
 				<div class="carouselWrapper" data-track="attrTop">

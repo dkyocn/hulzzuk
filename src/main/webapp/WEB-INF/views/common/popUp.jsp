@@ -17,20 +17,33 @@
     <script type="text/javascript" src="${ pageContext.servletContext.contextPath }/resources/js/jquery-3.7.1.min.js"></script>
     <script>
         function confirmAction() {
-            fetch('${actionUrl}', {
-                method: 'GET'
-            })
-                .then(response => response.text())
-                .then(data => {
-                    if (data === 'success') {
-                        if (window.opener) window.opener.location.reload();
-                        window.close();
-                    }
+        	const action = '${action}';
+            const moveUrl = '${moveUrl}';
+            //console.log("action:", action, "moveUrl:", moveUrl);
+
+            if (action === 'redirect' && moveUrl) {
+                if (window.opener) {
+                    window.opener.location.href = moveUrl;
+                    window.close();
+                }
+            } else if(action === 'close') {
+                window.close();
+            } else {
+                fetch('${actionUrl}', {
+                    method: 'GET'
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('작업 중 오류가 발생했습니다.');
-                });
+                    .then(response => response.text())
+                    .then(data => {
+                        if (data === 'success') {
+                            if (window.opener) window.opener.location.reload();
+                            window.close();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('작업 중 오류가 발생했습니다.');
+                    });
+            }
         }
 
         function cancelAction() {

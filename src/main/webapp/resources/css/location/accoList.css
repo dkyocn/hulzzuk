@@ -1,0 +1,120 @@
+@charset "UTF-8";
+
+/*제목*/
+.acco-title-section {
+    position: relative;
+    text-align: left;  /* 왼쪽 정렬로 변경 */
+    margin-top: 60px;  /* 위쪽 간격 늘림 */
+    margin-left: 500px; /* 이미지와 맞추기 위한 왼쪽 여백 */
+    margin-bottom: 30px;
+    z-index: 10;
+}
+
+.acco-title-section h1 {
+    font-size: 36px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.acco-title-section .underline {
+    width: 100px;
+    height: 4px;
+    background-color: orange;
+    margin: 0;  /* 왼쪽 정렬 맞춤 */
+    border-radius: 2px;
+}
+
+#logGallery {
+	position: relative;
+    width: 900px;  /*폭 제한.  1200px가 이거를 계속 줄여봐요.900까지  */
+    margin: 0 auto; /*가운데 정렬*/
+    padding: 20px 270px;  /*여백*/
+}
+
+
+.location-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);		/* 3개씩 가로 정렬 */
+    gap: 30px;
+    justify-content: center;
+}
+
+.location-card {
+    position: relative;
+    overflow: hidden;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    aspect-ratio: 1 / 1; /* 정사각형 유지 */
+    display: flex;
+    flex-direction: column;
+}
+
+.location-card:hover {
+    transform: translateY(-5px);
+}
+
+.location-image {
+    flex: 1 1 auto;  /* 남은 공간 다 차지 */
+    position: relative;
+}
+
+.location-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.location-info {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);  /*반투명 검정 배경*/
+    color: #fff;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.location-info h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.location-info p {
+    margin: 5px 0 0;
+    font-size: 13px;
+}
+
+.rank-number {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background-color: rgba(255, 69, 0, 0.9); /* 빨간 배경 */
+    color: white;
+    font-size: 24px; /* 더 크고 눈에 띄게 */
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 12px;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+
+.location-image {
+    position: relative; /* 순위 번호를 절대 위치로 배치하기 위해 필요 */
+}
+
+/* 반응형 디자인 */
+@media screen and (max-width: 768px) {
+    .location-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .location-grid {
+        grid-template-columns: 1fr;
+    }
+} 

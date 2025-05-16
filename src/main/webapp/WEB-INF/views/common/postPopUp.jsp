@@ -72,7 +72,7 @@
             ${message}
         </div>
         <div class="popup-buttons">
-            <button class="btn-confirm" onclick="confirmAction()">확인</button>
+            <button class="btn-confirm" type="button" onclick="confirmAction()">확인</button>
          <!--    <button class="btn-cancel" onclick="cancelAction()">취소</button> -->
         </div>
     </div>

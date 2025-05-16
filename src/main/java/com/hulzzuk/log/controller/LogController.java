@@ -84,6 +84,8 @@ public class LogController {
     @RequestMapping(value = "/myTripLog.do", method = RequestMethod.GET)
     public ModelAndView selectMyTripLog(HttpSession session) {
         UserVO loginUser = (UserVO) session.getAttribute("loginUser");
+    
+    // 장소 로그 조회하기
 
         if (loginUser == null) {
             return new ModelAndView("redirect:/user/login.do");

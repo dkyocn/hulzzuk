@@ -15,12 +15,18 @@
     <!-- plan 페이지 조회 -->
     <select id="getPlanPage" parameterType="hashMap" resultMap="resultVO">
         SELECT PLAN_ID, PLAN_TITLE, PLAN_PLACE, PLAN_START_DATE, PLAN_END_DATE
-        FROM (SELECT ROWNUM RNUM, PLAN_ID, PLAN_TITLE, PLAN_PLACE, PLAN_START_DATE, PLAN_END_DATE
-              FROM TB_PLAN
-              left join TB_USER_PL UP using(PLAN_ID)
-              where up.user_id = #{userId})
-        WHERE RNUM BETWEEN #{ paging.startRow } AND #{ paging.endRow }
-        order by PLAN_START_DATE desc, PLAN_END_DATE desc
+        FROM (
+        SELECT ROWNUM RNUM, A.*
+        FROM (
+        SELECT PLAN_ID, PLAN_TITLE, PLAN_PLACE, PLAN_START_DATE, PLAN_END_DATE
+        FROM TB_PLAN
+        <![CDATA[
+           order by PLAN_START_DATE desc, PLAN_END_DATE desc
+        ) A
+        WHERE ROWNUM <= #{paging.endRow}
+    )
+    WHERE RNUM >= #{paging.startRow}
+    ]]>
     </select>
 
     <!-- plan 개수 조회 -->
@@ -31,14 +37,35 @@
         where up.user_id = #{userId}
     </select>
 
+    <!-- plan 단일 조회 -->
+    <select id="getPlanById" parameterType="Long" resultMap="resultVO">
+        select PLAN_ID, PLAN_TITLE, PLAN_PLACE, PLAN_START_DATE, PLAN_END_DATE
+        from TB_PLAN
+        where plan_id = #{planId}
+    </select>
+
     <!-- plan 생성 -->
     <insert id="insertPlan" parameterType="Plan" useGeneratedKeys="true" keyColumn="PLAN_ID" keyProperty="planId">
         insert into TB_PLAN (PLAN_TITLE, PLAN_PLACE, PLAN_START_DATE, PLAN_END_DATE) values (#{planTitle},#{planPlace}, #{planStartDate},#{planEndDate})
     </insert>
+
+    <update id="updatePlan" parameterType="Plan" useGeneratedKeys="true" keyColumn="PLAN_ID" keyProperty="planId">
+        update TB_PLAN set PLAN_TITLE = #{planTitle}, PLAN_PLACE = #{planPlace}, PLAN_START_DATE = #{planStartDate}, PLAN_END_DATE = #{planEndDate}
+        where PLAN_ID = #{planId}
+    </update>
 
     <!-- plan 삭제 -->
     <delete id="deletePlan" parameterType="long">
         delete from TB_PLAN where plan_id = #{planId}
     </delete>
 
+	<!--  plan 리스트 조회 -->
+	<select id="getLocPlanList" parameterType="hashMap" resultMap="resultVO">
+	SELECT PLAN_ID, PLAN_TITLE, PLAN_PLACE, PLAN_START_DATE, PLAN_END_DATE
+        FROM (SELECT ROWNUM RNUM, PLAN_ID, PLAN_TITLE, PLAN_PLACE, PLAN_START_DATE, PLAN_END_DATE
+              FROM TB_PLAN
+              left join TB_USER_PL UP using(PLAN_ID)
+              where up.user_id = #{userId})
+        order by PLAN_START_DATE desc, PLAN_END_DATE desc
+	</select>
 </mapper>

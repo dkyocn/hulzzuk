@@ -14,8 +14,8 @@ body {
 
 .review-header {
     display: flex;
-    align-items: flex-end; /* 버튼을 제목 아래쪽에 맞춤 */
-    justify-content: space-between; /* 제목 왼쪽, 버튼 오른쪽 정렬 */
+    align-items: flex-end; 
+    justify-content: flex-end; /* 오른쪽 정렬 */
     margin-top: 10px; /* 제목과 리스트 사이 여백 */
     margin-bottom: 10px; /* 제목과 리스트 사이 여백 */
 }
@@ -28,6 +28,7 @@ body {
     border: none;
     cursor: pointer;
     border-radius: 5px;
+    text-decoration: none; /* a 태그 밑줄 제거 */
 }
 
 .review-item {
@@ -61,8 +62,7 @@ body {
     font-size: 16px;
     color: #333;
     line-height: 1.6;
-    margin-left: 7px;
-    margin-bottom: 15px;
+    margin: 0;
 }
 
 .review-content {

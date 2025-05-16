@@ -11,7 +11,7 @@ public class NoticeVO extends Paging implements Serializable {
 	private long noticeId; // 공지사항 id
 	private String title; // 제목
 	private String content; // 내용
-	private int isPinned; // 고정 여부
+	private boolean isPinned; // 고정 여부
 	private Date createdAt; // 최초 생성 일자
 	private Date updatedAt; // 최종 생성 일자
 	private Category category; // 카테고리 (NOICE, FAQ)
@@ -22,7 +22,7 @@ public class NoticeVO extends Paging implements Serializable {
 		super();
 	}
 
-	public NoticeVO(long noticeId, String title, String content, int isPinned, Date createdAt, Date updatedAt,
+	public NoticeVO(long noticeId, String title, String content, boolean isPinned, Date createdAt, Date updatedAt,
 			Category category) {
 		this.noticeId = noticeId;
 		this.title = title;
@@ -54,10 +54,10 @@ public class NoticeVO extends Paging implements Serializable {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public int isPinned() {
+	public boolean getIsPinned() {
 		return isPinned;
 	}
-	public void setPinned(int isPinned) {
+	public void setPinned(boolean isPinned) {
 		this.isPinned = isPinned;
 	}
 	public Date getCreatedAt() {

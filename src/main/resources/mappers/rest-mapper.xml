@@ -9,11 +9,10 @@
 	<result property="placeName" column="REST_PLACENAME" />
 	<result property="phone" column="REST_PHONE" />
 	<result property="addressName" column="REST_ADDRESSNAME" />
-	<result property="roadAddressName" column="REST_ROAD_ADDRESSNAME" />
+	<result property="category" column="REST_CATEGORY" />
 	<result property="x" column="REST_X" />
 	<result property="y" column="REST_Y" />
-	 <result property="imgPath" column="IMAGE_PATH"/>
-	  <result property="mapPath" column="MAP_PATH"/>
+	 <result property="imgPath" column="REST_IMAGE"/>
 	<result property="restMenu" column="REST_MENU" />
 	</resultMap>
 	
@@ -23,7 +22,7 @@
     FROM TB_REST
     <where>
       <if test="keyword != null and keyword != ''">
-        (REST_PLACENAME LIKE '%' || #{keyword} || '%' OR REST_ROAD_ADDRESSNAME LIKE '%' || #{keyword} || '%')
+        (REST_PLACENAME LIKE '%' || #{keyword} || '%' OR REST_ADDRESSNAME LIKE '%' || #{keyword} || '%')
       </if>
     </where>
   </select>
@@ -57,11 +56,11 @@
    <!-- 숙소 리스트 조회: keyword 검색 + 정렬 -->
   <select id="getRestPage" parameterType="hashMap" resultMap="resultList">
   SELECT * FROM ( SELECT ROWNUM AS RNUM, A.*
-    								FROM ( SELECT A.REST_ID, A.REST_PLACENAME, A.REST_ROAD_ADDRESSNAME
+    								FROM ( SELECT A.REST_ID, A.REST_PLACENAME, A.REST_ADDRESSNAME, REST_IMAGE
       												FROM TB_REST A
 												      <where>
 												        <if test="keyword != null and keyword != ''">
-												          (REST_PLACENAME LIKE '%' || #{keyword} || '%' OR REST_ROAD_ADDRESSNAME LIKE '%' || #{keyword} || '%')
+												          (REST_PLACENAME LIKE '%' || #{keyword} || '%' OR REST_ADDRESSNAME LIKE '%' || #{keyword} || '%')
 												        </if>
 												      </where>
 												      <choose>
@@ -89,14 +88,27 @@
     FROM TB_REST
     WHERE REST_ID = #{ restId }
   </select>
+  
+     <!--  맛집명 조회 -->
+ <select id="getRestName" parameterType="string" resultType="string">
+    SELECT REST_PLACENAME
+    FROM TB_REST
+    WHERE REST_ID = #{restId}
+  </select>
 
 	<select id="getRestList" parameterType="hashMap" resultMap="resultList">
 		select * from TB_REST
 		<where>
 			<if test="keyword != null and keyword != ''">
-				(REST_PLACENAME LIKE '%' || #{keyword} || '%' OR REST_ROAD_ADDRESSNAME LIKE '%' || #{keyword} || '%')
+				(REST_PLACENAME LIKE '%' || #{keyword} || '%' OR REST_ADDRESSNAME LIKE '%' || #{keyword} || '%')
 			</if>
 		</where>
 		order by REST_PLACENAME
 	</select>
+	
+	<!--  맛집 추가  -->
+	<insert id="insertRest" parameterType="hashMap" >
+		insert into TB_REST(REST_ID, REST_PLACENAME, REST_ADDRESSNAME, REST_PHONE, REST_X, REST_Y, REST_CATEGORY, REST_MENU, REST_IMAGE)
+		values(#{locId}, #{placeName}, #{addressName}, #{phone}, #{x}, #{y}, #{category}, #{restMenu}, #{imgPath})
+	</insert>
   </mapper>
