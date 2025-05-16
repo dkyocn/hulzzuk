@@ -43,7 +43,7 @@ public interface UserService {
 			HttpServletRequest request, String newPwd);
 	
 	// 내 정보 보기
-	ModelAndView selectUser(ModelAndView mv, String userId);
+	ModelAndView selectUser(ModelAndView mv, HttpSession session,  String userId);
 
 	ModelAndView moveInfoUpdate(ModelAndView mv, String userId);
 	

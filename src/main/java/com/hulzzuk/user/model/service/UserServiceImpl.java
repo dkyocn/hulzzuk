@@ -22,6 +22,7 @@ import com.hulzzuk.common.vo.FileNameChange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
@@ -387,17 +388,23 @@ public class UserServiceImpl implements UserService {
 	
 	// 마이페이지
 	@Override
-	public ModelAndView selectUser(ModelAndView mv, String userId) {
+	public ModelAndView selectUser(ModelAndView mv, HttpSession session, String userId) {
 
-		UserVO user = userDao.selectUser(userId);
+		UserVO loginUser = (UserVO) session.getAttribute("loginUser");
 
-		if (user != null) {
-			mv.setViewName("user/infoPage"); 
-			mv.addObject("user", user); 
-		}else {
-        	throw new IllegalArgumentException(ErrorCode.USER_NOT_FOUND.getMessage());
+		if(loginUser != null) {
+			UserVO user = userDao.selectUser(userId);
+
+			if (user != null) {
+				mv.setViewName("user/infoPage");
+				mv.addObject("user", user);
+			}else {
+				throw new IllegalArgumentException(ErrorCode.USER_NOT_FOUND.getMessage());
+			}
+		} else {
+			mv.setViewName("redirect:/user/loginSelect.do");
 		}
-		
+
 		return mv;
 	}
 
