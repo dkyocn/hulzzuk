@@ -1,6 +1,7 @@
 package com.hulzzuk.user.model.service;
 
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -83,37 +84,36 @@ public class UserServiceImpl implements UserService {
 			  // 소셜 로그인 여부 확인
 			
 	        UserVO user = (UserVO) session.getAttribute("loginUser");
-	        String sns = user.getUserPath();
-	        String accessToken = (String) session.getAttribute("accessToken");
-	        OAuth2AccessToken token = (OAuth2AccessToken) session.getAttribute("oauthToken");
-	        String accessTokenNaver = token.getAccessToken();
-
-	        if (sns != null && accessToken != null) {
-	            switch (sns) {
-	                case "kakao":
-	                	kakaoLoginAuth.logOut(accessToken);
-	                	//kakaoLoginAuth.disconnect(accessToken); 
-	                    break;
-	                case "naver":
-	                	//naverLoginAuth.logOut(accessTokenNaver);
-	                	// 1. 네이버 AccessToken 삭제
-                        try {
-                            String deleteUrl = NaverLoginAuth.buildTokenDeleteUrl(accessTokenNaver);
-                            URL url = new URL(deleteUrl);
-                            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                            conn.setRequestMethod("POST");
-                            conn.setDoOutput(true);
-                            conn.getResponseCode(); // 강제 실행
-                            conn.disconnect();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        // 2. 사용자 브라우저를 네이버 로그아웃 페이지로 리디렉션
-                        redirectUrl = "https://nid.naver.com/nidlogin.logout";
-						 
-	                    break;
-	            }
+	        if(user != null) {
+		        String sns = user.getUserPath();
+		        String accessToken = (String) session.getAttribute("accessToken");	// 카카오
+		        OAuth2AccessToken token = (OAuth2AccessToken) session.getAttribute("oauthToken");
+		        String accessTokenNaver = token.getAccessToken();	// 네이버
+	
+		        if (sns != null && (accessToken != null || accessTokenNaver != null)) {
+		            switch (sns) {
+		                case "KAKAO":
+		                	kakaoLoginAuth.logOut(accessToken);
+		                	//kakaoLoginAuth.disconnect(accessToken); 
+		                    break;
+		                case "NAVER":
+		                	//naverLoginAuth.logOut(accessTokenNaver);
+		                	// 1. 네이버 AccessToken 삭제
+							/*
+							 * try {
+							 * 
+							 * String deleteUrl = NaverLoginAuth.buildTokenDeleteUrl(accessTokenNaver); URI
+							 * uri = URI.create(deleteUrl); HttpURLConnection conn = (HttpURLConnection)
+							 * uri.toURL().openConnection(); conn.setRequestMethod("POST");
+							 * conn.setDoOutput(true); conn.getResponseCode(); // 강제 실행 conn.disconnect(); }
+							 * catch (Exception e) { e.printStackTrace(); }
+							 */
+	
+	                        // 2. 중간 로그아웃 페이지 이동 -> 1초 후 메인페이지 이동
+	                        mv.setViewName("user/naverLogoutRedirect");
+		                    break;
+		            }
+		        }
 	        }
 			
 			// 해당 세션객체가 있다면, 세션 객체를 없앰
@@ -507,6 +507,8 @@ public class UserServiceImpl implements UserService {
 		// 세션에서 ID 불러오기
         String authUserId = (String)session.getAttribute("authUserId");
         String deleteYN = new String();
+        OAuth2AccessToken token = (OAuth2AccessToken) session.getAttribute("oauthToken");
+        String accessTokenNaver = token.getAccessToken();	// 네이버
         
         // 해당 세션 객체가 있으면 리턴받고, 없으면 null 리턴받음
  		if (session != null) {
@@ -518,21 +520,36 @@ public class UserServiceImpl implements UserService {
 
 	        if (sns != null && accessToken != null) {
 	            switch (sns) {
-	                case "kakao":
+	                case "KAKAO":
 	                	kakaoLoginAuth.disconnect(accessToken);
 	                    break;
-	                case "naver":
+	                case "NAVER":
+	                	 try {
+	                         String deleteUrl = NaverLoginAuth.buildTokenDeleteUrl(accessTokenNaver);
+	                         URI uri = URI.create(deleteUrl);
+	                         HttpURLConnection conn = (HttpURLConnection) uri.toURL().openConnection();
+	                         conn.setRequestMethod("POST");
+	                         conn.setDoOutput(true);
+	                         conn.getResponseCode();
+	                         conn.disconnect();
+	                     } catch (Exception e) {
+	                         e.printStackTrace();
+	                     }
+	                	
+	                	//mv.setViewName("user/naverLogoutRedirection");
+						 
 	                  //  naverLoginAuth.logOut(accessToken); // Naver 로그아웃 호출
 	                    break;
 	            }
 	        }
+			
+			// 탈퇴 처리
+			int result = userDao.deleteUser(authUserId);
+			
 			// 세션 없애기
 			session.invalidate();
 			status.setComplete();
 			
-			// 탈퇴 처리
-			int result = userDao.deleteUser(authUserId);
-	
 			if(result > 0) {
 				deleteYN = "success|" + request.getContextPath() + "/main.do";
 			}else {
@@ -541,7 +558,7 @@ public class UserServiceImpl implements UserService {
 		}
 		return deleteYN;
  	}
-///hulzzuk_war/resources/images/user/jungdongju99@gmail.com/20250515181237.00.08.png
+
 	@Override
 	public Map<String, Object> profileUpload(MultipartFile mfile, HttpServletRequest request) {
 		HashMap<String, Object> map = new HashMap<>();

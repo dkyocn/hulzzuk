@@ -45,8 +45,12 @@ public class NaverLoginAuth {
             .apiSecret(CLIENT_SECRET)
             .callback(REDIRECT_URI)
             .build(NaverLoginApi.instance());
+     // 기본 URL 생성
+        String baseUrl = oauthService.getAuthorizationUrl(state);
 
-        return oauthService.getAuthorizationUrl(state);
+        // auth_type=reauthenticate 파라미터 추가 (자동 로그인 방지용)
+        return baseUrl + "&auth_type=reauthenticate";
+        //return oauthService.getAuthorizationUrl(state);
     }
 
     // AccessToken 획득
