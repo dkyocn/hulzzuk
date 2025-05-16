@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hulzzuk.common.vo.Paging;
-import com.hulzzuk.location.model.enumeration.LocationEnum;
 import com.hulzzuk.log.model.dao.LogDao;
 import com.hulzzuk.log.model.dao.LogReviewDao;
 import com.hulzzuk.log.model.vo.LogCommentVO;
@@ -66,29 +65,6 @@ public class LogServiceImpl implements LogService {
     public List<LogVO> getLogPage(int start, int amount) {
         return logDao.getLogPage(start, amount);
     }
-    
- // 상세페이지 로그 갯수 조회
- 	@Override
- 	public int logCount(String locId, LocationEnum locationEnum) {
- 		int logCount = logDao.logCount(locId, locationEnum);
- 		 
-         return logCount;
- 	}
- 	
- 	// 상세페이지 로그 리스트 조회
- 	public List<LogVO> getLocLogList(String locId, LocationEnum locationEnum) {
- 		// 로그 id 조회
- 		List<Long> logIdList = logDao.getLogId(locId, locationEnum);
- 		// 로그 조회 + 리스트
- 		List<LogVO> logList = new ArrayList<>();
- 		for(Long logId : logIdList  ) {
- 			List<LogVO> singleLog = logDao.getLogSelectOne(logId.longValue());
- 			if(singleLog != null && !singleLog.isEmpty()) {
- 				logList.addAll(singleLog);
- 			}
-        }
-         return logList;
- 	}
 
 	@Override
 	public PlanVO getPlanById(Long planId) {
