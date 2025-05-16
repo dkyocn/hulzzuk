@@ -30,6 +30,7 @@
 		<typeAlias type="com.hulzzuk.checklist.model.vo.ChecklistVO" alias="Checklist"/>
 		<typeAlias type="com.hulzzuk.common.vo.Paging" alias="Paging"/>
 		<typeAlias type="com.hulzzuk.voc.model.vo.VocVO" alias="Voc"/>
+		<typeAlias type="com.hulzzuk.comment.model.vo.CommentVO" alias="Comment"/>
 	</typeAliases>
 	
 	<mappers>
@@ -48,5 +49,6 @@
 		<mapper resource="mappers/planLoc-mapper.xml"/>
 		<mapper resource="mappers/voc-mapper.xml"/>
 		<mapper resource="mappers/checklist-mapper.xml"/>
+		<mapper resource="mappers/comment-mapper.xml"/>
 	</mappers>
 </configuration>
