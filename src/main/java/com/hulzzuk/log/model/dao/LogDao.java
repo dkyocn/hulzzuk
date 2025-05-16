@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import com.hulzzuk.common.vo.Paging;
 import com.hulzzuk.log.model.vo.LogCommentVO;
 import com.hulzzuk.location.model.enumeration.LocationEnum;
-import com.hulzzuk.log.model.vo.LogPlaceVO;
 import com.hulzzuk.log.model.vo.LogReviewVO;
 import com.hulzzuk.log.model.vo.LogVO;
 import com.hulzzuk.plan.model.vo.PlanVO;
