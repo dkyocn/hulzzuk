@@ -356,4 +356,11 @@
         CREATED_AT DESC
 </select>
   
+  <!-- 로그 단일 조회 -->
+ <select id="getLogSelectOne" parameterType="HashMap" resultMap="logResultMap">
+    SELECT IMAGE_PATH, LOG_TITLE, LOG_START_DATE, LOG_END_DATE, PLAN_DAY, USER_ID, CREATED_AT
+    FROM TB_LOG
+    where LOG_ID = #{logId} 
+</select>
+  
 </mapper>
