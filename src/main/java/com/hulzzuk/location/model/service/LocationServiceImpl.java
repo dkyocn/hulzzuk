@@ -142,9 +142,38 @@ public class LocationServiceImpl implements LocationService{
                 			}
                 		}
                 		break;
-                	case ALL : locationDao.getAccoById(JsonNode.get("id").asText());	
-                						   locationDao.getRestById(JsonNode.get("id").asText());
-                						   locationDao.getAttrById(JsonNode.get("id").asText());	break;
+                	case ALL : 
+                		String categoryCode = JsonNode.get("category_group_code").asText();
+                		String jsonId = JsonNode.get("id").asText();
+                		
+                		if("AD5".equals(categoryCode)) {
+                			LocationVO accoAll = locationDao.getAccoById(jsonId);
+                			if(accoAll == null) {
+                				accoAll = convertJsonToLocationVO(JsonNode, LocationEnum.ACCO);
+                				int result = locationDao.insertAcco(accoAll);
+                				if(result <= 0) {
+                					log.warn("숙소 insert 실패");
+                				}
+                			}
+                		} else if("CE7".equals(categoryCode) || "FD6".equals(categoryCode)) {
+                			LocationVO restAll = locationDao.getRestById(jsonId);
+                			if(restAll == null) {
+                				restAll = convertJsonToLocationVO(JsonNode, LocationEnum.REST);
+                				int result = locationDao.insertRest(restAll);
+                				if(result <= 0) {
+                					log.warn("맛집 insert 실패");
+                				}
+                			}
+                		} else if("CT1".equals(categoryCode) || "AT4".equals(categoryCode)) {
+                			LocationVO attrAll = locationDao.getAttrById(jsonId);
+                			if(attrAll == null) {
+                				attrAll = convertJsonToLocationVO(JsonNode, LocationEnum.ATTR);
+                				int result = locationDao.insertAttr(attrAll);
+                				if(result <= 0) {
+                					log.warn("즐길거리 insert 실패");
+                				}
+                			}
+                		}
                 	}
                 });
             }
@@ -196,7 +225,7 @@ public class LocationServiceImpl implements LocationService{
             mv.addObject("attrList", attrList);
             mv.addObject("attrPaging", attrPaging);
         	mv.setViewName("location/locationAllListView");
-        }else {
+        } else {
         	// 총 목록 갯수 조회해서. 총 페이지 수 계산함
             int listCount = getLocationListCount(keyword, sortEnum, locationEnum);
             // 페이지 관련 항목들 계산 처리

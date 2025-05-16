@@ -103,7 +103,7 @@ function goToDelete() {
         </div>
         <div class="review-content">
         	<span class="location-name">장소명 : <c:out value="${locName[review.reviewId]}" /></span>
-            <p><c:out value="${review.userReviewText}" /></p>
+            <c:out value="${review.userReviewText}" />
         </div>
     </div>
 </c:forEach>
