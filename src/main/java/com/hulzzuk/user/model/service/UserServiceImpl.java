@@ -77,8 +77,6 @@ public class UserServiceImpl implements UserService {
 	// 로그아웃
 	@Override
 	public ModelAndView logoutMethod(ModelAndView mv, HttpSession session, SessionStatus status) {
-		String redirectUrl = "/main.do";
-		
 		// 해당 세션 객체가 있으면 리턴받고, 없으면 null 리턴받음
 		if (session != null) {
 			  // 소셜 로그인 여부 확인
@@ -87,8 +85,16 @@ public class UserServiceImpl implements UserService {
 	        if(user != null) {
 		        String sns = user.getUserPath();
 		        String accessToken = (String) session.getAttribute("accessToken");	// 카카오
-		        OAuth2AccessToken token = (OAuth2AccessToken) session.getAttribute("oauthToken");
-		        String accessTokenNaver = token.getAccessToken();	// 네이버
+		        
+		        String accessTokenNaver = null;
+
+	            OAuth2AccessToken token = (OAuth2AccessToken) session.getAttribute("oauthToken");
+	            if (token != null) {
+	                accessTokenNaver = token.getAccessToken(); // 네이버
+	            }
+		        
+		       // OAuth2AccessToken token = (OAuth2AccessToken) session.getAttribute("oauthToken");
+		       // String accessTokenNaver = token.getAccessToken();	// 네이버
 	
 		        if (sns != null && (accessToken != null || accessTokenNaver != null)) {
 		            switch (sns) {
@@ -97,19 +103,7 @@ public class UserServiceImpl implements UserService {
 		                	//kakaoLoginAuth.disconnect(accessToken); 
 		                    break;
 		                case "NAVER":
-		                	//naverLoginAuth.logOut(accessTokenNaver);
-		                	// 1. 네이버 AccessToken 삭제
-							/*
-							 * try {
-							 * 
-							 * String deleteUrl = NaverLoginAuth.buildTokenDeleteUrl(accessTokenNaver); URI
-							 * uri = URI.create(deleteUrl); HttpURLConnection conn = (HttpURLConnection)
-							 * uri.toURL().openConnection(); conn.setRequestMethod("POST");
-							 * conn.setDoOutput(true); conn.getResponseCode(); // 강제 실행 conn.disconnect(); }
-							 * catch (Exception e) { e.printStackTrace(); }
-							 */
-	
-	                        // 2. 중간 로그아웃 페이지 이동 -> 1초 후 메인페이지 이동
+	                        // 중간 로그아웃 페이지 이동 -> 1초 후 메인페이지 이동
 	                        mv.setViewName("user/naverLogoutRedirect");
 		                    break;
 		            }
@@ -119,10 +113,10 @@ public class UserServiceImpl implements UserService {
 			// 해당 세션객체가 있다면, 세션 객체를 없앰
 			session.invalidate();
 			status.setComplete();
-			mv.setViewName("redirect:" + redirectUrl);
+			mv.setViewName("redirect:/main.do");
 		} else {
 			mv.addObject("message", "로그인 세션이 존재하지 않습니다.");
-			mv.setViewName("redirect:" + redirectUrl);
+			mv.setViewName("redirect:/main.do");
 		}
 		
 		return mv;
@@ -237,7 +231,7 @@ public class UserServiceImpl implements UserService {
 			mv.addObject("userId", authUserId);
 			
 			if("resetVerify".equals(mode)) {
-				mv.setViewName("user/userPwdPage");
+				mv.setViewName("user/newPwdPage");
 			}else if("joinVerify".equals(mode)) {
 				mv.addObject("message", "인증이 완료되었습니다.");
 		        mv.addObject("action", "close"); 
@@ -444,9 +438,7 @@ public class UserServiceImpl implements UserService {
 		String encryptedPwd = passwordEncryptor.encryptSHA256(user.getUserPwd()).toUpperCase();
 		user.setUserPwd(encryptedPwd);
 		
-		// 닉네임 생성 (이메일 앞부분)
-		//user.setUserNick(user.getUserId().substring(0, user.getUserId().indexOf("@")));
-		
+		// 닉네임 생성
 		String baseNick = user.getUserId().substring(0, user.getUserId().indexOf("@")); String finalNick = baseNick;
 		  
 		// DB에 닉네임이 존재하는지 확인하고 중복될 경우 숫자 붙이기 
@@ -507,55 +499,58 @@ public class UserServiceImpl implements UserService {
 		// 세션에서 ID 불러오기
         String authUserId = (String)session.getAttribute("authUserId");
         String deleteYN = new String();
-        OAuth2AccessToken token = (OAuth2AccessToken) session.getAttribute("oauthToken");
-        String accessTokenNaver = token.getAccessToken();	// 네이버
-        
+		
         // 해당 세션 객체가 있으면 리턴받고, 없으면 null 리턴받음
  		if (session != null) {
  			  // 소셜 로그인 여부 확인
  			
  	        UserVO user = (UserVO) session.getAttribute("loginUser");
- 	        String sns = user.getUserPath();
- 	        String accessToken = (String) session.getAttribute("accessToken");
+ 	        if(user != null) {
+ 		        String sns = user.getUserPath();
+ 		        String accessToken = (String) session.getAttribute("accessToken");	// 카카오
+ 		        
+ 		        String accessTokenNaver = null;
 
-	        if (sns != null && accessToken != null) {
-	            switch (sns) {
-	                case "KAKAO":
-	                	kakaoLoginAuth.disconnect(accessToken);
-	                    break;
-	                case "NAVER":
-	                	 try {
-	                         String deleteUrl = NaverLoginAuth.buildTokenDeleteUrl(accessTokenNaver);
-	                         URI uri = URI.create(deleteUrl);
-	                         HttpURLConnection conn = (HttpURLConnection) uri.toURL().openConnection();
-	                         conn.setRequestMethod("POST");
-	                         conn.setDoOutput(true);
-	                         conn.getResponseCode();
-	                         conn.disconnect();
-	                     } catch (Exception e) {
-	                         e.printStackTrace();
-	                     }
-	                	
-	                	//mv.setViewName("user/naverLogoutRedirection");
-						 
-	                  //  naverLoginAuth.logOut(accessToken); // Naver 로그아웃 호출
-	                    break;
-	            }
-	        }
-			
-			// 탈퇴 처리
-			int result = userDao.deleteUser(authUserId);
-			
-			// 세션 없애기
-			session.invalidate();
-			status.setComplete();
-			
-			if(result > 0) {
-				deleteYN = "success|" + request.getContextPath() + "/main.do";
-			}else {
-				throw new IllegalArgumentException(ErrorCode.USER_DELETE_ERROR.getMessage());
-			}
-		}
+ 	            OAuth2AccessToken token = (OAuth2AccessToken) session.getAttribute("oauthToken");
+ 	            if (token != null) {
+ 	                accessTokenNaver = token.getAccessToken(); // 네이버
+ 	            }
+     		        
+		        if (sns != null && accessToken != null) {
+		            switch (sns) {
+		                case "KAKAO":
+		                	kakaoLoginAuth.disconnect(accessToken);
+		                    break;
+		                case "NAVER":
+		                	 try {
+		                         String deleteUrl = NaverLoginAuth.buildTokenDeleteUrl(accessTokenNaver);
+		                         URI uri = URI.create(deleteUrl);
+		                         HttpURLConnection conn = (HttpURLConnection) uri.toURL().openConnection();
+		                         conn.setRequestMethod("POST");
+		                         conn.setDoOutput(true);
+		                         conn.getResponseCode();
+		                         conn.disconnect();
+		                     } catch (Exception e) {
+		                         e.printStackTrace();
+		                     }
+		                    break;
+		            }
+		        }
+				
+				// 탈퇴 처리
+				int result = userDao.deleteUser(authUserId);
+				
+				// 세션 없애기
+				session.invalidate();
+				status.setComplete();
+				
+				if(result > 0) {
+					deleteYN = "success|" + request.getContextPath() + "/main.do";
+				}else {
+					throw new IllegalArgumentException(ErrorCode.USER_DELETE_ERROR.getMessage());
+				}
+ 	        }	
+     	}
 		return deleteYN;
  	}
 

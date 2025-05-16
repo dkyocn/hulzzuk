@@ -1,6 +1,8 @@
 package com.hulzzuk.location.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.hulzzuk.location.model.vo.LocationVO;
@@ -65,5 +67,11 @@ public class LocationController {
 		@ResponseBody
 		public Map<String, Double> getDistance(@RequestBody Map<String, String> locationMap) {
 			return locationService.getDistance(locationMap);
+		}
+		
+		@RequestMapping(value = "locTop3.do")
+		@ResponseBody
+		public Map<String, List<LocationVO>> getTop3LocList(){
+			return locationService.getTop3LocList();
 		}
 }

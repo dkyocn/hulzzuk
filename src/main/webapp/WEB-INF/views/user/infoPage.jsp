@@ -179,7 +179,7 @@ window.onload = function () {
 			
 			<c:if test="${ empty requestScope.user.userProfile }">
 				<div id="myphoto2">
-					<img src="${pageContext.request.contextPath}/resources/images/logo2.png" id="photoDefault">
+					<img src="https://ssl.pstatic.net/static/pwe/address/img_profile.png" id="photoDefault">
 				</div>
 			</c:if>
 			${ requestScope.ofile }</td></tr>

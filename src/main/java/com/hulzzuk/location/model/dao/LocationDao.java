@@ -183,4 +183,35 @@ public class LocationDao {
         map.put("imgPath", attr.getImgPath());
         return sqlSessionTemplate.insert("attrMapper.insertAttr", map);
 	}
+	
+	// 숙소 top3 조회 (메인페이지)
+	public List<LocationVO> getTop3LocList(LocationEnum locationEnum) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("locationEnum", locationEnum);
+        
+        List<LocationVO> locationVOList = new ArrayList<>();
+     // 각 LocationEnum에 맞는 조회 쿼리 실행
+        switch (locationEnum) {
+            case ACCO:
+                locationVOList = sqlSessionTemplate.selectList("accoMapper.getTop3Acco", map);
+                locationVOList.forEach(locationVO -> {
+                    locationVO.setLocationEnum(LocationEnum.ACCO);
+                });
+                return locationVOList;
+            case REST:
+                locationVOList = sqlSessionTemplate.selectList("restMapper.getTop3Rest", map);
+                locationVOList.forEach(locationVO -> {
+                    locationVO.setLocationEnum(LocationEnum.REST);
+                });
+                return locationVOList;
+            case ATTR:
+                locationVOList = sqlSessionTemplate.selectList("attrMapper.getTop3Attr", map);
+                locationVOList.forEach(locationVO -> {
+                    locationVO.setLocationEnum(LocationEnum.ATTR);
+                });
+                return locationVOList;
+        }
+
+        return locationVOList;
+	}
 }
