@@ -19,4 +19,18 @@ public class CommentDao {
 		return sqlSessionTemplate.selectList("commentMapper.getVocComment", vocId);
 	}
 
+	// 댓글 단일 조회
+	public CommentVO getCommentById(Long commentId){
+		return sqlSessionTemplate.selectOne("commentMapper.getCommentById", commentId);
+	}
+
+	// 댓글 생성
+	public int createComment(CommentVO commentVO){
+		return sqlSessionTemplate.insert("commentMapper.insertComment", commentVO);
+	}
+
+	// 댓글 삭제
+	public int deleteComment(long commentId){
+		return sqlSessionTemplate.delete("commentMapper.deleteComment", commentId);
+	}
 }
