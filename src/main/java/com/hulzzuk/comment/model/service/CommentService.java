@@ -20,4 +20,8 @@ public interface CommentService {
 
 	// 댓글 삭제
 	Map<String, Object> deleteComment(HttpSession session, long id);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4e0d880f84a87e259a2fb4108aa97b3cdaf8b9c3
 }

@@ -20,4 +20,8 @@
     	from tb_recomment
     	where COMMENT_ID = #{commentId}
     </select>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4e0d880f84a87e259a2fb4108aa97b3cdaf8b9c3
 </mapper>
