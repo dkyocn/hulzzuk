@@ -141,8 +141,6 @@ public class LoveServiceImpl implements LoveService{
 	        case REST -> loveVO.setRestId(locId);
 	        case ATTR -> loveVO.setAttrId(locId);
 	    }
-	    logger.info("[삭제 요청] userId = " + sessionUserId + ", enum = " + locationEnum + ", locId = " + locId);
-	    logger.info("→ 조건: accoId = " + loveVO.getAccoId() + ", restId = " + loveVO.getRestId() + ", attrId = " + loveVO.getAttrId());
 	    try {
 	        int deleted = loveDao.deleteLoveByCondition(loveVO);
 	        result.put("success", deleted > 0);

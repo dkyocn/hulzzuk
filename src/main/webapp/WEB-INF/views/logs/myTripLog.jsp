@@ -42,7 +42,7 @@
                     <img src="<c:out value='${log.imagePath}'/>" alt="Log Image" />
                     <div class="overlay">
                         <h3><c:out value="${log.logTitle}"/></h3>
-                        <p>❤️ <c:out value="${log.loveCount}" /></p>
+                        <p>❤️ <fmt:formatNumber value="${loveCountMap[log.logId]}"/></p>
                         <p><fmt:formatDate value="${log.logStartDate}" pattern="yyyy-MM-dd" /></p>
                     </div>
                 </div>

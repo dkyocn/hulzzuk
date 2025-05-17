@@ -485,7 +485,7 @@ public class UserServiceImpl implements UserService {
 	
 	// 회원 탈퇴 안내 (info 페이지에서 이동)
 	@Override
-	public ModelAndView deleteGuide(ModelAndView mv, HttpSession session, @RequestParam("userId") String userId) {
+	public ModelAndView deleteGuide(ModelAndView mv, HttpSession session, String userId) {
 
 		String sessionUserId = (String) session.getAttribute("authUserId");
 		
