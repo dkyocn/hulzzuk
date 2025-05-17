@@ -155,14 +155,36 @@
   <!-- 댓글 입력창 (AJAX 처리용) -->
  <c:choose>
 <c:when test="${not empty loginUser}">
-  <div class="comment-form mt-4">
-    <input type="hidden" id="logId" value="${log.logId}" />
-    <div class="form-group">
-      <label for="commentContent"><strong>댓글 작성</strong></label>
-      <textarea class="form-control" id="commentContent" rows="3" placeholder="댓글을 입력하세요..." required></textarea>
+  <!-- 댓글 작성 영역 -->
+<div id="log-comment-box" class="container mt-5">
+  <div class="row">
+    <div class="col-12 col-md-12">
+      <div class="comment-card">
+        <div class="comment-header">
+          <h5 class="comment-title">댓글 작성</h5>
+        </div>
+        <div class="comment-body">
+          <form id="commentForm">
+            <!-- Hidden Inputs -->
+            <input type="hidden" name="type" value="LOG" />
+            <input type="hidden" name="id" value="${log.logId}" />
+
+            <!-- 댓글 입력창 -->
+            <div class="form-group mb-3">
+              <label for="commentContent" class="form-label">내용</label>
+              <textarea id="commentContent" name="content" class="form-control" rows="3" placeholder="댓글을 입력하세요"></textarea>
+            </div>
+
+            <!-- 등록 버튼 -->
+            <div class="text-end">
+              <button type="button" id="submitCommentBtn" class="btn btn-submit-comment">댓글 등록</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-    <button type="button" class="btn btn-primary mt-2" onclick="submitComment()">댓글 등록</button>
   </div>
+</div>
 </c:when>
 
   <c:otherwise>
@@ -172,61 +194,55 @@
     </div>
   </c:otherwise>
 </c:choose>
-  
+
+	 <%-- 로그댓글조회 CommentVO 연결.0517--%>
+	<c:forEach var="comment" items="${comments}">
+		<div class="comment">
+		<strong>${comment.userId}</strong> - ${comment.content}
+        <span class="timestamp">${comment.createdAt}</span>
+    </div>
+	</c:forEach>
+	
   
 </div>
 </div>
 
 <script type="text/javascript">
 
-<!--  2. AJAX 응답 결과로 로그인 체크 -->
-function submitComment() {
-	  const content = $("#commentContent").val().trim();
-	  const logId = $("#logId").val();
+<!-- 댓글 작성 Ajax -->
 
-	  if (!content) {
-	    alert("댓글 내용을 입력하세요.");
+$('#submitCommentBtn').click(function () {
+	  const content = $('#commentContent').val();
+	  const logId = $('input[name="id"]').val();
+
+	  if (!content.trim()) {
+	    alert("댓글 내용을 입력해주세요.");
 	    return;
 	  }
 
 	  $.ajax({
-	    url: "/hulzzuk/log/commentInsert.do",
-	    method: "POST",
-	    contentType: "application/json",
+	    type: 'POST',
+	    url: '/hulzzuk/comment/create.do',
 	    data: JSON.stringify({
-	      logId: logId,
+	      type: 'LOG',
+	      id: logId,
 	      content: content
 	    }),
-	    success: function(response) {
+	    contentType: 'application/json; charset=utf-8',
+	    success: function (response) {
 	      if (response.success) {
-	        alert(response.message);
-	        location.reload();  // 댓글 등록 후 새로고침
+	        alert('댓글이 등록되었습니다.');
+	        location.reload();
 	      } else {
-	        alert(response.message);
-	        if (response.redirect) {
-	          window.location.href = response.redirect;
-	        }
+	        alert(response.message || '댓글 등록 실패');
 	      }
 	    },
-	    error: function() {
-	      alert("댓글 등록 중 오류가 발생했습니다.");
+	    error: function () {
+	      alert('서버 오류로 댓글 등록에 실패했습니다.');
 	    }
 	  });
-	}
-	
-	<c:forEach var="comment" items="${comments}">
-		<div class="comment">
-	 	 ${comment.content}
-		</div>
-	
-	<c:forEach var="reply" items="${comment.replies}">
-	  	<div class="recomment">
-	   	 |__ ${reply.content}
-	 	 </div>
-		</c:forEach>
-	</c:forEach>
-	
-		
+	});
+
 
 
 </script>

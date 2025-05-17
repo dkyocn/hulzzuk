@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.hulzzuk.comment.model.service.CommentService;
+import com.hulzzuk.comment.model.vo.CommentVO;
 import com.hulzzuk.common.util.FileSaveUtility;
 import com.hulzzuk.log.model.service.LogReviewService;
 import com.hulzzuk.log.model.service.LogService;
@@ -50,6 +52,9 @@ public class LogController {
 
 	@Autowired
 	private FileSaveUtility fileSaveUtility;
+	
+	@Autowired
+	private CommentService commentService;
 	
 	// 대표 이미지 저장 경로
 	private String SAVE_DIR;
@@ -270,17 +275,18 @@ public ModelAndView viewLogDetail(@RequestParam("logId") Long logId, HttpSession
     List<LogReviewVO> reviews = logService.getReviewListByLogId(logId);  //ServiceImple에서 logDao.getReviewsByLogId(logId); --여기서 이름 바뀜!
 
     // 3. 댓글 목록 조회
-    List<LogCommentVO> comments = logService.getCommentsByLogId(logId);
+    List<CommentVO> comments = commentService.getLogComment(logId);
+    //List<LogCommentVO> comments = logService.getCommentsByLogId(logId); //공통으로 변경함으로 주석처리.이후삭제
 
-    // 4. 댓글 ID 리스트 추출 → 대댓글 조회용
-    List<Long> commentIdList = comments.stream()
-        .map(LogCommentVO::getCommentId)
-        .collect(Collectors.toList());
+//    // 4. 댓글 ID 리스트 추출 → 대댓글 조회용
+//    List<Long> commentIdList = comments.stream()
+//        .map(LogCommentVO::getCommentId)
+//        .collect(Collectors.toList());
 
-    // 5. 대댓글 목록 조회
-    List<LogCommentVO> replies = (commentIdList == null || commentIdList.isEmpty())
-        ? Collections.emptyList()
-        : logService.getRepliesByCommentIds(commentIdList);
+//    // 5. 대댓글 목록 조회
+//    List<LogCommentVO> replies = (commentIdList == null || commentIdList.isEmpty())
+//        ? Collections.emptyList()
+//        : logService.getRepliesByCommentIds(commentIdList);
 
     // 6. 로그 확인용 출력
     System.out.println("logVO = " + log);
@@ -290,7 +296,7 @@ public ModelAndView viewLogDetail(@RequestParam("logId") Long logId, HttpSession
     mav.addObject("log", log);
     mav.addObject("reviews", reviews);
     mav.addObject("comments", comments);
-    mav.addObject("replies", replies);
+  //  mav.addObject("replies", replies);
 
     return mav;
 }

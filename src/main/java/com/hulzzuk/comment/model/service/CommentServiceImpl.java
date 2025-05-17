@@ -81,4 +81,10 @@ public class CommentServiceImpl implements CommentService{
 		return map;
 	}
 
+	@Override
+	public List<CommentVO> getLogComment(Long logId) {
+		return commentDao.getLogComment(logId); 
+	
+	}
+
 }

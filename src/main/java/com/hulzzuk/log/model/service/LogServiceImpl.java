@@ -217,25 +217,7 @@ public class LogServiceImpl implements LogService {
 	}
 
 
-	
-	/**
-	 * 
-	 * @Override
-public LogVO selectRecentLogId() {
-    return logDao.selectRecentLogId();
-}
 
-@Override
-public void insertLog(LogVO log) {
-    logDao.insertLog(log);
-}
-
-@Override
-public void insertTripLog(LogReviewVO review) {
-    logDao.insertTripLog(review);
-}
-	 * 
-	 */
 	//0517 로그컨텐트테스트
 	@Override
 	public List<LogReviewVO> getPlacesByPlanDay(Long planId, int planDay) {
@@ -249,26 +231,5 @@ public void insertTripLog(LogReviewVO review) {
 		// return logDao.selectPlacesByPlanDayByLogId(logId);  //이전은 안맞았
 	}
 	
-//	
-//	@Override
-//    public List<LogCommentVO> getCommentTreeByLogId(Long logId) {
-//        List<LogCommentVO> comments = logDao.getTopLevelComments(logId);
-//        for (LogCommentVO comment : comments) {
-//            List<LogCommentVO> replies = logDao.getRepliesByParentId(comment.getCommentId());
-//            comment.setReplies(replies);
-//        }
-//        return comments;
-//    }
 
-//	@Override
-//    public void insertComment(LogCommentVO comment) {
-//        if (comment!=null && comment.getParentCommentId() == null) {
-//            logDao.insertTopLevelComment(comment);   //댓글 
-//        } else {
-//            logDao.insertReplyComment(comment);   //대댓글    
-//            			//   void insertReplyComment(LogCommentVO comment); 인터페이스필요없음.분기해서내부에서만쓰므
-//        }
-//    }
-	
-	
 }

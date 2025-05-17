@@ -33,4 +33,9 @@ public class CommentDao {
 	public int deleteComment(long commentId){
 		return sqlSessionTemplate.delete("commentMapper.deleteComment", commentId);
 	}
+
+	//Log 댓글조회 
+	public List<CommentVO> getLogComment(Long logId) {
+		return sqlSessionTemplate.selectList("commentMapper.getLogComment", logId);
+	}
 }

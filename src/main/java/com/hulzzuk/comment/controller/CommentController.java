@@ -22,18 +22,21 @@ public class CommentController {
 
 
 	// 생성
-	@RequestMapping("create.do")
-	@ResponseBody
-	public Map<String, Object> createComment(HttpSession session,
-											 @RequestParam(name = "type") String type, // VOC, LOG
-											 @RequestParam(name = "id") Long id,
-											 @RequestParam(name = "content") String content) {
+		@RequestMapping(value = "create.do", method =  RequestMethod.POST)
+		@ResponseBody
+		public Map<String, Object> createComment(HttpSession session,
+												 @RequestParam(name = "type") String type, // VOC, LOG
+												 @RequestParam(name = "id") Long id,
+												 @RequestParam(name = "content") String content) {
 
-		return commentService.createComment(session, type, id, content);
-	}
+			return commentService.createComment(session, type, id, content);
+		}
 
+
+	
+	
 	// 삭제
-	@RequestMapping("delete.do")
+	@RequestMapping(value = "delete.do", method =   RequestMethod.POST)
 	@ResponseBody
 	public  Map<String, Object> deleteComment(HttpSession session,
 											  @RequestParam(name = "id") Long id) {

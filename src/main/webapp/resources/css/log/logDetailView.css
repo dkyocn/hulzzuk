@@ -246,4 +246,37 @@ body {
   .reply-content {
     font-size: 14px;
   }
+  
+  /* 댓글입력창 */
+  .comment-card {
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.comment-header {
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+}
+
+.comment-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--main-color);
+}
+
+.btn-submit-comment {
+  background-color: var(--main-color);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+}
+
+.btn-submit-comment:hover {
+  background-color: #d75c15;
+}
 }
