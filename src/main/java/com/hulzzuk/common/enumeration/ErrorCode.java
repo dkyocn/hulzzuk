@@ -30,6 +30,8 @@ public enum ErrorCode {
     COMMENT_NOT_FOUND(422,"해당 ID의 댓들이 존재하지 않습니다."),
     COMMENT_INSERT_ERROR(598,"댓글을 생성하는데 실패하였습니다."),
     COMMENT_DELETE_ERROR(599,"댓글을 삭제하는데 실패하였습니다."),
+    RECOMMENT_INSERT_ERROR(601,"대댓글을 생성하는데 실패하였습니다."),
+    RECOMMENT_DELETE_ERROR(602,"대댓글을 삭제하는데 실패하였습니다."),
 	MAIL_SEND_FAIL(421, "메일 발송이 실패했습니다.");
 	
 

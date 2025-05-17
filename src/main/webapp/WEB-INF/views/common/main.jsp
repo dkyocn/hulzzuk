@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
 <meta charset="UTF-8">
 <title>HulZZuk</title>
@@ -15,50 +16,12 @@
 </noscript>
 <script type="text/javascript"
 	src="${ pageContext.servletContext.contextPath }/resources/js/jquery-3.7.1.min.js"></script>
-<script type="text/javascript">
-let logList = [];
-let attrList = [];
-let restList = [];
-let accoList = [];
-
-document.addEventListener('DOMContentLoaded', () => {
-	// 최신 체크리스트 데이터 가져오기
-	function fetchUpdatedChecklist() {
-		try {
-			const response = $.ajax({
-				url: '${pageContext.request.contextPath}/loc/locTop3.do', // Ensure context path is correct
-				type: 'GET',
-				dataType: 'json'
-			});
-
-			// Update global arrays with response data
-			attrList = response.attrList || [];
-			restList = response.restList || [];
-			accoList = response.accoList || [];
-
-			console.log('Fetched data:', { attrList, restList, accoList, logList });
-
-			// Optionally, call a function to render or process the data
-			// renderChecklist();
-
-			return { attrList, restList, accoList };
-		} catch (error) {
-			console.error('리스트 갱신 실패:', error);
-			return { attrList: [], restList: [], accoList: [], logList: [] };
-		}
-	}
-
-	// Call the function on page load
-	fetchUpdatedChecklist();
-});
-
-console.log('attrList :',attrList);
-</script>
-
 </head>
 
 
 <body>
+<fmt:setLocale value="ja"/>
+
 	<c:import url="/WEB-INF/views/common/header.jsp" />
 	<div class="inner">
 		<img id="logo" src="resources/images/hulzzuk01.png"> <br>
