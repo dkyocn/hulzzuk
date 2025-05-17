@@ -4,7 +4,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page isELIgnored="false" %>
 <!DOCTYPE html>
-<html lang="kr">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <title>여행 로그 상세보기</title>
@@ -31,20 +31,109 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/lang/summernote-ko-KR.min.js"></script>
 
   <!-- Summernote 초기화 -->
-  <script>
-    $(document).ready(function () {
-      $('.summernote').summernote({
-        placeholder: '여행 후기를 입력해주세요.',
-        lang: 'ko-KR',
-        height: 50,
-        toolbar: [
-          ['style', ['bold', 'italic', 'underline', 'clear']],
-          ['para', ['ul', 'ol', 'paragraph']],
-          ['insert', ['link', 'picture']],
-          ['view', ['codeview']]
-        ]
-      });
+  
+ <script type="text/javascript">
+   $(document).ready(function () {
+     $('.summernote').summernote({
+       placeholder: '여행 후기를 입력해주세요.',
+       lang: 'ko-KR',
+       height: 50,
+       toolbar: [
+         ['style', ['bold', 'italic', 'underline', 'clear']],
+         ['para', ['ul', 'ol', 'paragraph']],
+         ['insert', ['link', 'picture']],
+         ['view', ['codeview']]
+       ]
+     });
+   });
+
+ // 찜하기 버튼
+    document.addEventListener("DOMContentLoaded", function () {
+    	window.locId =  "${requestScope.location.locId}";
+    	window.locEnum = "${requestScope.locationEnum}";
+        const locLoveBtn = document.querySelector(".locLoveBtn");
+        const locLoveImg = locLoveBtn.querySelector(".locLoveImg");
+
+        // 기본 상태 설정
+        const loveDefaultImgSrc = "${pageContext.request.contextPath}/resources/images/loc/loc-love-black.png";
+        const loveHoverImgSrc = "${pageContext.request.contextPath}/resources/images/loc/loc-love-orange.png";
+
+        // 마우스를 올렸을 때
+        locLoveBtn.addEventListener("mouseover", function () {
+        	if(locLoveBtn.dataset.loved !== 'true') {
+        		locLoveImg.src = loveHoverImgSrc;
+        	}
+        });
+
+        // 마우스가 떠났을 때
+        locLoveBtn.addEventListener("mouseout", function () {
+        	if(locLoveBtn.dataset.loved !== 'true') {
+        		locLoveImg.src = loveDefaultImgSrc;
+        	}
+        });    
+    });   
+    
+ // 페이지 로딩 시 하트 상태 반영
+    document.addEventListener("DOMContentLoaded", function () {
+        const buttons = document.querySelectorAll(".locLoveBtn");
+
+        buttons.forEach(button => {
+            const logId = button.dataset.logId;
+            const img = button.querySelector(".locLoveImg");
+
+            fetch('${pageContext.request.contextPath}/love/logCheck.do?logId=' + encodeURIComponent(logId))
+                .then(response => response.json())
+                .then(data => {
+                    const loved = data.loved === true;
+                    button.dataset.loved = loved.toString();
+                    img.src = loved
+                        ? '${pageContext.request.contextPath}/resources/images/loc/loc-love-filled.png'
+                        : '${pageContext.request.contextPath}/resources/images/loc/loc-love-black.png';
+                })
+                .catch(err => console.error("찜 상태 체크 실패:", err));
+        });
     });
+
+    function toggleLove(button) {
+        const userId = '${sessionScope.loginUser.userId}';
+        
+        console.log("userId:", userId);
+        
+        if (!userId) {
+            alert("로그인이 필요합니다.");
+            return;
+        }
+        
+        const loved = button.dataset.loved === 'true';
+        const logId = button.dataset.logId;
+        const img = button.querySelector('.locLoveImg');
+
+        const url = loved
+            ? '${pageContext.request.contextPath}/love/logDelete.do?logId=' + encodeURIComponent(logId)
+            : '${pageContext.request.contextPath}/love/logCreate.do?logId=' + encodeURIComponent(logId);
+
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                if (!loved) {
+                    img.src = '${pageContext.request.contextPath}/resources/images/loc/loc-love-filled.png';
+                    button.dataset.loved = 'true';
+                } else {
+                    img.src = '${pageContext.request.contextPath}/resources/images/loc/loc-love-black.png';
+                    button.dataset.loved = 'false';
+                }
+            } else {
+                console.warn("찜 요청 실패", data); // 디버그용, UI에는 안 보임
+            }
+        })
+        .catch(err => {
+            console.error("통신 오류:", err);
+        });
+    }
   </script>
 </head>
 
@@ -97,7 +186,9 @@
   
 <!-- 네모 아이콘 + 좋아요 수 + 댓글 수 -->
 <div class="log-meta">
-    <span class="lov-count">❤️ ${log.loveCount}</span>
+    <button class="locLoveBtn" data-loved="false" data-log-id="${log.logId}" onclick="toggleLove(this)">
+    		<img class="locLoveImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-love-black.png">
+ 			<fmt:formatNumber value="${loveCount}"/></button>
     <span class="icon-box"></span> ${comments.size()} 댓글
 </div>
 

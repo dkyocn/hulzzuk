@@ -39,7 +39,7 @@ public class LoveController {
 	    return loveService.selectAllLoveList(mv, session);
 	}
 	
-	// 찜 등록
+	// 여행지 찜 등록
 	@RequestMapping(value = "create.do", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> insertLove(HttpSession session, @RequestParam(name = "locationEnum") LocationEnum locationEnum, 
@@ -47,29 +47,16 @@ public class LoveController {
 	    return loveService.insertLove(session, locationEnum, locId);
 	}
 	
-	// 찜 여부 반환
+	// 여행지 찜 중복 확인
 	@RequestMapping(value = "check.do")
 	@ResponseBody
 	public Map<String, Object> checkLoveStatus(HttpSession session,
 	        @RequestParam("locationEnum") LocationEnum locationEnum,
 	        @RequestParam("locId") String locId) {
-		logger.info("찜 여부");
 	    return loveService.checkLoveStatus(session, locationEnum, locId);
 	}
-	/*
-	 * // 찜 카운트
-	 * 
-	 * @RequestMapping(value = "count.do")
-	 * 
-	 * @ResponseBody public Map<String, Object> getLoveCount(@RequestParam("locId")
-	 * String locId,
-	 * 
-	 * @RequestParam("locationEnum") LocationEnum locationEnum) { int count =
-	 * loveService.loveCount(locId, locationEnum); Map<String, Object> result = new
-	 * HashMap<>(); result.put("count", count); return result; }
-	 */
 	
-	// 찜 해제
+	// 여행지 찜 해제
 	@RequestMapping(value = "delete.do", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> deleteLove(HttpSession session,
@@ -78,13 +65,30 @@ public class LoveController {
 	    return loveService.deleteLove(session, locationEnum, locId);
 	}
 
-	/*
-	 * @RequestMapping(value = "delete.do", method = RequestMethod.POST)
-	 * 
-	 * @ResponseBody public Map<String, Object> deleteLove(@RequestParam("loveId")
-	 * long loveId) { return loveService.deleteLove(loveId); }
-	 */
 	
+	// -----------------------------------------------------------------
+	
+	
+	// 로그 찜 등록
+	@RequestMapping(value = "logCreate.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> insertLogLove(HttpSession session, @RequestParam("logId") Long logId) {
+		return loveService.insertLogLove(session, logId);
+	}
+	
+	// 로그 찜 중복 확인
+	@RequestMapping(value = "logCheck.do")
+	@ResponseBody
+	public Map<String, Object> checkLogLoveStatus(HttpSession session, @RequestParam("logId") Long logId) {
+		return loveService.checkLogLoveStatus(session, logId);
+	}
+	
+	// 로그 찜 해제
+	@RequestMapping(value = "logDelete.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> deleteLogLove(HttpSession session, @RequestParam("logId") Long logId) {
+		return loveService.deleteLogLove(session, logId);
+	}
 	
 	/*
 	 * // 찜 항목 불러오기
@@ -98,3 +102,4 @@ public class LoveController {
 	 */
 	
 }
+ 

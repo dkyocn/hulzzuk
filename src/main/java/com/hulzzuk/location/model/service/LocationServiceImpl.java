@@ -52,7 +52,7 @@ public class LocationServiceImpl implements LocationService{
 		LocationVO locationVO = null;
 
 		switch(locationEnum) {
-		case  ACCO : locationVO =  locationDao.getAccoById(locId);	break;
+		case ACCO : locationVO =  locationDao.getAccoById(locId);		break;
 		case REST : locationVO =  locationDao.getRestById(locId);		break;
 		case ATTR : locationVO =  locationDao.getAttrById(locId);		break;
 		}

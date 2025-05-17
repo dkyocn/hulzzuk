@@ -4,6 +4,7 @@ import java.io.File;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -29,6 +30,7 @@ import com.hulzzuk.log.model.service.LogService;
 import com.hulzzuk.log.model.vo.LogCommentVO;
 import com.hulzzuk.log.model.vo.LogReviewVO;
 import com.hulzzuk.log.model.vo.LogVO;
+import com.hulzzuk.love.model.service.LoveService;
 import com.hulzzuk.plan.model.vo.PlanVO;
 import com.hulzzuk.user.model.vo.UserVO;
 
@@ -48,6 +50,9 @@ public class LogController {
 	private LogReviewService logReviewService;
 	
 	@Autowired
+	private LoveService loveService;
+	
+	@Autowired
 	private ServletContext context;
 
 	@Autowired
@@ -64,14 +69,22 @@ public class LogController {
 
         int totalCount = logService.getLogCount(); // 전체 로그 수
         List<LogVO> logList = logService.getLogPage(start, amount); // 현재 페이지 로그 목록
-
+        
+        //Map<Long, Integer> loveCountMap = new HashMap<>();
+        for (LogVO log : logList) {
+            int loveCount = loveService.getLogLoveCount(log.getLogId());
+            log.setLoveCount(loveCount);
+        }
+        
         ModelAndView mav = new ModelAndView("logs/log"); // logs/log.jsp로 이동
         mav.addObject("logs", logList);
+        mav.addObject("logList", logList);
         mav.addObject("page", page);
         mav.addObject("totalCount", totalCount);
         mav.addObject("amount", amount);
         return mav;
     }
+    
     // 좋아요 순으로 조회 (필터) 
     @RequestMapping("/loveRank.do")
     public ModelAndView getLoveRankLogPage() {
@@ -109,7 +122,7 @@ public class LogController {
     	if(loginUser ==null ) {
     		// 로그인 후원래 가려던 페이지 기억해두기
     		session.setAttribute("redirectAfterLogin", "/log/selectPID.do");
-    		return new ModelAndView("redirect:/user/login.do"); // 로그인페이지
+    		return new ModelAndView("redirect:/user/loginSelect.do"); // 로그인페이지
     	}
     	
       //  String userId = loginUser.getUserId();
@@ -262,7 +275,7 @@ public ModelAndView viewLogDetail(@RequestParam("logId") Long logId, HttpSession
     UserVO loginUser = (UserVO) session.getAttribute("loginUser");
     if (loginUser == null) {
         session.setAttribute("redirectAfterLogin", "/log/detail.do?logId=" + logId);
-        return new ModelAndView("redirect:/user/login.do");
+        return new ModelAndView("redirect:/user/loginSelect.do");
     }
 
     // 1. 로그 정보 가져오기
@@ -287,6 +300,9 @@ public ModelAndView viewLogDetail(@RequestParam("logId") Long logId, HttpSession
         replies = logService.getRepliesByCommentIds(commentIdList);
     }
 
+    // 6. 찜 개수 계산
+    int loveCount = loveService.getLogLoveCount(logId);
+    		
     // 로그 확인용 출력
     System.out.println("logVO = " + log);
 
@@ -296,6 +312,7 @@ public ModelAndView viewLogDetail(@RequestParam("logId") Long logId, HttpSession
     mav.addObject("reviews", reviews);
     mav.addObject("comments", comments);
     mav.addObject("replies", replies);
+    mav.addObject("loveCount", loveCount == 0 ? 0 : loveCount);
     return mav;
 }
     
