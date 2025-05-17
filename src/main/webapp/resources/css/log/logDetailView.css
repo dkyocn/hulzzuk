@@ -188,8 +188,33 @@ body {
   }
 }
 
+.log-meta {
+    display: flex;
+    gap: 10px;
+    font-size: 16px;
+    color: #888;
+    margin-top: 10px;
+    justify-content: flex-end;
+}
 
-/** 댓글 좋아요. 수정 삭제  **/
+.log-meta button {
+    background: none;
+    border: none;
+    font-size: 14px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+}
+
+/* 버튼 그룹 이미지 크기 조정 */
+.log-meta button img {
+    width: 32px;
+    height: 32px;
+    object-fit: cover; /* 이미지 비율 유지하며 크기 맞추기 */
+
+
+/* 댓글 좋아요. 수정 삭제 */
 .log-meta-wrapper {
   display: flex;
   justify-content: space-between; /* 좌우 정렬 */
@@ -203,6 +228,7 @@ body {
   margin-right: 10px;
   font-size: 16px;
 }
+
 /* 목록 버튼 기본 스타일 */
 .btn-back {
   background-color: #28a745;

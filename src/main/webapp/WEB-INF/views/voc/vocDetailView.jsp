@@ -13,6 +13,51 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/voc/vocDetailView.css">
 	<!-- font 적용 -->
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+	<script type="text/javascript" src="${pageContext.servletContext.contextPath}/resources/js/jquery-3.7.1.min.js"></script>
+	<script type="text/javascript">
+	
+	function comcreate(vocId, content){
+		 var content = $("textarea[name='content']").val();
+		    if(content.trim() === "") {
+		        alert("댓글 내용을 입력해주세요.");
+		        return;
+		    }
+		    
+		 $.ajax({
+             url: '${pageContext.request.contextPath}/comment/create.do?type=VOC',
+             type: 'POST',
+             data: { id: vocId, content: content },
+             dataType: 'json',
+             success: function(response) {
+                 if (response.status === "success") {
+                	 location.reload();
+                 }
+             },
+             error: function(xhr, status, error) {
+                 console.error('삭제 실패:', status, error, xhr.responseText);
+                 alert('항목 삭제에 실패했습니다. 오류: ' + xhr.responseText);
+             }
+         });
+	}
+			
+	function comdelete(commentId){
+		$.ajax({
+            url: '${pageContext.request.contextPath}/comment/delete.do',
+            type: 'POST',
+            data: { id: commentId },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === "success") {
+               	 location.reload();
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('삭제 실패:', status, error, xhr.responseText);
+                alert('항목 삭제에 실패했습니다. 오류: ' + xhr.responseText);
+            }
+        });
+	}
+	</script>
 </head>
 <body>
 <c:import url="/WEB-INF/views/common/header.jsp" />
@@ -54,11 +99,19 @@
         </div>
     </div>
 
-    <!-- 댓글 입력 -->
-    <div class="comment-write-box">
-        <textarea placeholder="댓글을 작성해 주세요"></textarea>
-        <button type="button" class="comment-submit-btn">등록</button>
-    </div>
+    <c:choose>
+    <c:when test="${empty loginUserId}">
+        <div class="comment-write-box not-logged-in">
+            <p>댓글을 작성하려면 <a href="${pageContext.request.contextPath}/user/loginSelect.do">로그인</a>이 필요합니다.</p>
+        </div>
+    </c:when>
+    <c:otherwise>
+            <div class="comment-write-box">
+                <textarea name="content" placeholder="댓글을 작성해 주세요"></textarea>
+                <button type="button" class="comment-submit-btn" onclick="comcreate(${vocVO.vocId}, $('textarea[name=content]').val())">등록</button>
+            </div>
+    </c:otherwise>
+</c:choose>
 
     <!-- 댓글 리스트 (예시용, 반복문 필요) -->
     <div class="comment-list">
@@ -70,7 +123,7 @@
 		                <fmt:formatDate value="${comment.createdAt}" pattern="yyyy.MM.dd" />
 		            </span>
 		            <span class="comment-actions">
-		                <a href="#">삭제</a>
+		                <button type="button" onclick="comdelete(${comment.commentId})">삭제</button>
 		            </span>
 		        </div>
 		        <div class="comment-body">${comment.content}</div>

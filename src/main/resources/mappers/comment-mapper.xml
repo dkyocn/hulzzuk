@@ -30,11 +30,11 @@
 
 	<!-- 댓글 삭제 -->
 	<delete id="deleteComment" parameterType="Long">
-		delete from TB_COMMENT where voc_id = #{commentId}
+		delete from TB_COMMENT where COMMENT_ID = #{commentId}
 	</delete>
 
 	<select id="getCommentById" parameterType="long" resultMap="resultList">
-		selet * from TB_COMMENT
+		select * from TB_COMMENT
 		      where comment_id = #{commentId}
 	</select>
 	

@@ -27,7 +27,7 @@
     </div>
 
     <div class="rmenu">
-        <a href="${pageContext.request.contextPath}/love/moveLove.do">My 찜</a>
+        <a href="${pageContext.request.contextPath}/love/page.do">My 찜</a>
         <a href="${pageContext.request.contextPath}/log/page.do?page=1">여행로그</a>
         <a href="${pageContext.servletContext.contextPath}/plan/page.do?page=1">일정</a>
         <c:if test="${empty loginUser }">
@@ -42,10 +42,10 @@
 <!-- 사이드 메뉴 -->
 <div class="side-menu" id="sideMenu">
     <div class="side-top">
-        <select class="chip" id="chip"> 
-            <option value="">🌐 한국어</option>
-            <option value="eng">🌐 English</option>
-        </select>
+<%--        <select class="chip" id="chip"> --%>
+<%--            <option value="">🌐 한국어</option>--%>
+<%--            <option value="eng">🌐 English</option>--%>
+<%--        </select>--%>
         <button class="close-btn" onclick="closeMenu()">&times;</button>
     </div>
 
@@ -67,7 +67,7 @@
     		<li><a href="${pageContext.request.contextPath}/user/select.do?userId=${loginUser.userId}">마이페이지</a></li>
 	         <li class="mymenu"><a href="${ pageContext.servletContext.contextPath }/log/myTripLog.do?">My 여행로그</a></li>
 	        <li class="mymenu"><a href="${ pageContext.servletContext.contextPath }/plan/page.do?page=1">My 일정</a></li>
-	        <li class="mymenu"><a href="${pageContext.request.contextPath}/love/moveLove.do">My 찜</a></li>
+	        <li class="mymenu"><a href="${pageContext.request.contextPath}/love/page.do">My 찜</a></li>
 	        
 	        <c:url var="myrev" value="review/select.do">
             <c:param name="userId" value="${loginUser.userId}" />

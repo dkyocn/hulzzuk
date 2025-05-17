@@ -32,7 +32,7 @@
     <c:if test="${ !empty sessionScope.loginUser }">
 	    <a href="${ pageContext.servletContext.contextPath }/log/myTripLog.do?">My 여행로그</a>
         <a href="${ pageContext.servletContext.contextPath }/plan/page.do?page=1">My 일정</a>
-	    <a href="${pageContext.request.contextPath}/love/moveLove.do">My 찜</a>
+	    <a href="${pageContext.request.contextPath}/love/page.do">My 찜</a>
 	    <a href="${ pageContext.servletContext.contextPath }/review/select.do?userId=${loginUser.userId}">My 리뷰</a>
     </c:if>
   </div>

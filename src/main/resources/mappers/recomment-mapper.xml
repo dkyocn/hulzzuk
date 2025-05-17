@@ -5,7 +5,7 @@
 <mapper namespace="recommentMapper">
 
 <!-- 코멘트 resultMap -->
-    <resultMap id="resultList" type="recomment">
+    <resultMap id="resultList" type="Recomment">
 	    <result property="recoId" column="RECO_ID" />
 		<result property="content" column="CONTENT" />
 		<result property="createdAt" column="CREATED_AT" />
@@ -20,4 +20,18 @@
     	from tb_recomment
     	where COMMENT_ID = #{commentId}
     </select>
+
+	<select id="getRecommentById" parameterType="long" resultMap="resultList">
+		select * from TB_RECOMMENT
+		where recomment_id = #{id}
+	</select>
+
+	<insert id="createRecomment" parameterType="Recomment" useGeneratedKeys="true" keyColumn="RECO_ID" keyProperty="recoId">
+		insert into TB_RECOMMENT (RECO_ID, CONTENT, CREATED_AT, UPDATED_AT, USER_ID, COMMENT_ID)
+		values (#{recoId}, #{content}, sysdate, sysdate, #{userId}, #{commentId})
+	</insert>
+
+	<delete id="deleteRecomment" parameterType="long">
+		delete TB_RECOMMENT where reco_id = #{recoId}
+	</delete>
 </mapper>

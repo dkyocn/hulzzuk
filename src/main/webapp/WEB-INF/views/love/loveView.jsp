@@ -35,6 +35,30 @@
     border-radius: 2px;
 }
 
+.inner {
+    display: flex;
+    justify-content: flex-end;
+    max-width: 650px;
+    margin: 0 auto;
+    padding-right: 15px;
+}
+
+/* 카테고리 */
+.inner #logForm {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.category {
+	border: none;
+}
+
 .loveContentWrapper {
     width: 100%;
     max-width: 650px;
@@ -127,6 +151,23 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .catch(err => console.error("찜 상태 체크 실패:", err));
     });
+    
+    buttons.forEach(button => {
+        const logId = button.dataset.logId;
+        const img = button.querySelector(".locLoveImg");
+
+        fetch('${pageContext.request.contextPath}/love/logCheck.do?logId=' + encodeURIComponent(logId))
+            .then(response => response.json())
+            .then(data => {
+                const loved = data.loved === true;
+                button.dataset.loved = loved.toString();
+                img.src = loved
+                    ? '${pageContext.request.contextPath}/resources/images/loc/loc-love-filled.png'
+                    : '${pageContext.request.contextPath}/resources/images/loc/loc-love-black.png';
+            })
+            .catch(err => console.error("찜 상태 체크 실패:", err));
+    });
+    
 });
 
 // 버튼 클릭 시 작동 (create.do & delete.do)
@@ -140,12 +181,21 @@ function toggleLove(button) {
     const loved = button.dataset.loved === 'true';
     const locId = button.dataset.locId;
     const locationEnum = button.dataset.locationEnum;
-    const img = button.querySelector('.locLoveImg');
+    const logId = button.dataset.logId;
+    const img = button.querySelector('img');
 
-    const url = loved
-        ? '${pageContext.request.contextPath}/love/delete.do?locId=' + encodeURIComponent(locId) + '&locationEnum=' + encodeURIComponent(locationEnum)
-        : '${pageContext.request.contextPath}/love/create.do?locId=' + encodeURIComponent(locId) + '&locationEnum=' + encodeURIComponent(locationEnum);
-
+    let url = '';
+    
+    if(logId){
+    	url = loved
+	    	? '${pageContext.request.contextPath}/love/logDelete.do?logId=' + encodeURIComponent(logId)
+	    	: '${pageContext.request.contextPath}/love/logCreate.do?logId=' + encodeURIComponent(logId);
+    }else{
+    	url = loved
+	        ? '${pageContext.request.contextPath}/love/delete.do?locId=' + encodeURIComponent(locId) + '&locationEnum=' + encodeURIComponent(locationEnum)
+	        : '${pageContext.request.contextPath}/love/create.do?locId=' + encodeURIComponent(locId) + '&locationEnum=' + encodeURIComponent(locationEnum);
+    }
+    
     fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -202,6 +252,18 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="underline"><hr></div>
 </div><br>
 
+<div class="inner">
+	<form class="search-box" action="page.do" method="get" id="logForm">
+		<select class="category" id="category" name="logCategory" onchange="document.getElementById('logForm').submit();">
+			<option value="ALL" <c:if test="${param.logCategory == 'ALL'}">selected</c:if>>전체</option>
+			<option value="ACCO" <c:if test="${param.logCategory == 'ACCO'}">selected</c:if>>숙소</option>
+			<option value="REST" <c:if test="${param.logCategory == 'REST'}">selected</c:if>>맛집</option>
+			<option value="ATTR" <c:if test="${param.logCategory == 'ATTR'}">selected</c:if>>즐길거리</option>
+			<option value="LOG" <c:if test="${param.logCategory == 'LOG'}">selected</c:if>>로그</option>
+		</select> 
+	</form>
+</div>
+
 <div class="loveContentWrapper">
     <div id="loveList" class="planLocList">
       <!-- 여행지 출력 (ACCO / REST / ATTR 구분) -->
@@ -229,31 +291,32 @@ document.addEventListener("DOMContentLoaded", function () {
       </c:forEach>
     </c:if>
         
-      <c:if test="${not empty log}">
-         <c:forEach var="item" items="${log}" varStatus="status">
-            <div class="loveCard">
-	            <div class="loveCard-left">
-	                <img src="${item.imagePath}" style="border:none; width:100px; height:100px;">
-	            </div>
-	            <div class="loveCard-middle">
-	                <p class="loveTitle">${item.logTitle}</p>
-	            </div>
-	            <div class="loveCard-right">
-		            <button class="logLoveBtn"  data-loved="false" data-loc-id="${item.logId}"
-        						data-location-enum="LOG" onclick="toggleLove(this)">
-		    			<img class="logLoveImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-love-black.png">
-		 			</button>
-	            </div>
-        	</div>
-         </c:forEach>
-  	   </c:if> 
+    <c:if test="${not empty log}">
+       <c:forEach var="item" items="${log}" varStatus="status">
+          <div class="loveCard">
+            <div class="loveCard-left">
+                <img src="${item.imagePath}" style="border:none; width:100px; height:100px;">
+            </div>
+            <div class="loveCard-middle">
+                <a href="${pageContext.request.contextPath}/log/detail.do?logId=${item.logId}">
+                	<p class="loveTitle">${item.logTitle}</p>
+                </a>
+            </div>
+            <div class="loveCard-right">
+	            <button class="locLoveBtn"  data-loved="false" data-log-id="${item.logId}" onclick="toggleLove(this)">
+	    			<img class="locLoveImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-love-black.png">
+	 			</button>
+            </div>
+       	  </div>
+        </c:forEach>
+ 	 </c:if> 
 
-	   <c:if test="${empty location && empty log}">
-	   		<div class="loveCard">
-	        	<p>찜한 항목이 없습니다.</p>
-	        </div>
-	   </c:if>
-    </div>
+	 <c:if test="${empty location && empty log}">
+	   	<div class="loveCard">
+	        <p>찜한 항목이 없습니다.</p>
+	    </div>
+	 </c:if>
+   </div>
 </div>
 
 
