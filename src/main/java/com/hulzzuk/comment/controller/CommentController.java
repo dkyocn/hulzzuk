@@ -34,6 +34,7 @@ public class CommentController {
 
 	// 삭제
 	@RequestMapping("delete.do")
+	@ResponseBody
 	public  Map<String, Object> deleteComment(HttpSession session,
 											  @RequestParam(name = "id") Long id) {
 		return commentService.deleteComment(session, id);
