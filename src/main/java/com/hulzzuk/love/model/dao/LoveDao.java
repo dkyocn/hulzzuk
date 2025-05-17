@@ -34,12 +34,7 @@ public class LoveDao {
 	    return sqlSessionTemplate.insert("loveMapper.insertAttrLove", love);
 	}
 	
-	// 로그 찜 등록
-	public int insertLogLove(LoveVO love) {
-	    return sqlSessionTemplate.insert("loveMapper.insertLogLove", love);
-	}
-
-	// 찜 중복 확인
+	// 여행지 찜 중복 확인
 	public int selectLoveExists(LoveVO love) {
 	    return sqlSessionTemplate.selectOne("loveMapper.selectLoveExists", love);
 	}
@@ -52,22 +47,35 @@ public class LoveDao {
 		return sqlSessionTemplate.selectOne("loveMapper.getLocLoveCount", map); 
 	}
 	
-	// 로그 찜 개수 조회
-	/*
-	 * public int getLogLoveCount(String logId) { HashMap<String, String> map = new
-	 * HashMap<>(); map.put("logId", logId); return
-	 * sqlSessionTemplate.selectOne("loveMapper.getLogLoveCount", map); }
-	 */
-
-    // 찜 삭제 (여행지)
+    // 여행지 찜 삭제
  	public int deleteLoveByCondition(LoveVO love) {
  		return sqlSessionTemplate.delete("loveMapper.deleteLoveByCondition", love);
  	}
  	
-	/*
-	 * // 찜 삭제 (log) public int deleteLove(LoveVO love) { return
-	 * sqlSessionTemplate.delete("loveMapper.deleteLove", love); }
-	 */
+ 	// ----------------------------------------------------
+ 	
+	// 로그 찜 등록
+	public int insertLogLove(LoveVO love) {
+	    return sqlSessionTemplate.insert("loveMapper.insertLogLove", love);
+	}
+
+	// 로그 찜 중복 확인
+	public int selectLogLoveExists(LoveVO love) {
+		return sqlSessionTemplate.selectOne("loveMapper.selectLogLoveExists", love);
+	}
+	
+	// 로그 찜 개수 조회
+	public int getLogLoveCount(Long logId) { 
+		HashMap<String, Long> map = new HashMap<>(); 
+		map.put("logId", logId); 
+		return sqlSessionTemplate.selectOne("loveMapper.getLogLoveCount", map); 
+	}
+	 
+	// 로그 찜 삭제 
+ 	public int deleteLogLove(LoveVO love) { 
+ 		return sqlSessionTemplate.delete("loveMapper.deleteLoveByLogId", love); 
+ 	}
+	 
  	
  	// 전체 찜 리스트
  	public List<LoveVO> selectAllLoveList(String userId){ 

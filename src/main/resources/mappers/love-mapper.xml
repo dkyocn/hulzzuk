@@ -31,13 +31,7 @@
 		values ( #{attrId}, #{userId})
 	</insert>
 	
-	<!-- 여행로그 찜 등록용 쿼리 -->
-	<insert id="insertLogLove" parameterType="Love">
-		insert into tb_love (LOG_ID, USER_ID)
-		values ( #{logId}, #{userId})
-	</insert>
-	
-	<!-- 찜 중복 확인용 쿼리 -->
+	<!-- 여행지 중복 확인용 쿼리 -->
 	<select id="selectLoveExists" parameterType="Love" resultType="int">
 	    select count(*)
 	    from tb_love
@@ -46,10 +40,9 @@
 	        <when test="accoId != null">AND acco_id = #{accoId}</when>
 	        <when test="restId != null">AND rest_id = #{restId}</when>
 	        <when test="attrId != null">AND attr_id = #{attrId}</when>
-	        <when test="logId != 0">AND log_id = #{logId}</when>
 	    </choose>
 	</select>
-	
+
 	<!-- 여행지 찜 개수 조회 -->
 	<select id="getLocLoveCount" resultType="int">
     	select count(*) from tb_love
@@ -62,13 +55,7 @@
 	    </where>
 	</select>	
 	
-	<!-- 로그 찜 개수 조회 -->
-	<!-- <select id="getLogLoveCount" resultType="int">
-    	select count(*) from tb_love
-	    where log_id = #{logId}
-	</select> 	 -->
-
-	<!-- 찜 삭제용 쿼리 -->
+	<!-- 여행지 찜 삭제용 쿼리 -->
 	<delete id="deleteLoveByCondition" parameterType="Love">
 		delete from tb_love
 		where user_id = #{ userId }
@@ -76,8 +63,40 @@
 	        <when test="accoId != null">AND acco_id = #{accoId}</when>
 	        <when test="restId != null">AND rest_id = #{restId}</when>
 	        <when test="attrId != null">AND attr_id = #{attrId}</when>
-	        <when test="logId != 0">AND log_id = #{logId}</when>
   		</choose>
+	</delete>
+	
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+		
+	<!-- 로그 찜 등록용 쿼리 -->
+	<insert id="insertLogLove" parameterType="Love">
+		insert into tb_love (LOG_ID, USER_ID)
+		values ( #{logId}, #{userId})
+	</insert>
+	
+	<!-- 로그 찜 개수 조회 -->
+	<select id="getLogLoveCount" resultType="int">
+    	select count(*) from tb_love
+	    where log_id = #{logId}
+	</select> 	
+	
+	<!-- 로그 찜 중복 확인용 쿼리 -->
+	<select id="selectLogLoveExists" parameterType="Love" resultType="int">
+	    select count(*)
+	    from tb_love
+	    where user_id = #{userId}
+	    <if test="logId != 0">
+        	AND log_id = #{logId}
+   		</if>
+	</select>
+
+	<!-- 로그 찜 삭제용 쿼리 -->
+	<delete id="deleteLoveByLogId" parameterType="Love">
+		delete from tb_love
+		where user_id = #{ userId }
+		<if test="logId != 0">
+    	    AND log_id = #{logId}
+    	</if>
 	</delete>
 	
 	<!-- 전체 찜 리스트 조회 -->

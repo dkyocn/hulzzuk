@@ -35,7 +35,7 @@ public class LoveServiceImpl implements LoveService{
 	@Autowired
 	private LogDao logDao;
 	
-	// 찜 등록
+	// 여행지 찜 등록
 	@Override
 	public Map<String, Object> insertLove(HttpSession session, LocationEnum locationEnum, String locId) {
 		Map<String, Object> result = new HashMap<>();
@@ -85,6 +85,7 @@ public class LoveServiceImpl implements LoveService{
 	    return result;
 	}
 	
+	// 여행지 찜 중복 확인
 	@Override
 	public Map<String, Object> checkLoveStatus(HttpSession session, LocationEnum locationEnum, String locId) {
 	    Map<String, Object> result = new HashMap<>();
@@ -118,15 +119,7 @@ public class LoveServiceImpl implements LoveService{
 		return loveCount == 0 ? 0 : loveCount; 
 	}
 	
-	// 로그 찜 개수 조회
-	/*
-	 * public int getLogLoveCount(String logId) { int loveCount =
-	 * loveDao.getLogLoveCount(logId);
-	 * 
-	 * return loveCount == 0 ? 0 : loveCount; }
-	 */
-	
-	// 찜 해제
+	// 여행지 찜 해제
 	@Override
 	public Map<String, Object> deleteLove(HttpSession session, LocationEnum locationEnum, String locId) {
 	    Map<String, Object> result = new HashMap<>();
@@ -162,24 +155,110 @@ public class LoveServiceImpl implements LoveService{
 
 	
 	
-	/*
-	 * // 찜 해제 (로그용)
-	 * 
-	 * @Override public Map<String, Object> deleteLove(long loveId) { Map<String,
-	 * Object> result = new HashMap<>();
-	 * 
-	 * try { LoveVO love = new LoveVO(); love.setLoveId(loveId);
-	 * 
-	 * int deleteResult = loveDao.deleteLove(love);
-	 * 
-	 * if (deleteResult > 0) { // 찜 삭제 성공 result.put("success", true); } else {
-	 * result.put("success", false); }
-	 * 
-	 * } catch (Exception e) { result.put("success", false); result.put("message",
-	 * "서버 오류: " + e.getMessage()); }
-	 * 
-	 * return result; }
-	 */
+	// --------------------------------------------------------------------------
+	
+	
+	
+	// 로그 찜 등록
+	@Override
+	public Map<String, Object> insertLogLove(HttpSession session, Long logId) {
+		Map<String, Object> result = new HashMap<>();
+		String userId = (String) session.getAttribute("authUserId");
+		
+		if (userId == null || logId == null) {
+	        result.put("success", false);
+	        result.put("message", "잘못된 요청입니다.");
+	        return result;
+	    }
+		
+		LoveVO loveVO = new LoveVO();
+		loveVO.setUserId(userId);
+    	loveVO.setLogId(logId);
+    	
+        try {
+        	// 중복 확인
+        	if (loveDao.selectLogLoveExists(loveVO) > 0) {
+                result.put("success", false);
+                result.put("message", "이미 찜한 항목입니다.");
+                return result;
+            }
+        	
+        	int successYN = loveDao.insertLogLove(loveVO);
+			
+	        if (successYN > 0) {
+	        	// 찜 등록 성공
+	            result.put("success", true);
+	        } else {
+	        	// 찜 등록 실패
+	            result.put("success", false);
+	            result.put("message", "찜 등록에 실패했습니다.");
+	        }
+	    }catch (Exception e) {
+	        result.put("success", false);
+	    }
+	    return result;
+	}
+	
+	// 로그 찜 중복 확인
+	@Override
+	public Map<String, Object> checkLogLoveStatus(HttpSession session, Long logId) {
+		Map<String, Object> result = new HashMap<>();
+	    String userId = (String) session.getAttribute("authUserId");
+
+	    if (userId == null || logId == null) {
+	        result.put("loved", false); // 로그인 안 됐거나 파라미터 이상 시 찜 안 한 것으로 처리
+	        return result;
+	    }
+
+	    LoveVO loveVO = new LoveVO();
+	    loveVO.setUserId(userId);
+	    loveVO.setLogId(logId);
+	    
+	    // 기존 중복 확인 로직 그대로 사용
+	    boolean isLoved = loveDao.selectLogLoveExists(loveVO) > 0;
+	    result.put("loved", isLoved);
+
+	    return result;
+	}
+	
+	// 로그 찜 개수 조회
+	public int getLogLoveCount(Long logId) { 
+		int loveCount = loveDao.getLogLoveCount(logId);
+  
+		return loveCount == 0 ? 0 : loveCount; 
+	}
+	 
+	// 로그 찜 해제
+	@Override 
+	public Map<String, Object> deleteLogLove(HttpSession session, Long logId) { 
+		Map<String, Object> result = new HashMap<>();
+	    String userId = (String) session.getAttribute("authUserId");
+	    logger.info("sessionId : " + userId);
+
+	    if (userId == null || logId == null) {
+	        result.put("success", false);
+	        result.put("message", "유효하지 않은 요청입니다.");
+	        return result;
+	    }
+
+	    LoveVO loveVO = new LoveVO();
+	    loveVO.setUserId(userId);
+	    loveVO.setLogId(logId);
+
+	    try {
+	        int deleted = loveDao.deleteLoveByCondition(loveVO);
+	        result.put("success", deleted > 0);
+	    } catch (Exception e) {
+	        result.put("success", false);
+	        result.put("message", "삭제 중 오류 발생: " + e.getMessage());
+	    }
+
+	    return result;
+	}
+	 
+	
+	// ---------------------------------------------------------------
+	
 	
 	// 전체 찜 리스트
 	@Override
@@ -247,6 +326,7 @@ public class LoveServiceImpl implements LoveService{
 	    logger.info(">>>> logList size: " + logList.size());
 	    return mv;
 	}
+
 	    
 
 }
