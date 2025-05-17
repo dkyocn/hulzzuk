@@ -194,7 +194,7 @@
 <div class="log-meta">
     <button class="locLoveBtn" data-loved="false" data-log-id="${log.logId}" onclick="toggleLove(this)">
     		<img class="locLoveImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-love-black.png">
- 			<fmt:formatNumber value="${loveCount}"/></button>
+ 			&nbsp;<fmt:formatNumber value="${loveCount}"/></button>
      <span class="icon-box">💬 ${comments.size()} </span>
 </div>
 <button class="btn-back" onclick="history.back()"> 목록</button>
