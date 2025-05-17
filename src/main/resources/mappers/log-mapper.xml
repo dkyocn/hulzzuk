@@ -209,7 +209,7 @@
 	</select>
 	
 	
- <!-- ************ 로그 상세 조회 1 *************-->
+ <!-- ************ 로그 상세 조회 1: TB_LOG *************-->
     <select id="getLogById" parameterType="long" resultMap="logResultMap">
         SELECT 
             LOG_ID,
@@ -227,12 +227,20 @@
     </select>
     
     
-<!-- ************로그 상세보기 조회 2 : 	getContentByLogId() 였음 ************************ -->
-<select id="getReviewsByLogId" resultType="com.hulzzuk.log.model.vo.LogReviewVO">
-    SELECT *
-    FROM TB_TRIP_LOG
-    WHERE LOG_ID = #{logId}
-    ORDER BY PLAN_DAY ASC
+<!-- ************로그 상세보기 조회 2 :TB_TRIP_LOG: 	getContentByLogId() 였음 ************************ -->
+<!--logReview-mapper에 selectPlacesByPlanDay 는 전체를 가져옴 -->
+<!--content후기만 가져오는 쿼리를 개별생성함 (3차시도) select* 로 실패해서 alias 로변경  --> 
+<select id="getReviewsByLogId" parameterType="long" resultType="com.hulzzuk.log.model.vo.LogReviewVO">
+    SELECT 
+    LOG_ID      AS logId,
+    ACCO_ID     AS accoId,
+    REST_ID     AS restId,
+    ATTR_ID     AS attrId,
+    LOG_CONTENT AS logContent,
+    PLAN_DAY    AS planDay
+  FROM TB_TRIP_LOG
+  WHERE LOG_ID = #{logId}
+  ORDER BY PLAN_DAY, ACCO_ID, ATTR_ID, REST_ID
 </select>
     
     <!-- 로그 좋아요순 조 -->
@@ -333,6 +341,22 @@
       SYSDATE
     )
   </insert>
+<!-- 댓글 수 -->
+
+<update id="updateComment" parameterType="com.hulzzuk.log.model.vo.LogCommentVO">
+  UPDATE TB_COMMENT
+  SET CONTENT = #{content},
+      UPDATED_AT = SYSDATE
+  WHERE COMMENT_ID = #{commentId}
+  AND USER_ID = #{userId}
+</update>
+
+<!-- 댓글삭제  -->
+<delete id="deleteComment" parameterType="long">
+  DELETE FROM TB_COMMENT
+  WHERE COMMENT_ID = #{commentId}
+  AND USER_ID = #{userId} <!-- 본인 글인지 확인 -->
+</delete>
 
   <!-- 대댓글 저장 -->
   <!--<insert id="insertReplyComment" parameterType="com.hulzzuk.log.model.vo.LogCommentVO">
