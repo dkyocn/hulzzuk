@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.hulzzuk.location.model.dao.LocationDao;
@@ -262,19 +263,19 @@ public class LoveServiceImpl implements LoveService{
 	
 	// 전체 찜 리스트
 	@Override
-	public ModelAndView selectAllLoveList(ModelAndView mv, HttpSession session) {
+	public ModelAndView selectAllLoveList(ModelAndView mv, HttpSession session, String category) {
 	    Map<String, Object> result = new HashMap<>();
-	    String sessionUserId = (String) session.getAttribute("authUserId");
+	    String userId = (String) session.getAttribute("authUserId");
 	    
 	    // 세션 없을 경우 로그인 페이지로 이동
-	    if(sessionUserId == null) {
+	    if(userId == null) {
 	    	mv.setViewName("redirect:/user/loginSelect.do");
 	    	return mv;
 	    }
 	    
 	    // 1. 찜 정보 불러오기
-	    List<LoveVO> loveList = loveDao.selectAllLoveList(sessionUserId);
-	    logger.info("sessionUserId : " + sessionUserId);
+	    List<LoveVO> loveList = loveDao.selectAllLoveList(userId);
+	    logger.info("sessionUserId : " + userId);
 
 	    // 2. 분류용 리스트 생성
 	    List<String> accoIds = new ArrayList<>();
@@ -289,35 +290,61 @@ public class LoveServiceImpl implements LoveService{
 	        if (love.getLogId() != null) logIds.add(love.getLogId());
 	    }
 
-	    // 3. Location 리스트 구성
+	    // 3. Location&Log 리스트 구성
 	    List<LocationVO> locationList = new ArrayList<>();
-
-	    for (String id : accoIds) {
-	    	LocationVO locationVO = locationDao.getAccoById(id);
-	    	locationVO.setLocationEnum(LocationEnum.ACCO);
-	        locationList.add(locationVO);
-	    }
-	    for (String id : restIds) {
-	    	LocationVO locationVO = locationDao.getRestById(id);
-	    	locationVO.setLocationEnum(LocationEnum.REST);
-	        locationList.add(locationVO);
-	    }
-	    for (String id : attrIds) {
-	    	LocationVO locationVO = locationDao.getAttrById(id);
-	    	locationVO.setLocationEnum(LocationEnum.ATTR);
-	        locationList.add(locationVO);
-	    }
-
-	    // 4. Log 리스트 구성 (logDao에 해당 메서드 필요)
 	    List<LogVO> logList = new ArrayList<>();
-	    if (!logIds.isEmpty()) {
-	        logList = logDao.getLogListByIds(logIds); // 이 메서드는 mapper에 따로 구현 필요
+	    
+	    switch (category) {
+		    case "ACCO":
+			    for (String id : accoIds) {
+			    	LocationVO locationVO = locationDao.getAccoById(id);
+			    	locationVO.setLocationEnum(LocationEnum.ACCO);
+			        locationList.add(locationVO);
+			    }
+			    break;
+		    case "REST":
+			    for (String id : restIds) {
+			    	LocationVO locationVO = locationDao.getRestById(id);
+			    	locationVO.setLocationEnum(LocationEnum.REST);
+			        locationList.add(locationVO);
+			    }
+			    break;
+		    case "ATTR":
+			    for (String id : attrIds) {
+			    	LocationVO locationVO = locationDao.getAttrById(id);
+			    	locationVO.setLocationEnum(LocationEnum.ATTR);
+			        locationList.add(locationVO);
+			    }
+			    break;
+		    case "LOG":
+		    	if (!logIds.isEmpty()) {
+		    		logList = logDao.getLogListByIds(logIds);
+		    	}
+		    	break;
+		    case "ALL":
+		    default:
+                for (String id : accoIds) {
+                    LocationVO vo = locationDao.getAccoById(id);
+                    vo.setLocationEnum(LocationEnum.ACCO);
+                    locationList.add(vo);
+                }
+                for (String id : restIds) {
+                    LocationVO vo = locationDao.getRestById(id);
+                    vo.setLocationEnum(LocationEnum.REST);
+                    locationList.add(vo);
+                }
+                for (String id : attrIds) {
+                    LocationVO vo = locationDao.getAttrById(id);
+                    vo.setLocationEnum(LocationEnum.ATTR);
+                    locationList.add(vo);
+                }
+                if (!logIds.isEmpty()) {
+                    logList = logDao.getLogListByIds(logIds);
+                }
+                break;
 	    }
 
-	    // 5. map에 담기
-		/*
-		 * result.put("location", locationList); result.put("log", logList);
-		 */
+
 	    mv.addObject("location", locationList);
 	    mv.addObject("log", logList);
 	    mv.setViewName("love/loveView");
@@ -326,7 +353,5 @@ public class LoveServiceImpl implements LoveService{
 	    logger.info(">>>> logList size: " + logList.size());
 	    return mv;
 	}
-
-	    
 
 }

@@ -33,10 +33,11 @@ public class LoveController {
 	private LoveService loveService;
 	
 	// My 찜 페이지 이동
-	@RequestMapping(value = "moveLove.do") 
+	@RequestMapping(value = "page.do") 
 	@ResponseBody
-	public ModelAndView moveLovePage(ModelAndView mv, HttpSession session) {
-	    return loveService.selectAllLoveList(mv, session);
+	public ModelAndView moveLovePage(ModelAndView mv, HttpSession session,
+			@RequestParam(name = "logCategory", defaultValue = "ALL") String category) {
+	    return loveService.selectAllLoveList(mv, session, category);
 	}
 	
 	// 여행지 찜 등록
@@ -90,16 +91,17 @@ public class LoveController {
 		return loveService.deleteLogLove(session, logId);
 	}
 	
+	// ---------------------------------------------------------------------
+	
+	
 	/*
-	 * // 찜 항목 불러오기
+	 * @RequestMapping(value = "page.do") public ModelAndView
+	 * getLovePage(ModelAndView mv, HttpSession session,
 	 * 
-	 * @RequestMapping(value = "allList.do")
-	 * 
-	 * @ResponseBody public ModelAndView selectAllLoveList(ModelAndView mv,
-	 * HttpSession session) {
-	 * 
+	 * @RequestParam(name = "logCategory", defaultValue = "ALL") String category) {
 	 * return mv; }
 	 */
+	 
 	
 }
  
