@@ -68,7 +68,10 @@ public interface LogService {
 	List<LogReviewVO> getReviewsByLogId(long logId);   //*************로그디테일뷰 에서도 
 	List<LogCommentVO> getCommentsByLogId(Long logId); //*************로그디테일뷰 에서도 
 	List<LogCommentVO> getRepliesByCommentIds(List<Long> commentIdList);
+	//댓글입
 	void insertComment(LogCommentVO comment);
+	//대댓글
+	void insertReply(LogCommentVO reply);
 	
 	
 //	void insertComment(LogCommentVO comment);

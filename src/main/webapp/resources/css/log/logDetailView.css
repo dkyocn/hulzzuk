@@ -10,6 +10,7 @@ body {
   color: #333;
 }
 
+
 .main-panel {
   max-width: 960px;
   margin: 40px auto;
@@ -32,6 +33,26 @@ body {
   max-width: 100%;
   border-radius: 8px;
   object-fit: cover;
+}
+
+.log-image {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+/* 반응형: 패널의 최소 50% 높이 확보  @media (min-width: 768px) { */
+
+.log-image {
+  width: 100%;              /* 가로 너비를 100%로 (부모 기준) */
+  max-width: 600px;         /* 최대 가로 제한 (옵션) */
+  min-width: 50%;           /* 최소 50% 이상 */
+  min-height: 300px;        /* 최소 높이도 확보 */
+  object-fit: cover;        /* 비율 유지하면서 채우기 */
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .log-title {
@@ -59,52 +80,163 @@ body {
   margin-bottom: 8px;
   color: var(--main-color);
 }
-
-.log-comments {
-  margin-top: 40px;
+/* 전체 댓글 영역 */
+.comments-container {
+  margin-top: 30px;
+}
+/* 개별 댓글 블록 */
+.comment-wrapper {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.comment-block, .reply-block {
-  border-bottom: 1px solid #eee;
-  padding: 10px 0;
+.reply-blocks {
+  margin-left: 10px;
 }
 
 .reply-block {
-  margin-left: 30px;
-  background-color: #fafafa;
-  padding-left: 15px;
-  border-left: 3px solid var(--main-color);
-  margin-top: 10px;
+  background-color: #f8f9fa;
 }
-/** 목록버튼   **/
-.btn-back {
+
+
+
+/* 프로필 아이콘 */
+.profile-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;  /* 동그랗게 유지하려면 */
+  object-fit: cover;   /* 이미지 비율 유지하며 채우기 */
+  margin-right: 10px;
+}
+
+/* 작성자 / 날짜 / 액션 */
+.comment-author, .reply-author {
+  font-weight: bold;
+  margin-right: 10px;
+  color: #333;
+}
+
+.comment-date, .reply-date {
+  font-size: 14px;
+  color: #888;
+}
+/* 작성 시간 */
+.text-muted {
+  font-size: 13px;
+}
+
+/* 수정/삭제 링크 */
+.comment-actions a {
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.comment-actions .edit-link:hover {
+  text-decoration: underline;
+  color: #0056b3;
+}
+
+.comment-actions .delete-link:hover {
+  text-decoration: underline;
+  color: #b30000;
+}
+
+/* 댓글 블록 */
+.comment-block {
+  padding: 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background-color: #fdfdfd;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* 대댓글 블록 */
+.reply-block {
+  border-left: 4px solid var(--main-color);
+  background-color: #f9f9f9;
+  padding-left: 12px;
+  border-radius: 6px;
+}
+
+/* 대댓글 입력창 */
+.reply-input textarea {
+  resize: none;
+}
+
+@media (max-width: 576px) {
+  .comment-actions {
+    width: 100%;
     text-align: right;
-    margin-top: 20px;
-    background-color: #28a745; 
-    color: white;
-}
-/** 댓글 좋아요. 수정 삭제  **/
-.icon-box {
+    margin-top: 5px;
+  }
+
+  .comment-author, .reply-author {
     display: inline-block;
-    width: 14px;
-    height: 14px;
-    border: 2px solid #555;
-    margin-right: 5px;
-    vertical-align: middle;
+    margin-top: 6px;
+  }
 }
 
-.log-meta {
-    display: flex;
-    gap: 10px;
-    font-size: 16px;
-    color: #888;
+
+/** 댓글 좋아요. 수정 삭제  **/
+.log-meta-wrapper {
+  display: flex;
+  justify-content: space-between; /* 좌우 정렬 */
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+/* 좋아요 + 댓글 아이콘 영역 */
+.log-meta span {
+  margin-right: 10px;
+  font-size: 16px;
+}
+/* 목록 버튼 기본 스타일 */
+.btn-back {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+/* 호버 시 스타일 */
+.btn-back:hover {
+  background-color: #218838;
+}
+
+/* 반응형: 작은 화면에서 버튼 아래로 */
+@media screen and (max-width: 600px) {
+  .log-meta-wrapper {
+    flex-direction: column;
+    align-items: flex-start; /* 왼쪽 정렬 */
+  }
+
+  .btn-back {
+    align-self: flex-end; /* 오른쪽 끝으로 */
     margin-top: 10px;
+  }
 }
 
-.lov-count::before {
-    content: "좋아요 ";
-}
+/* 반응형: 모바일에서 간격 조정 */
+@media (max-width: 768px) {
+  .comment-wrapper {
+    padding: 12px;
+  }
 
-.comment-count::before {
-    content: "댓글 ";
+  .profile-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .comment-content p,
+  .reply-content {
+    font-size: 14px;
+  }
 }

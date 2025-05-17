@@ -308,5 +308,27 @@ public ModelAndView viewLogDetail(@RequestParam("logId") Long logId, HttpSession
         return "redirect:/log/detail.do?logId=" + comment.getLogId();
     }
 
+    //대댓글등록
+    @RequestMapping(value = "/comment/replyInsert.do", method = RequestMethod.POST)
+    public String insertReply(LogCommentVO reply, HttpSession session) {
+        UserVO loginUser = (UserVO) session.getAttribute("loginUser");
+
+        // 로그인 체크
+        if (loginUser == null) {
+            return "redirect:/member/login.do"; // 로그인 페이지로 리다이렉트
+        }
+
+        // 유저 정보 세팅
+        reply.setUserId(loginUser.getUserId());
+
+        // 댓글 등록
+        logService.insertReply(reply);
+
+        return "redirect:/log/detail.do?logId=" + reply.getLogId();
+    }
+    
+    
+    
+    
 }
 

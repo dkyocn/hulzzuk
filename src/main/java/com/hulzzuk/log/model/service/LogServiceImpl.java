@@ -171,6 +171,11 @@ public class LogServiceImpl implements LogService {
 	public void insertComment(LogCommentVO comment) {
 		logDao.insertTopLevelComment(comment);
 	}
+
+	@Override
+	public void insertReply(LogCommentVO reply) {
+		logDao.insertReply(reply);
+	}
 	
 	/**
 	 * 
