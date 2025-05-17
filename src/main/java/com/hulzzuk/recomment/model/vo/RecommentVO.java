@@ -15,6 +15,12 @@ public class RecommentVO {
 		super();
 	}
 
+	public RecommentVO(String content, String userId, Long commentId) {
+		this.content = content;
+		this.userId = userId;
+		this.commentId = commentId;
+	}
+
 	public RecommentVO(Long recoId, String content, Date createdAt, Date updatedAt, String userId, Long commentId) {
 		super();
 		this.recoId = recoId;
