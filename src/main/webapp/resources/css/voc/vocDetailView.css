@@ -91,7 +91,7 @@
     resize: vertical;
 }
 
-.comment-submit-btn {
+.comment-submit-btn, comment-submit-gray-btn {
     align-self: flex-end; /* 오른쪽 정렬 */
     padding: 6px 12px;
 }
@@ -126,6 +126,51 @@
 .comment-actions {
     float: right;
     font-size: 0.85em;
+}
+
+/* 대댓글 스타일 */
+.recomment-item {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 8px 0 8px 30px; /* 왼쪽 들여쓰기 */
+    background-color: #f0f0f0;
+    border-left: 4px solid #ccc;
+    border-radius: 4px;
+}
+
+.recomment-item .comment-header {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.recomment-item .comment-date {
+    font-weight: normal;
+    font-size: 0.85em;
+    color: #888;
+    margin-left: 10px;
+}
+
+.recomment-item .comment-actions {
+    float: right;
+    font-size: 0.8em;
+}
+
+.recomment-item .comment-body {
+    margin-top: 4px;
+}
+
+.recomment-list {
+    margin-top: 10px;
+}
+
+.comment-submit-wrapper {
+    display: flex;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    margin-top: 10px;
+}
+
+.comment-submit-gray-btn:hover {
+    background-color: #d5d5d5;
 }
 
 .back-to-list {

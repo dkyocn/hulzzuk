@@ -31,6 +31,7 @@
 		<typeAlias type="com.hulzzuk.common.vo.Paging" alias="Paging"/>
 		<typeAlias type="com.hulzzuk.voc.model.vo.VocVO" alias="Voc"/>
 		<typeAlias type="com.hulzzuk.comment.model.vo.CommentVO" alias="Comment"/>
+		<typeAlias type="com.hulzzuk.recomment.model.vo.RecommentVO" alias="Recomment"/>
 	</typeAliases>
 	
 	<mappers>
@@ -50,5 +51,6 @@
 		<mapper resource="mappers/voc-mapper.xml"/>
 		<mapper resource="mappers/checklist-mapper.xml"/>
 		<mapper resource="mappers/comment-mapper.xml"/>
+		<mapper resource="mappers/recomment-mapper.xml"/>
 	</mappers>
 </configuration>
