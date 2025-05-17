@@ -20,4 +20,5 @@
     	from tb_recomment
     	where COMMENT_ID = #{commentId}
     </select>
+
 </mapper>

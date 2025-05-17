@@ -15,8 +15,15 @@ public class CommentVO {
 		super();
 	}
 
+	public CommentVO(String content, Long logId, Long vocId, String userId) {
+		this.content = content;
+		this.logId = logId;
+		this.vocId = vocId;
+		this.userId = userId;
+	}
+
 	public CommentVO(long commentId, String content, Date createdAt, Date updateedAt, Long logId, Long vocId,
-			String userId) {
+					 String userId) {
 		super();
 		this.commentId = commentId;
 		this.content = content;
