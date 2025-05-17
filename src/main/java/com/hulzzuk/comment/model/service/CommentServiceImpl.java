@@ -26,6 +26,10 @@ public class CommentServiceImpl implements CommentService{
 	    List<CommentVO> commentList = commentDao.getVocComment(vocId);
 	    return commentList;
 	}
+	
+	// voc 댓글 생성
+	
+	// voc 댓글 삭제
 
 	@Override
 	public Map<String, Object> createComment(HttpSession session, String type, long id, String content) {

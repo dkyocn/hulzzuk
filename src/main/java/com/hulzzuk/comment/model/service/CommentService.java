@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.hulzzuk.comment.model.vo.CommentVO;
 import com.hulzzuk.voc.model.enumeration.VocEnum;
 
-@Service("commentService")
 public interface CommentService {
 	// voc 댓글 조회
 	List<CommentVO> getVocComment(Long vocId);
@@ -19,5 +18,6 @@ public interface CommentService {
 	Map<String, Object> createComment(HttpSession session, String type, long id, String content);
 
 	// 댓글 삭제
-	Map<String, Object> deleteComment(HttpSession session, long id);
+	Map<String, Object> deleteComment(HttpSession session, long id); 
+	
 }

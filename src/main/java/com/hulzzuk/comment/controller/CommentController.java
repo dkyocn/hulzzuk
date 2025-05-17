@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hulzzuk.comment.model.service.CommentService;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,6 +34,7 @@ public class CommentController {
 
 	// 삭제
 	@RequestMapping("delete.do")
+	@ResponseBody
 	public  Map<String, Object> deleteComment(HttpSession session,
 											  @RequestParam(name = "id") Long id) {
 		return commentService.deleteComment(session, id);
