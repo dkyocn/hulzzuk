@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -22,7 +23,8 @@ public class RecommentController {
 
 
     // 생성
-    @RequestMapping("create.do")
+    @RequestMapping(value = "create.do", method = RequestMethod.POST)
+    @ResponseBody
     public Map<String, Object> createRecomment(HttpSession session,
                                                @RequestParam(name = "id") Long id,
                                                @RequestParam(name = "content") String content) {
@@ -30,7 +32,7 @@ public class RecommentController {
     }
 
     // 삭제
-    @RequestMapping("delete.do")
+    @RequestMapping(value = "delete.do", method = RequestMethod.POST)
     @ResponseBody
     public  Map<String, Object> deleteRecomment(HttpSession session,
                                               @RequestParam(name = "id") Long id) {
