@@ -34,6 +34,7 @@
             <option value="ATTR" <c:if test="${param.locationEnum == 'ATTR'}">selected</c:if>>즐길거리</option>
         </select> 
         <input class="search-txt" type="text" name="keyword" placeholder="검색어를 입력하세요.">
+        <input type="hidden" name="page" value="1" />  <!-- 페이지 초기화 -->
         <button class="search-btn" type="submit">
             <img src="${pageContext.request.contextPath}/resources/images/search.png" alt="검색" style="border:none;">
         </button>

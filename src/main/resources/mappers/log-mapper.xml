@@ -36,6 +36,14 @@
 	    <result property="placeName" column="PLACE_NAME"/>
 	</resultMap>
 	
+	<resultMap id="commentResultMap" type="LogCommentVO">
+	  <result property="commentId" column="COMMENT_ID"/>
+	  <result property="content" column="CONTENT"/>
+	  <result property="userId" column="USER_ID"/>
+	  <result property="createdAt" column="CREATED_AT"/>
+	  <result property="userNick" column="USER_NICK"/>
+	  <result property="userProfile" column="USER_PROFILE"/>
+	</resultMap>
 
     <!-- 전체 로그 리스트 조회 -->
     <select id="getLogList" resultMap="logResultMap" >
@@ -250,21 +258,20 @@
 
 
 
-<!-- ************  댓글포함로그디테일 조회  (닉네임.프로필표시) ************ -->
-<select id="getCommentsByLogId" parameterType="long" resultType="LogCommentVO">
+<!-- ************ 댓글포함 로그디테일 조회 (닉네임, 프로필 표시) ************ -->
+<select id="getCommentsByLogId" resultType="com.hulzzuk.log.model.vo.LogCommentVO">
     SELECT 
         c.COMMENT_ID,
         c.CONTENT,
         c.USER_ID,
         TO_CHAR(c.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT,
-        u.USER_NICK,
-        u.USER_PROFILE
+        u.USER_NICK AS userNick,
+        u.USER_PROFILE AS userProfile
     FROM TB_COMMENT c
     JOIN TB_USER u ON c.USER_ID = u.USER_ID
     WHERE c.LOG_ID = #{logId}
     ORDER BY c.CREATED_AT DESC
 </select>
-
 
 <select id="getRepliesByCommentIds" parameterType="list" resultType="com.hulzzuk.log.model.vo.LogCommentVO">
     SELECT
@@ -379,6 +386,11 @@
         CREATED_AT DESC
 </select>
 
-<!--UserNick 표시  -->
-
+  <!-- 로그 단일 조회 -->
+ <select id="getLogSelectOne" parameterType="HashMap" resultMap="logResultMap">
+    SELECT IMAGE_PATH, LOG_TITLE, LOG_START_DATE, LOG_END_DATE, PLAN_DAY, USER_ID, CREATED_AT
+    FROM TB_LOG
+    where LOG_ID = #{logId} 
+</select>
+  
 </mapper>

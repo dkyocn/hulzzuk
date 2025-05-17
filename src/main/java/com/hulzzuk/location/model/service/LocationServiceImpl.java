@@ -422,4 +422,19 @@ public class LocationServiceImpl implements LocationService{
 			}
 	        return vo;
 	 }
+	 
+	 // 찜 많은 순 Top3 출력 
+	 @Override
+	 public ModelAndView getTop3LocList(ModelAndView mv) {
+
+		 List<LocationVO> accoList = locationDao.getTop3LocList(LocationEnum.ACCO);
+		 List<LocationVO> restList = locationDao.getTop3LocList(LocationEnum.REST);
+		 List<LocationVO> attrList = locationDao.getTop3LocList(LocationEnum.ATTR);
+
+		 mv.addObject("accoList", accoList);
+		 mv.addObject("restList", restList);
+		 mv.addObject("attrList", attrList);
+
+		 return mv;
+	 }
 }

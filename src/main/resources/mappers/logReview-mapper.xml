@@ -30,10 +30,40 @@
   ORDER BY SEQ
 </select>
 
-
+<!--  장소별 로그 갯수 조회용 쿼리 -->
+	<select id="logCount" resultType="_int" parameterType="Long">
+	 	SELECT COUNT(*) 
+	    FROM TB_TRIP_LOG g
+	    <choose>
+	        <when test="locationEnum == 'ACCO'">
+	            WHERE g.ACCO_ID = #{locId}
+	        </when>
+	        <when test="locationEnum == 'REST'">
+	            WHERE g.REST_ID = #{locId}
+	        </when>
+	        <when test="locationEnum == 'ATTR'">
+	            WHERE g.ATTR_ID = #{locId}
+	        </when>
+	    </choose>
+	</select>
+	
+	<!--  로그id로 리스트 조회 -->
+	<select id="getLogId" resultType="Long" parameterType="Long">
+		SELECT LOG_ID
+	    FROM TB_TRIP_LOG g
+	    <choose>
+	        <when test="locationEnum == 'ACCO'">
+	            WHERE g.ACCO_ID = #{locId}
+	        </when>
+	        <when test="locationEnum == 'REST'">
+	            WHERE g.REST_ID = #{locId}
+	        </when>
+	        <when test="locationEnum == 'ATTR'">
+	            WHERE g.ATTR_ID = #{locId}
+	        </when>
+	    </choose>
+	</select>
  
-  
-  
   <!-- 중계테이블 저장 -->
 
 <insert id="insertLogReview" parameterType="LogReviewVO">
@@ -53,7 +83,6 @@
     #{planDay}
   )
 </insert>
-
 
   <!-- 특정 로그의 후기 리스트 조회 -->
   <select id="selectLogReviewList" parameterType="long" resultType="com.hulzzuk.log.model.vo.LogReviewVO">
@@ -89,9 +118,5 @@
     AND TP.PLAN_DAY = #{planDay}
   ORDER BY TP.SEQ
 </select>
-
-
-
-
 
 </mapper>

@@ -84,4 +84,18 @@
 		insert into TB_ATTR(ATTR_ID, ATTR_PLACENAME, ATTR_ADDRESSNAME, ATTR_PHONE, ATTR_X, ATTR_Y, ATTR_CATEGORY, ATTR_IMAGE)
 		values(#{locId}, #{placeName}, #{addressName}, #{phone}, #{x}, #{y}, #{category}, #{imgPath})
 	</insert>
+	
+	<!-- 즐길거리 top3 조회 -->
+	<select id="getTop3Attr" parameterType="hashMap" resultMap="resultList">
+		SELECT A.ATTR_ID, A.ATTR_PLACENAME, A.ATTR_ADDRESSNAME, A.ATTR_IMAGE
+  		FROM TB_ATTR A
+  		LEFT JOIN (
+   			SELECT ATTR_ID, COUNT(*) AS LOVE_CNT
+    		FROM TB_LOVE
+  			GROUP BY ATTR_ID
+  		) L ON A.ATTR_ID = L.ATTR_ID
+  		ORDER BY NVL(L.LOVE_CNT, 0) DESC
+  		FETCH FIRST 3 ROWS ONLY
+	</select>
+	
 	</mapper>
