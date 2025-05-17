@@ -20,8 +20,6 @@
 
 
 <body>
-<fmt:setLocale value="ja"/>
-
 	<c:import url="/WEB-INF/views/common/header.jsp" />
 	<div class="inner">
 		<img id="logo" src="resources/images/hulzzuk01.png"> <br>

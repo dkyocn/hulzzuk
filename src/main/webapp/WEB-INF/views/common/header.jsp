@@ -42,10 +42,10 @@
 <!-- 사이드 메뉴 -->
 <div class="side-menu" id="sideMenu">
     <div class="side-top">
-        <select class="chip" id="chip"> 
-            <option value="">🌐 한국어</option>
-            <option value="eng">🌐 English</option>
-        </select>
+<%--        <select class="chip" id="chip"> --%>
+<%--            <option value="">🌐 한국어</option>--%>
+<%--            <option value="eng">🌐 English</option>--%>
+<%--        </select>--%>
         <button class="close-btn" onclick="closeMenu()">&times;</button>
     </div>
 
