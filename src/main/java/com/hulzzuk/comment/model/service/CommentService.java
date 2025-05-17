@@ -12,4 +12,8 @@ import com.hulzzuk.voc.model.enumeration.VocEnum;
 public interface CommentService {
 	// voc 댓글 조회
 	List<CommentVO> getVocComment(Long vocId);
+	// voc 댓글 생성
+	
+	// voc 댓글 삭제
+	
 }

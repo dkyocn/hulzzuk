@@ -70,23 +70,35 @@
 		                <fmt:formatDate value="${comment.createdAt}" pattern="yyyy.MM.dd" />
 		            </span>
 		            <span class="comment-actions">
-		                <a href="#">수정</a> | <a href="#">삭제</a>
+		                <a href="#">삭제</a>
 		            </span>
 		        </div>
 		        <div class="comment-body">${comment.content}</div>
+		         <!-- 대댓글을 이 위치로 이동 -->
+		        <c:if test="${not empty recommentMap[comment.commentId]}">
+		            <div class="recomment-list">
+		                <c:forEach var="recomment" items="${recommentMap[comment.commentId]}">
+		                    <div class="recomment-item">
+		                        <div class="comment-header">
+		                            ${recouserNicks[recomment.userId]}
+		                            <span class="comment-date">
+		                                <fmt:formatDate value="${recomment.createdAt}" pattern="yyyy.MM.dd" />
+		                            </span>
+		                            <span class="comment-actions">
+		                                <a href="#">삭제</a>
+		                            </span>
+		                        </div>
+		                        <div class="comment-body">${recomment.content}</div>
+		                    </div>
+		                </c:forEach>
+		            </div>
+		        </c:if>
+		        	<div class="comment-submit-wrapper">
+					    <button type="submit" class="comment-submit-gray-btn">댓글 등록</button>
+					</div>
 		    </div>
 		</c:forEach>
-
-        <div class="comment-item user">
-            <div class="comment-header">
-                ${voc.userId} <span class="comment-date">2025.03.31</span>
-                <span class="comment-actions">
-                    <a href="#">수정</a> | <a href="#">삭제</a>
-                </span>
-            </div>
-            <div class="comment-body">네</div>
-        </div>
-    </div>
+</div>
 
     <!-- 목록 버튼 -->
     <div class="back-to-list">

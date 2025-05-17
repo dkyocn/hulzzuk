@@ -19,4 +19,9 @@ public class CommentDao {
 		return sqlSessionTemplate.selectList("commentMapper.getVocComment", vocId);
 	}
 
+	// voc 댓글 생성
+	
+	
+	// voc 댓글 삭제
+	
 }
