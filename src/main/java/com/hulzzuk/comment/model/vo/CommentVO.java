@@ -6,7 +6,7 @@ public class CommentVO {
 	private long commentId;
 	private String content;
 	private Date createdAt;
-	private Date updateedAt;
+	private Date updatedAt;
 	private Long logId;
 	private Long vocId;
 	private String userId;
@@ -22,13 +22,13 @@ public class CommentVO {
 		this.userId = userId;
 	}
 
-	public CommentVO(long commentId, String content, Date createdAt, Date updateedAt, Long logId, Long vocId,
+	public CommentVO(long commentId, String content, Date createdAt, Date updatedAt, Long logId, Long vocId,
 					 String userId) {
 		super();
 		this.commentId = commentId;
 		this.content = content;
 		this.createdAt = createdAt;
-		this.updateedAt = updateedAt;
+		this.updatedAt = updatedAt;
 		this.logId = logId;
 		this.vocId = vocId;
 		this.userId = userId;
@@ -59,11 +59,11 @@ public class CommentVO {
 	}
 
 	public Date getUpdateedAt() {
-		return updateedAt;
+		return updatedAt;
 	}
 
-	public void setUpdateedAt(Date updateedAt) {
-		this.updateedAt = updateedAt;
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 
 	public Long getLogId() {

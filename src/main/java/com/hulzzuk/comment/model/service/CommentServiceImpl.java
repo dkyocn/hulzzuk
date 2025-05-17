@@ -28,9 +28,6 @@ public class CommentServiceImpl implements CommentService{
 	}
 	
 	// voc 댓글 생성
-	
-	// voc 댓글 삭제
-
 	@Override
 	public Map<String, Object> createComment(HttpSession session, String type, long id, String content) {
 
@@ -61,6 +58,7 @@ public class CommentServiceImpl implements CommentService{
 		return map;
 	}
 
+	// voc 댓글 삭제
 	@Override
 	public Map<String, Object> deleteComment(HttpSession session, long id) {
 		UserVO loginUser = (UserVO) session.getAttribute("loginUser");

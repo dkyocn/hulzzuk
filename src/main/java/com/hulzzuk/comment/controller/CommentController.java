@@ -22,7 +22,7 @@ public class CommentController {
 
 
 	// 생성
-	@RequestMapping("create.do")
+	@RequestMapping(value = "create.do", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> createComment(HttpSession session,
 											 @RequestParam(name = "type") String type, // VOC, LOG
@@ -33,7 +33,7 @@ public class CommentController {
 	}
 
 	// 삭제
-	@RequestMapping("delete.do")
+	@RequestMapping(value = "delete.do", method = RequestMethod.POST)
 	@ResponseBody
 	public  Map<String, Object> deleteComment(HttpSession session,
 											  @RequestParam(name = "id") Long id) {
