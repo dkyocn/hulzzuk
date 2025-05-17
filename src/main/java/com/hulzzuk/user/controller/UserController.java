@@ -146,8 +146,8 @@ public class UserController {
 		
 	// 마이 페이지
 	@RequestMapping(value = "select.do")
-	public ModelAndView userDetailMethod(ModelAndView mv, @RequestParam("userId") String userId) {
-	    return userService.selectUser(mv, userId);
+	public ModelAndView userDetailMethod(ModelAndView mv, HttpSession session, @RequestParam("userId") String userId) {
+	    return userService.selectUser(mv, session, userId);
 	}
 	
 	// 마이 페이지 수정 페이지로 이동

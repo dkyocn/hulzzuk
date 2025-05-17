@@ -2,7 +2,6 @@ package com.hulzzuk.log.controller;
 
 import java.io.File;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.hulzzuk.common.util.FileSaveUtility;
-import com.hulzzuk.common.vo.FileNameChange;
 import com.hulzzuk.log.model.service.LogReviewService;
 import com.hulzzuk.log.model.service.LogService;
 import com.hulzzuk.log.model.vo.LogCommentVO;
@@ -219,8 +216,6 @@ public Long getRecentLogId(@RequestBody Map<String, String> params) {
     return logService.getRecentLogIdByUserIdAndTitle(userId, logTitle);
 }
 
-
-
    //후기 데이터만 JSON으로 받아서 저장
 	/**
     * [Ajax] 전체 리뷰 리스트 JSON으로 받아 저장 (대표 이미지, 제목 제외)
@@ -269,36 +264,35 @@ public Long getRecentLogId(@RequestBody Map<String, String> params) {
    }
    
    
-// 로그 상세보기 + 후기 리스트
+// 로그 상세보기 + 후기 리스트 + 댓글/대댓글
 @RequestMapping(value = "/detail.do", method = RequestMethod.GET)
 public ModelAndView viewLogDetail(@RequestParam("logId") Long logId, HttpSession session) {
+    
+  /*  // 로그인 여부 확인
     UserVO loginUser = (UserVO) session.getAttribute("loginUser");
     if (loginUser == null) {
         session.setAttribute("redirectAfterLogin", "/log/detail.do?logId=" + logId);
         return new ModelAndView("redirect:/user/loginSelect.do");
     }
-
-    // 1. 로그 정보 가져오기
+*/
+    // 1. 로그 메타 정보 조회 (제목, 날짜, 이미지 등)
     LogVO log = logService.getLogById(logId);
 
-    // 2. 리뷰 정보 가져오기
-    List<LogReviewVO> reviews = logService.getReviewsByLogId(logId);
+    // 2. Day1/Day2 리뷰 + 장소 정보 조회 (logContent 포함)
+    List<LogReviewVO> reviews = logService.getReviewListByLogId(logId);  //ServiceImple에서 logDao.getReviewsByLogId(logId); --여기서 이름 바뀜!
 
-    // 3. 댓글 목록 가져오기
+    // 3. 댓글 목록 조회
     List<LogCommentVO> comments = logService.getCommentsByLogId(logId);
 
-    // 4. 댓글 ID만 추출 (대댓글 조회용)
+    // 4. 댓글 ID 리스트 추출 → 대댓글 조회용
     List<Long> commentIdList = comments.stream()
         .map(LogCommentVO::getCommentId)
         .collect(Collectors.toList());
 
-    // 5. 대댓글 목록 가져오기 (commentIdList가 있을 경우만)
-    List<LogCommentVO> replies;
-    if (commentIdList == null || commentIdList.isEmpty()) {
-        replies = Collections.emptyList();
-    } else {
-        replies = logService.getRepliesByCommentIds(commentIdList);
-    }
+    // 5. 대댓글 목록 조회
+    List<LogCommentVO> replies = (commentIdList == null || commentIdList.isEmpty())
+        ? Collections.emptyList()
+        : logService.getRepliesByCommentIds(commentIdList);
 
     // 6. 찜 개수 계산
     int loveCount = loveService.getLogLoveCount(logId);
@@ -306,24 +300,62 @@ public ModelAndView viewLogDetail(@RequestParam("logId") Long logId, HttpSession
     // 로그 확인용 출력
     System.out.println("logVO = " + log);
 
-    // View에 데이터 전달
+    // 7. View로 데이터 전달
     ModelAndView mav = new ModelAndView("logs/logDetailView");
     mav.addObject("log", log);
     mav.addObject("reviews", reviews);
     mav.addObject("comments", comments);
     mav.addObject("replies", replies);
     mav.addObject("loveCount", loveCount == 0 ? 0 : loveCount);
+
     return mav;
 }
     
     
     //댓글등록 
-    @RequestMapping(value = "/commentInsert.do", method = RequestMethod.POST)
-    public String insertComment(LogCommentVO comment, HttpSession session) {
-        comment.setUserId((String) session.getAttribute("loginId"));
-        logService.insertComment(comment);
-        return "redirect:/log/detail.do?logId=" + comment.getLogId();
-    }
+	@RequestMapping(value = "/commentInsert.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> insertComment(@RequestBody LogCommentVO comment, HttpSession session) {
+	    Map<String, Object> result = new HashMap<>();
+	
+	    UserVO loginUser = (UserVO) session.getAttribute("loginUser");
+	    if (loginUser == null) {
+	        result.put("success", false);
+	        result.put("message", "로그인이 필요합니다.");
+	        result.put("redirect", "/member/login.do");
+	        return result;
+	    }
+	
+	    comment.setUserId(loginUser.getUserId());
+	    logService.insertComment(comment);
+	
+	    result.put("success", true);
+	    result.put("message", "댓글이 등록되었습니다.");
+	    return result;
+	}
 
+
+    //대댓글등록
+    @RequestMapping(value = "/comment/replyInsert.do", method = RequestMethod.POST)
+    public String insertReply(LogCommentVO reply, HttpSession session) {
+        UserVO loginUser = (UserVO) session.getAttribute("loginUser");
+
+        // 로그인 체크
+        if (loginUser == null) {
+            return "redirect:/member/login.do"; // 로그인 페이지로 리다이렉트
+        }
+
+        // 유저 정보 세팅
+        reply.setUserId(loginUser.getUserId());
+
+        // 댓글 등록
+        logService.insertReply(reply);
+
+        return "redirect:/log/detail.do?logId=" + reply.getLogId();
+    }
+    
+    
+    
+    
 }
 

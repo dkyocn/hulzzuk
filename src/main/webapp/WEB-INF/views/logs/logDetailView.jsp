@@ -140,6 +140,8 @@
 <body>
 <c:import url="/WEB-INF/views/common/header.jsp"/>
 
+ 
+
 <div class="container main-panel">
 
 <!-- 로그 제목 및 대표 이미지 영역 -->
@@ -147,7 +149,9 @@
   <div class="row align-items-center">
   
     <!-- 대표 이미지 -->
-    <div class="col-md-6">
+    <!--w-100 :가로전체.h-auto:비율유지,img-fluid: 부트스트랩 반응형이미지 클래스  -->
+    <%-- <img class="img-fluid w-50 h-auto rounded log-image" src="${log.imagePath}" alt="대표 이미지" /> --%>
+     <div class="col-md-6">
       <c:choose>
         <c:when test="${not empty log.imagePath && !log.imagePath.endsWith('/resources/images/logList/no_image.jpg')}">
           <img id="preview" class="img-fluid rounded" src="${log.imagePath}" alt="대표 이미지" />
@@ -177,49 +181,176 @@
     <c:forEach var="review" items="${reviews}">
    	 <c:if test="${not empty review.logContent}">
       <div class="review-block">
-        <h5>Day ${review.planDay}</h5>
+        <h5>Day ${review.planDay} </h5>
         <p>${review.logContent}</p>
       </div>
       </c:if>
     </c:forEach>
   </div>
-  
+
+ 
 <!-- 네모 아이콘 + 좋아요 수 + 댓글 수 -->
+<div class="log-meta-wrapper">
 <div class="log-meta">
     <button class="locLoveBtn" data-loved="false" data-log-id="${log.logId}" onclick="toggleLove(this)">
     		<img class="locLoveImg" src="${pageContext.request.contextPath}/resources/images/loc/loc-love-black.png">
  			<fmt:formatNumber value="${loveCount}"/></button>
-    <span class="icon-box"></span> ${comments.size()} 댓글
+     <span class="icon-box">💬 ${comments.size()} </span>
+</div>
+<button class="btn-back" onclick="history.back()"> 목록</button>
 </div>
 
-  <!-- 댓글 섹션 -->
-  <div class="log-comments mt-5">
-    <h4>댓글 <span class="badge badge-secondary">${fn:length(comments)}</span></h4>
-    <c:forEach var="comment" items="${comments}">
-      <div class="comment-block">
-        <strong>${comment.userId}</strong> <small>${comment.createdAt}</small>
-        <p>${comment.content}</p>
+<!-- 댓글 전체 영역 -->
+<div class="comments-container">
 
-        <!-- 대댓글 -->
-        <c:forEach var="reply" items="${replies}">
-          <c:if test="${reply.parentId == comment.commentId}">
-            <div class="reply-block ml-4">
-              <strong>${reply.userId}</strong> <small>${reply.createdAt}</small>
-              <p>${reply.content}</p>
+<!-- 댓글 리스트 반복 -->
+  <c:forEach var="comment" items="${comments}">
+    <div class="comment-wrapper mb-4 p-3 border rounded">
+
+      <!-- 댓글 상단 메타 -->
+      <div class="d-flex justify-content-between align-items-center flex-wrap">
+        <div class="d-flex align-items-center mb-3">
+          <img src="${pageContext.request.contextPath}/resources/images/common/user-temp.jpg" class="profile-icon mr-3" >
+          <strong class="comment-author mr-4">${comment.userNick}</strong>
+          <span class="text-muted small">
+            <fmt:formatDate value="${comment.createdAt}" pattern="yyyy-MM-dd HH:mm" />
+          </span>
+        </div>
+
+        <!-- 수정/삭제 -->
+        <c:if test="${loginUser.userId == comment.userId}">
+          <div class="comment-actions mb-2">
+            <a href="#" class="edit-link text-primary mr-2" onclick="editComment(${comment.commentId})">수정</a>
+            <a href="#" class="delete-link text-danger" onclick="deleteComment(${comment.commentId})">삭제</a>
+          </div>
+        </c:if>
+      </div>
+
+      <!-- 댓글 본문 -->
+      <div class="comment-content mb-3">
+        <p class="mb-0">${comment.content}</p>
+      </div>
+
+      <!-- 대댓글 목록 -->
+      <div class="reply-blocks ml-3">
+        <c:forEach var="reply" items="${comment.replies}">
+          <div class="reply-block mb-2 p-2 bg-light border rounded">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+              <div>
+                <strong class="reply-author mr-2">${reply.userNick}</strong>
+                <span class="text-muted small">
+                  <fmt:formatDate value="${reply.createdAt}" pattern="yyyy-MM-dd HH:mm" />
+                </span>
+              </div>
             </div>
-          </c:if>
+            <div class="reply-content mt-1 reply-indent">${reply.content}</div>
+          </div>
         </c:forEach>
       </div>
-    </c:forEach>
-  </div>
 
-</div>
-    <!-- 목록으로 돌아가기 버튼 -->
-    <div class="btn-back">
-        <button onclick="window.history.back();">목록</button>
+	<!-- 대댓글 입력창 (댓글 id따라 다르게 생성되는걸로 ) -->
+	<div class="reply-input mt-3">
+        <form method="post" action="/hulzzuk/log/comment/replyInsert.do">
+         <input type="hidden" name="commentId" value="${comment.commentId}" class="parent-comment-id">
+          <input type="hidden" name="logId" value="${log.logId}" />
+          <div class="form-group">
+            <textarea name="content" class="form-control" rows="2" placeholder="답글을 입력하세요"></textarea>
+          </div>
+          <button type="submit" class="btn btn-sm btn-outline-secondary">답글 등록</button>
+        </form>
+      </div>
+
+    </div> <!-- .comment-wrapper -->
+  </c:forEach>
+  
+
+ <!-- ️ 댓글 입력창 (항상 표시) --> 
+  <!-- 댓글 입력창 (AJAX 처리용) -->
+ <c:choose>
+<c:when test="${not empty loginUser}">
+  <div class="comment-form mt-4">
+    <input type="hidden" id="logId" value="${log.logId}" />
+    <div class="form-group">
+      <label for="commentContent"><strong>댓글 작성</strong></label>
+      <textarea class="form-control" id="commentContent" rows="3" placeholder="댓글을 입력하세요..." required></textarea>
     </div>
-    
+    <button type="button" class="btn btn-primary mt-2" onclick="submitComment()">댓글 등록</button>
+  </div>
+</c:when>
+
+  <c:otherwise>
+    <%-- 비로그인 사용자에게 안내 --%>
+    <div class="alert alert-warning mt-4">
+      댓글을 작성하려면 <a href="${pageContext.request.contextPath}/user/login.do">로그인</a>이 필요합니다.
+    </div>
+  </c:otherwise>
+</c:choose>
+  
+  
+</div>
+</div>
+
+<script type="text/javascript">
+
+<!--  2. AJAX 응답 결과로 로그인 체크 -->
+function submitComment() {
+	  const content = $("#commentContent").val().trim();
+	  const logId = $("#logId").val();
+
+	  if (!content) {
+	    alert("댓글 내용을 입력하세요.");
+	    return;
+	  }
+
+	  $.ajax({
+	    url: "/hulzzuk/log/commentInsert.do",
+	    method: "POST",
+	    contentType: "application/json",
+	    data: JSON.stringify({
+	      logId: logId,
+	      content: content
+	    }),
+	    success: function(response) {
+	      if (response.success) {
+	        alert(response.message);
+	        location.reload();  // 댓글 등록 후 새로고침
+	      } else {
+	        alert(response.message);
+	        if (response.redirect) {
+	          window.location.href = response.redirect;
+	        }
+	      }
+	    },
+	    error: function() {
+	      alert("댓글 등록 중 오류가 발생했습니다.");
+	    }
+	  });
+	}
+	
+	<c:forEach var="comment" items="${comments}">
+		<div class="comment">
+	 	 ${comment.content}
+		</div>
+	
+	<c:forEach var="reply" items="${comment.replies}">
+	  	<div class="recomment">
+	   	 |__ ${reply.content}
+	 	 </div>
+		</c:forEach>
+	</c:forEach>
+	
+		
+
+
+</script>
+
+
+
+
+
+
 <c:import url="/WEB-INF/views/common/footer.jsp" />
+
 
 
 </body>

@@ -18,7 +18,7 @@ public interface LogService {
 
     int getLogCount();
 
-    LogVO getLogById(long id);    //*************로그디테일뷰 에서도 
+    LogVO getLogById(long id);    //*************로그디테일뷰 에서도 ( 타이틀이랑 기본정보 불러옴)- 나머지는 getReviewListByLogId
 
 
     void updateLog(LogVO logVo);
@@ -53,38 +53,56 @@ public interface LogService {
 	//전체 장소 리스트 조회 (Day1/Day2 전부 포함)
 	List<LogReviewVO> getPlaceListByPlanId(long planId);
    
-	//특정 Day의 장소만 조회 (예: Day1 또는 Day2만)
+	//특정 Day의 장소만 조회 (예: Day1 또는 Day2만) // 로그디테일뷰에서도 조회함.
 	List<LogReviewVO> getPlacesByPlanDay(long planId, int planDay);
 	
 	
 
 	
-	//테스트용. 아이디추가하고 최신아이디조회
+	//아이디추가하고 최신아이디조회
 	Long getRecentLogIdByUserIdAndTitle(String userId, String logTitle);
 	
 //로그상세보기 DetailView
 	
 	//새로추가된 리뷰  (상세보기)   //댓글 대댓글
-	List<LogReviewVO> getReviewsByLogId(long logId);   //*************로그디테일뷰 에서도 
+	List<LogReviewVO> getLogDetailViewByLogId(long logId);   //*************로그디테일뷰 에서도 
+	
+	List<LogReviewVO> getReviewListByLogId(Long logId); // selectLogReviewList로그인서트용임 .
+	//디테일뷰 전용 getReviewListByLogId() 메서드
+	
+	//로그컨텐트얻기위한 임시테스트
+	List<LogReviewVO> getReviewsByLogId(Long logId);
+	//로그컨텐트얻기위한 3차시
+	List<LogReviewVO> getPlacesByPlanDay(Long planId, int planDay);
+	
 	List<LogCommentVO> getCommentsByLogId(Long logId); //*************로그디테일뷰 에서도 
 	List<LogCommentVO> getRepliesByCommentIds(List<Long> commentIdList);
+	//댓글입
 	void insertComment(LogCommentVO comment);
+	//대댓글
+	void insertReply(LogCommentVO reply);
+	/**
+	 * 
+	 * @Override
+	public LogVO selectRecentLogId() {
+	return logDao.selectRecentLogId();
+	}
+	
+	@Override
+	public void insertLog(LogVO log) {
+	logDao.insertLog(log);
+	}
+	
+	@Override
+	public void insertTripLog(LogReviewVO review) {
+	logDao.insertTripLog(review);
+	}
+	 * 
+	 */
 	
 	
-//	void insertComment(LogCommentVO comment);
-//    List<LogCommentVO> getCommentTreeByLogId(Long logId);  // 삭제예정  
+	
 
-
-/**
- * // 최근 생성된 로그 1건 조회 (간단히 확인용)
-LogVO selectRecentLogId();
-
-// 로그 저장 (logId는 logVO 내부에 set됨)
-void insertLog(LogVO log);
-
-// 장소별 콘텐츠 저장
-void insertTripLog(LogReviewVO review);
- * **/
 
 
 }

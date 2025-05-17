@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+  "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="recommentMapper">
+
+<!-- 코멘트 resultMap -->
+    <resultMap id="resultList" type="recomment">
+	    <result property="recoId" column="RECO_ID" />
+		<result property="content" column="CONTENT" />
+		<result property="createdAt" column="CREATED_AT" />
+		<result property="updatedAt" column="UPDATED_AT" />
+		<result property="userId" column="USER_ID" />
+		<result property="commentId" column="COMMENT_ID" />
+    </resultMap>
+    
+    <!-- voc 댓글 조회 -->
+    <select id="getVocRecomment" parameterType="Long" resultMap="resultList">
+    	select * 
+    	from tb_recomment
+    	where COMMENT_ID = #{commentId}
+    </select>
+</mapper>

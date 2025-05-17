@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="commentMapper">
+
+    <!-- 코멘트 resultMap -->
+    <resultMap id="resultList" type="Comment">
+	    <result property="commentId" column="COMMENT_ID" />
+		<result property="content" column="CONTENT" />
+		<result property="createdAt" column="CREATED_AT" />
+		<result property="updatedAt" column="UPDATED_AT" />
+		<result property="logId" column="LOG_ID" />
+		<result property="vocId" column="VOC_ID" />
+		<result property="userId" column="USER_ID"/>
+    </resultMap>
+    
+    <!-- voc 댓글 조회 -->
+    <select id="getVocComment" parameterType="Long" resultMap="resultList">
+    	select * 
+    	from tb_comment
+    	where VOC_ID = #{vocId}
+    </select>
+
+	<!-- 댓글 생성 -->
+	<insert id="insertComment" parameterType="Comment" useGeneratedKeys="true" keyColumn="COMMENT_ID" keyProperty="commentId">
+		insert into TB_COMMENT (COMMENT_ID, CONTENT, CREATED_AT, UPDATED_AT, LOG_ID, VOC_ID, USER_ID)
+		values (#{commentId}, #{content}, sysdate, sysdate, #{logId}, #{vocId}, #{userId})
+	</insert>
+
+	<!-- 댓글 삭제 -->
+	<delete id="deleteComment" parameterType="Long">
+		delete from TB_COMMENT where voc_id = #{commentId}
+	</delete>
+
+	<select id="getCommentById" parameterType="long" resultMap="resultList">
+		selet * from TB_COMMENT
+		      where comment_id = #{commentId}
+	</select>
+</mapper>

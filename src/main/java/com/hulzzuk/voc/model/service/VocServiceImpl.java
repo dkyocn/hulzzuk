@@ -9,8 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.hulzzuk.comment.model.service.CommentService;
+import com.hulzzuk.comment.model.vo.CommentVO;
 import com.hulzzuk.common.enumeration.ErrorCode;
 import com.hulzzuk.common.vo.Paging;
+import com.hulzzuk.recomment.model.service.RecommentService;
+import com.hulzzuk.recomment.model.vo.RecommentVO;
 import com.hulzzuk.user.model.dao.UserDao;
 import com.hulzzuk.user.model.vo.UserVO;
 import com.hulzzuk.voc.model.dao.VocDao;
@@ -29,6 +33,10 @@ public class VocServiceImpl implements VocService{
 	private VocDao vocDao;
 	@Autowired
 	private UserDao userDao;
+	@Autowired
+	private CommentService commentService;
+	@Autowired
+	private RecommentService recommentService;
 	
 	// 리스트 갯수 조회
 	@Override
@@ -48,7 +56,6 @@ public class VocServiceImpl implements VocService{
 		 List<VocVO> vocList = vocDao.getVocList(vocEnum, keyword, null);
         
 	       HashMap<String, String> userNicks  = new HashMap<>();
-	       logger.info(userNicks.size()+" hguifytfuyfytfugiuyfguhjb");
 	        for(VocVO vocVO : vocList  ) {
 	        	UserVO user = userDao.selectUser(vocVO.getUserId());
 	        	userNicks.put(vocVO.getUserId(), user.getUserNick());
@@ -92,8 +99,42 @@ public class VocServiceImpl implements VocService{
 		VocVO vocVO = vocDao.getVocById(vocId); 
 		String loginUserId = (String) session.getAttribute("authUserId");
 		
+		UserVO userVo = userDao.selectUser(vocVO.getUserId());		
+		// 2. 댓글 목록 + 개수 조회 (댓글 서비스 호출)
+		List<CommentVO> commentList = commentService.getVocComment(vocId);
+		
+		HashMap<String, String> userNicks = new HashMap<>();
+		HashMap<String, String> recouserNicks = new HashMap<>();
+		
+		HashMap<Long, List<RecommentVO>> recommentMap = new HashMap<>();
+		
+		for(CommentVO commentVO : commentList) {
+			userNicks.put(commentVO.getUserId(), userDao.selectUser(commentVO.getUserId()).getUserNick());
+			
+			List<RecommentVO> tempRecomments = recommentService.getVocRecomment(commentVO.getCommentId());
+			// commentid 댓글에 대한 대댓글 조회 -> 대댓글 useriD를 가지고 닉네임 조회
+			if(tempRecomments != null) {
+				recommentMap.put(commentVO.getCommentId(), tempRecomments);
+				for(RecommentVO reco : tempRecomments) {
+	                    UserVO recoUser = userDao.selectUser(reco.getUserId());
+	                    recouserNicks.put(reco.getUserId(), recoUser.getUserNick());
+	                }
+					/*
+					 * recommentList = recommentService.getVocRecomment(commentVO.getCommentId());
+					 * recouserNicks.put(, userDao.selectUser(commentVO.getUserId()).getUserNick());
+					 */
+				}
+		}
+		
+		
+		
 		mv.addObject("loginUserId", loginUserId);
 		mv.addObject("vocVO", vocVO);
+		mv.addObject("commentList", commentList);
+		mv.addObject("recommentMap", recommentMap);
+		mv.addObject("userNicks",userNicks);
+		mv.addObject("recouserNicks",recouserNicks);
+		
 		mv.setViewName("voc/vocDetailView");
 		
 		return mv; 

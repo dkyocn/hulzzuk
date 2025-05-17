@@ -19,7 +19,7 @@ public class LogReviewServiceImpl implements LogReviewService {
 	
 
 
-	//************LogReviewServiceImpl merged
+//************LogReviewServiceImpl merged
 	  @Override
 	    public int insertLogReview(LogReviewVO review) {
 	        return logReviewDao.insertLogReview(review);

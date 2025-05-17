@@ -113,7 +113,7 @@
 	</insert>
 	
 	<!-- 맛집 top3 조회 -->
-	<select id="getTop3REST" parameterType="hashMap" resultMap="resultList">
+	<select id="getTop3Rest" parameterType="hashMap" resultMap="resultList">
 		SELECT R.REST_ID, R.REST_PLACENAME, R.REST_ADDRESSNAME, R.REST_IMAGE
   		FROM TB_REST R
   		LEFT JOIN (

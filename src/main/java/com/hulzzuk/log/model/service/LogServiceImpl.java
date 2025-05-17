@@ -1,8 +1,10 @@
 package com.hulzzuk.log.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +42,7 @@ public class LogServiceImpl implements LogService {
         return logDao.getLogCount();
     }
     
-    //로그디테일뷰  **********************
+    //로그디테일뷰  **********************컨텐트포함 나머지는 하단에서 getReviewListByLogId
     @Override
     public LogVO getLogById(long id) {
         return logDao.getLogById(id);
@@ -148,12 +150,49 @@ public class LogServiceImpl implements LogService {
 		return logDao.selectRecentLogId(userId, logTitle);
 	}
 
-
+	//LogDetailView (content 포함)
+	@Override
+	public List<LogReviewVO> getReviewListByLogId(Long logId) {
+		return logDao.getReviewsByLogId(logId); // 여기서 reviews 로 이름 바뀜!
+	}
+	
+	
 	//로그디테일뷰 **********************
 	@Override
-    public List<LogReviewVO> getReviewsByLogId(long logId) {
-        return logDao.getReviewsByLogId(logId);
-    }
+    public List<LogReviewVO> getLogDetailViewByLogId(long logId) {
+		// 1. 로그 정보 가져오기
+	    LogVO log = logDao.getLogById(logId);
+	    Long planId = log.getPlanId();
+
+	    // 일단 Day1/Day2 두 번 반복해서 합치기
+	    List<LogReviewVO> merged = new ArrayList<>();
+	    for (int day = 1; day <= 2; day++) {
+	        Map<String, Object> param = new HashMap<>();
+	        param.put("planId", planId);
+	        param.put("planDay", day);
+	        //List<LogReviewVO> placeList = logDao.selectPlacesByPlanDay(param);
+	        List<LogReviewVO> placeList = logDao.selectPlacesByPlanDay(param);   // 잘못가져오는것 같아서 이걸로변
+	        
+	        List<LogReviewVO> reviewList = logDao.selectLogReviewList(logId);
+
+	        for (LogReviewVO place : placeList) {
+	            for (LogReviewVO review : reviewList) {
+	                boolean same =
+	                    Objects.equals(place.getAccoId(), review.getAccoId()) &&
+	                    Objects.equals(place.getRestId(), review.getRestId()) &&
+	                    Objects.equals(place.getAttrId(), review.getAttrId());
+
+	                if (same) {
+	                    place.setLogContent(review.getLogContent());
+	                    break;
+	                }
+	            }
+	        }
+	        merged.addAll(placeList);
+	    }
+
+	    return merged;
+	}
 
 	//로그디테일뷰 **********************
 	@Override
@@ -171,6 +210,13 @@ public class LogServiceImpl implements LogService {
 	public void insertComment(LogCommentVO comment) {
 		logDao.insertTopLevelComment(comment);
 	}
+
+	@Override
+	public void insertReply(LogCommentVO reply) {
+		logDao.insertReply(reply);
+	}
+
+
 	
 	/**
 	 * 
@@ -190,17 +236,18 @@ public void insertTripLog(LogReviewVO review) {
 }
 	 * 
 	 */
-
-//	@Override
-//	public List<LogPlaceVO> getPlacesByPlanDay(Long planId, int day) {
-//		
-//		return logReviewDao.selectByPlanDay(planId,day);
-//	}
+	//0517 로그컨텐트테스트
+	@Override
+	public List<LogReviewVO> getPlacesByPlanDay(Long planId, int planDay) {
+		return logDao.getPlacesByPlanDay(planId, planDay);  // logMapper.xml의 getPlacesByPlanDay 연결됨
+	} 
 //
-//	@Override
-//	public List<LogReviewVO> getReviewsByLogId(Long logId) {
-//		 return logDao.getReviewsByLogId(logId);
-//	}
+	//0517 로그컨텐트테스트
+	@Override
+	public List<LogReviewVO> getReviewsByLogId(Long logId) {
+		 return logDao.getReviewsByLogId(logId);  // logMapper.xml의 getReviewsByLogId 연결됨
+		// return logDao.selectPlacesByPlanDayByLogId(logId);  //이전은 안맞았
+	}
 	
 //	
 //	@Override

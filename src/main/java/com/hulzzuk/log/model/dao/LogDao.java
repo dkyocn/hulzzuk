@@ -105,10 +105,10 @@ public class LogDao {
         return sqlSession.selectOne("logMapper.getPlanById", planId);
     }
 
-//CommentsByPlaceId라서지워도 될텐데.....추후확인  //////////////////////////////////////////////////////////////////////////////////////
-	public List<LogReviewVO> getReviewsByLogId(Long logId) {
-		 return sqlSession.selectList("logMapper.getCommentsByPlaceId", logId);
-	}
+//CommentsByPlaceId라서   지워도 될텐데.....추후확인  ////////////////////////////////////////////////////////////
+//	public List<LogReviewVO> getReviewsByLogId(Long logId) {
+//		 return sqlSession.selectList("logMapper.getCommentsByPlaceId", logId);
+//	}  // 매퍼도 삭제했으니 안쓰면 지울
    
 	//MyTripLog조회 /** 사용자별 로그 리스트 조회 */
 	public List<LogVO> selectLogsByUser(String userId) {
@@ -135,7 +135,7 @@ public class LogDao {
 	 public List<LogReviewVO> getPlaceListByPlanId(long planId) {
 	        return sqlSession.selectList("logMapper.getPlaceListByPlanId", planId);
 	    }
-	//특정 Day의 장소만 조회 (예: Day1 또는 Day2만)
+////////특정 Day의 장소만 조회 (예: Day1 또는 Day2만)/////////////////////////////////////////////
 	 public List<LogReviewVO> getPlacesByPlanDay(long planId, int planDay) {
 		    Map<String, Object> params = new HashMap<>();
 		    params.put("planId", planId);
@@ -144,15 +144,16 @@ public class LogDao {
 		    return sqlSession.selectList("logMapper.getPlacesByPlanDay", params);
 		} 
 	 
-	 //새로추가된리뷰   // 장소별 콘텐츠 (LogReviewVO) 가져오기 ************************로그디테일///** 장소별 콘텐츠 (LogReviewVO) 가져오기 - 로그 디테일용 */
+	 //새로추가된리뷰   // 장소별 콘텐츠 (LogReviewVO) 가져오기 ************************로그디테일/(파이널 )
+	 //** 장소별 콘텐츠 (LogReviewVO) 가져오기 - 로그 디테일용 */
 	 public List<LogReviewVO> getReviewsByLogId(long logId) {
-		 return sqlSession.selectList("logMapper.getReviewsByLogId", logId);
- }
-	 
+		return sqlSession.selectList("logMapper.getReviewsByLogId", logId);
+		} 
+ 
+		
+
 /**메소드 분리방식 적용해보기 **/ 
-	 
-	 
-	 
+	  
 	// LogDao.java
 	public List<LogReviewVO> getReviewList(long logId) {
 		 return sqlSession.selectList("logMapper.getReviewByLogId", logId);
@@ -165,9 +166,28 @@ public class LogDao {
 	
 		    return sqlSession.selectOne("logMapper.selectRecentLogId", params);
 		}
-	
-	
 
+////////로그디테일뷰 
+	//************************로그디테일///**LogReviewVO한번에 가져오는것으로 바꾸며 추가 (May.17)
+	public List<LogReviewVO> selectLogReviewList(Long logId) {
+		return sqlSession.selectList("logMapper.getReviewsByLogId", logId);
+	}
+	//로그 컨텐트 얻기위한 임시테스트  ////////////////////////////////////////////////
+	public List<LogReviewVO> selectPlacesByPlanDayByLogId(Long logId, int planDay) {
+		Map<String, Object> param = new HashMap<>();
+
+		// planId는 logId 기반으로 조회해야 하므로 서브쿼리 형태로 쿼리 안에 넣는다면 여기선 필요 없음
+		param.put("logId", logId);
+		param.put("planDay", planDay);
+	return sqlSession.selectList("logReviewMapper.selectPlacesByPlanDay", param);
+	}	 
+
+		
+	
+//////////TB_TRIP_LOG와 조인된 테이블  (관련전체에서 꺼내옴) ////////////////////////////////////////////////
+	public List<LogReviewVO> selectPlacesByPlanDay(Map<String, Object> param) {
+		return sqlSession.selectList("logReviewMapper.selectPlacesByPlanDay", param);
+	}
 	
 	
 	public List<LogCommentVO> getCommentsByLogId(Long logId) {
@@ -181,7 +201,7 @@ public class LogDao {
 	
 
 	 // 댓글(부모가 없는) 목록 반환 ************************로그디테일///************************로그디테일/// /** 부모 댓글 목록 조회 */
-		public List<LogCommentVO> getTopLevelComments(Long logId) {
+		public List<LogCommentVO> getTopLevelComments(Long logId, Object someParam) {
 			return sqlSession.selectList("logMapper.selectTopLevelComments", logId);
 		}
 		// 특정 댓글의 대댓글 목록 반환  ************************로그디테일///************************로그디테일////** 대댓글 목록 조회 */
@@ -196,5 +216,12 @@ public class LogDao {
 		public void insertReplyComment(LogCommentVO comment) {
 			sqlSession.insert("logMapper.insertTopLevelComment", comment); //정상 처리
 		}
+
+
+		 public void insertReply(LogCommentVO reply) {
+		        sqlSession.insert("logMapper.insertReply", reply);
+		 }
+
+
 
 }

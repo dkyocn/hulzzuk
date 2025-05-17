@@ -22,21 +22,34 @@ let restList = [];
 let accoList = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-	//최신 체크리스트 데이터 가져오기
-	async function fetchUpdatedChecklist() {
-	    try {
-	        const response = await $.ajax({
-	            url: '${pageContext.request.contextPath}/location/locTop3.do',
-	            type: 'GET',
-	            dataType: 'json'
-	        });
-	        return {
-	        	attrList: response.attrList || [] };
-	    } catch (error) {
-	        console.error('즐길거리 리스트 갱신 실패:', error);
-	        return { checklistList: [] };
-	    }
+	// 최신 체크리스트 데이터 가져오기
+	function fetchUpdatedChecklist() {
+		try {
+			const response = $.ajax({
+				url: '${pageContext.request.contextPath}/loc/locTop3.do', // Ensure context path is correct
+				type: 'GET',
+				dataType: 'json'
+			});
+
+			// Update global arrays with response data
+			attrList = response.attrList || [];
+			restList = response.restList || [];
+			accoList = response.accoList || [];
+
+			console.log('Fetched data:', { attrList, restList, accoList, logList });
+
+			// Optionally, call a function to render or process the data
+			// renderChecklist();
+
+			return { attrList, restList, accoList };
+		} catch (error) {
+			console.error('리스트 갱신 실패:', error);
+			return { attrList: [], restList: [], accoList: [], logList: [] };
+		}
 	}
+
+	// Call the function on page load
+	fetchUpdatedChecklist();
 });
 
 console.log('attrList :',attrList);
@@ -122,34 +135,31 @@ console.log('attrList :',attrList);
 						<div class="sliderTrack">
 							<article class="style4">
 								<span class="image"> <img
-									src="resources/images/pic04.jpg" alt="" />
+									src="${attrList[0].imgPath}" alt="" />
 								</span> <a href="generic.html">
-									<h2>Tempus</h2>
-									<div class="content">
-										<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor
-											veroeros et feugiat.</p>
-									</div>
-								</a>
+								<h2>${attrList[0].placeName}</h2>
+								<div class="content">
+									<p>${attrList[0].addressName}</p>
+								</div>
+							</a>
 							</article>
 							<article class="style5">
 								<span class="image"> <img
-									src="resources/images/pic05.jpg" alt="" />
+										src="${attrList[1].imgPath}" alt="" />
 								</span> <a href="generic.html">
-									<h2>Aliquam</h2>
+									<h2>${attrList[1].placeName}</h2>
 									<div class="content">
-										<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor
-											veroeros et feugiat.</p>
+										<p>${attrList[1].addressName}</p>
 									</div>
 								</a>
 							</article>
 							<article class="style6">
 								<span class="image"> <img
-									src="resources/images/pic06.jpg" alt="" />
+										src="${attrList[2].imgPath}" alt="" />
 								</span> <a href="generic.html">
-									<h2>Veroeros</h2>
+									<h2>${attrList[2].placeName}</h2>
 									<div class="content">
-										<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor
-											veroeros et feugiat.</p>
+										<p>${attrList[2].addressName}</p>
 									</div>
 								</a>
 							</article>
@@ -169,34 +179,31 @@ console.log('attrList :',attrList);
 						<div class="sliderTrack">
 							<article class="style2">
 								<span class="image"> <img
-									src="resources/images/pic07.jpg" alt="" />
+										src="${restList[0].imgPath}" alt="" />
 								</span> <a href="generic.html">
-									<h2>Ipsum</h2>
+									<h2>${restList[0].placeName}</h2>
 									<div class="content">
-										<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor
-											veroeros et feugiat.</p>
+										<p>${restList[0].addressName}</p>
 									</div>
 								</a>
 							</article>
 							<article class="style3">
 								<span class="image"> <img
-									src="resources/images/pic08.jpg" alt="" />
+										src="${restList[1].imgPath}" alt="" />
 								</span> <a href="generic.html">
-									<h2>Dolor</h2>
+									<h2>${restList[1].placeName}</h2>
 									<div class="content">
-										<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor
-											veroeros et feugiat.</p>
+										<p>${restList[1].addressName}</p>
 									</div>
 								</a>
 							</article>
 							<article class="style1">
 								<span class="image"> <img
-									src="resources/images/pic09.jpg" alt="" />
+										src="${restList[2].imgPath}" alt="" />
 								</span> <a href="generic.html">
-									<h2>Nullam</h2>
+									<h2>${restList[2].placeName}</h2>
 									<div class="content">
-										<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor
-											veroeros et feugiat.</p>
+										<p>${restList[2].addressName}</p>
 									</div>
 								</a>
 							</article>
@@ -216,38 +223,36 @@ console.log('attrList :',attrList);
 						<div class="sliderTrack">
 							<article class="style5">
 								<span class="image"> <img
-									src="resources/images/pic10.jpg" alt="" />
+										src="${accoList[0].imgPath}" alt="" />
 								</span> <a href="generic.html">
-									<h2>Ultricies</h2>
+									<h2>${accoList[0].placeName}</h2>
 									<div class="content">
-										<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor
-											veroeros et feugiat.</p>
+										<p>${accoList[0].addressName}</p>
 									</div>
 								</a>
 							</article>
 							<article class="style6">
 								<span class="image"> <img
-									src="resources/images/pic11.jpg" alt="" />
+										src="${accoList[1].imgPath}" alt="" />
 								</span> <a href="generic.html">
-									<h2>Dictum</h2>
+									<h2>${accoList[1].placeName}</h2>
 									<div class="content">
-										<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor
-											veroeros et feugiat.</p>
+										<p>${accoList[1].addressName}</p>
 									</div>
 								</a>
 							</article>
 							<article class="style4">
 								<span class="image"> <img
-									src="resources/images/pic12.jpg" alt="" />
+										src="${accoList[2].imgPath}" alt="" />
 								</span> <a href="generic.html">
-									<h2>Pretium</h2>
+									<h2>${accoList[2].placeName}</h2>
 									<div class="content">
-										<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor
-											veroeros et feugiat.</p>
+										<p>${accoList[2].addressName}</p>
 									</div>
 								</a>
 							</article>
 					</div>
+				</div>
 				</div>
 			</div>
 			<br> <br>

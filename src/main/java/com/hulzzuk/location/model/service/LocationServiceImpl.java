@@ -425,17 +425,16 @@ public class LocationServiceImpl implements LocationService{
 	 
 	 // 찜 많은 순 Top3 출력 
 	 @Override
-	 public Map<String, List<LocationVO>> getTop3LocList() {
+	 public ModelAndView getTop3LocList(ModelAndView mv) {
 
 		 List<LocationVO> accoList = locationDao.getTop3LocList(LocationEnum.ACCO);
 		 List<LocationVO> restList = locationDao.getTop3LocList(LocationEnum.REST);
 		 List<LocationVO> attrList = locationDao.getTop3LocList(LocationEnum.ATTR);
 
-		 HashMap<String, List<LocationVO>> map = new HashMap<>();
-		 map.put("accoList", accoList);
-		 map.put("restList", restList);
-		 map.put("attrList", attrList);
-		 
-		 return map;
+		 mv.addObject("accoList", accoList);
+		 mv.addObject("restList", restList);
+		 mv.addObject("attrList", attrList);
+
+		 return mv;
 	 }
 }

@@ -68,10 +68,4 @@ public class LocationController {
 		public Map<String, Double> getDistance(@RequestBody Map<String, String> locationMap) {
 			return locationService.getDistance(locationMap);
 		}
-		
-		@RequestMapping(value = "locTop3.do")
-		@ResponseBody
-		public Map<String, List<LocationVO>> getTop3LocList(){
-			return locationService.getTop3LocList();
-		}
 }
