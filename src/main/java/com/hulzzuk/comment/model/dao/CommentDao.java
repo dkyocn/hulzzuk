@@ -1,6 +1,5 @@
 package com.hulzzuk.comment.model.dao;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -34,8 +33,4 @@ public class CommentDao {
 		return sqlSessionTemplate.delete("commentMapper.deleteComment", commentId);
 	}
 
-	//Log 댓글조회 
-	public List<CommentVO> getLogComment(Long logId) {
-		return sqlSessionTemplate.selectList("commentMapper.getLogComment", logId);
-	}
 }

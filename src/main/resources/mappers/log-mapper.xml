@@ -270,80 +270,66 @@
 <select id="getCommentsByLogId" resultType="com.hulzzuk.log.model.vo.LogCommentVO">
     SELECT 
         c.COMMENT_ID,
-        c.CONTENT,
+        c.LOG_ID,
         c.USER_ID,
-        TO_CHAR(c.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT,
         u.USER_NICK AS userNick,
-        u.USER_PROFILE AS userProfile
+        u.USER_PROFILE AS userProfile,
+        c.CONTENT,
+        TO_CHAR(c.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS createdAt,
+        TO_CHAR(c.UPDATED_AT, 'YYYY-MM-DD HH24:MI') AS updatedAt
+    FROM TB_COMMENT c
+    JOIN TB_USER u ON c.USER_ID = u.USER_ID
+    WHERE c.LOG_ID = #{logId}
+    ORDER BY c.CREATED_AT ASC
+</select>
+
+
+	<!-- 최상위 댓글 조회 -->
+   <!-- 댓글 조회 -->
+  <select id="getTopLevelComments" resultType="com.hulzzuk.log.model.vo.LogCommentVO">
+        SELECT 
+        c.COMMENT_ID,
+        c.LOG_ID,
+        c.USER_ID,
+        u.USER_NICK AS userNick,
+        u.USER_PROFILE AS userProfile,
+        c.CONTENT,
+        c.CREATED_AT  AS createdAt,
+        c.UPDATED_AT  AS updatedAt
     FROM TB_COMMENT c
     JOIN TB_USER u ON c.USER_ID = u.USER_ID
     WHERE c.LOG_ID = #{logId}
     ORDER BY c.CREATED_AT DESC
 </select>
 
-<select id="getRepliesByCommentIds" parameterType="list" resultType="com.hulzzuk.log.model.vo.LogCommentVO">
-    SELECT
-        RECO_ID AS COMMENT_ID,
-        COMMENT_ID AS PARENT_ID,
-        USER_ID,
-        CONTENT,
-        TO_CHAR(CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT,
-        TO_CHAR(UPDATE_AT, 'YYYY-MM-DD HH24:MI') AS UPDATED_AT
-    FROM TB_RECOMMENT
-    WHERE COMMENT_ID IN
-    <foreach item="id" index="index" collection="list" open="(" separator="," close=")">
-        #{id}
-    </foreach>
-    ORDER BY CREATED_AT ASC
+
+<!-- TB_RECOMMENT 에서 대댓글 조회 -->
+<select id="getRecommentsByCommentId" resultType="com.hulzzuk.log.model.vo.LogCommentVO">
+    SELECT 
+    r.RECO_ID AS commentId,
+    r.COMMENT_ID,
+    r.USER_ID,
+    u.USER_NICK AS userNick,
+    u.USER_PROFILE AS userProfile,
+    r.CONTENT,
+    r.CREATED_AT AS createdAt,
+    r.UPDATE_AT AS updatedAt
+  FROM TB_RECOMMENT r
+  JOIN TB_USER u ON r.USER_ID = u.USER_ID
+  WHERE r.COMMENT_ID = #{commentId}
+  ORDER BY r.CREATED_AT ASC
 </select>
 
-	<!-- 최상위 댓글 조회 -->
-   <!-- 댓글 조회 -->
-  <select id="getTopLevelComments" resultType="com.hulzzuk.log.model.vo.LogCommentVO">
-    SELECT
-      COMMENT_ID,
-      LOG_ID,
-      USER_ID,
-      CONTENT,
-      TO_CHAR(CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT
-    FROM TB_COMMENT
-    WHERE LOG_ID = #{logId}
-    ORDER BY CREATED_AT ASC
-  </select>
-
-  <!-- 대댓글 조회 -->
-  <select id="getRepliesByParentId" resultType="com.hulzzuk.log.model.vo.LogCommentVO">
-    SELECT
-      RECO_ID AS COMMENT_ID,
-      COMMENT_ID AS PARENT_ID,
-      USER_ID,
-      CONTENT,
-      TO_CHAR(CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT,
-      TO_CHAR(UPDATE_AT, 'YYYY-MM-DD HH24:MI') AS UPDATED_AT
-    FROM TB_RECOMMENT
-    WHERE COMMENT_ID = #{commentId}
-    ORDER BY CREATED_AT ASC
-  </select>
-
-  <!-- 댓글 저장 -->
-  <insert id="insertTopLevelComment" parameterType="com.hulzzuk.log.model.vo.LogCommentVO">
-    INSERT INTO TB_COMMENT (
-      COMMENT_ID,
-      LOG_ID,
-      USER_ID,
-      CONTENT,
-      CREATED_AT
-    ) VALUES (
-      SEQ_COMMENT_ID.NEXTVAL,
-      #{logId},
-      #{userId},
-      #{content},
-      SYSDATE
-    )
-  </insert>
+  
+  
+  <!-- 댓글 생성 -->
+	<insert id="insertLogComment" parameterType="com.hulzzuk.log.model.vo.LogCommentVO" useGeneratedKeys="true" keyColumn="COMMENT_ID" keyProperty="commentId">
+		insert into TB_COMMENT (COMMENT_ID, CONTENT, CREATED_AT, UPDATED_AT, LOG_ID, VOC_ID, USER_ID)
+		values (#{commentId}, #{content}, sysdate, sysdate, #{logId}, #{vocId}, #{userId})
+	</insert>
 <!-- 댓글 수 -->
 
-<update id="updateComment" parameterType="com.hulzzuk.log.model.vo.LogCommentVO">
+<update id="updateLogComment" parameterType="com.hulzzuk.log.model.vo.LogCommentVO">
   UPDATE TB_COMMENT
   SET CONTENT = #{content},
       UPDATED_AT = SYSDATE
@@ -352,44 +338,28 @@
 </update>
 
 <!-- 댓글삭제  -->
-<delete id="deleteComment" parameterType="long">
+<delete id="deleteLogComment" parameterType="long">
   DELETE FROM TB_COMMENT
   WHERE COMMENT_ID = #{commentId}
   AND USER_ID = #{userId} <!-- 본인 글인지 확인 -->
 </delete>
 
   <!-- 대댓글 저장 -->
-  <!--<insert id="insertReplyComment" parameterType="com.hulzzuk.log.model.vo.LogCommentVO">
-    INSERT INTO TB_RECOMMENT (
-      RECO_ID,
-      COMMENT_ID,
-      USER_ID,
-      CONTENT,
-      CREATED_AT,
-      UPDATE_AT
-    ) VALUES (
-      SEQ_RECOMMENT_ID.NEXTVAL,
-      #{parentId},
-      #{userId},
-      #{content},
-      SYSDATE,
-      SYSDATE
-    )
-  </insert>-->
-  
-  <insert id="insertReply" parameterType="LogCommentVO">
+
+  <insert id="insertReplyComment" parameterType="LogCommentVO">
   INSERT INTO TB_RECOMMENT (
-    RECO_ID,
+     RECO_ID,
     COMMENT_ID,
     USER_ID,
     CONTENT,
-    CREATED_AT
+    CREATED_AT,
+    UPDATE_AT
   )
   VALUES (
-    TB_RECOMMENT_SEQ.NEXTVAL,
-    #{parentCommentId},
+    #{commentId},
     #{userId},
     #{content},
+    SYSDATE,
     SYSDATE
   )
 </insert>

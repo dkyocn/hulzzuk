@@ -35,17 +35,7 @@ body {
   object-fit: cover;
 }
 
-.log-image {
-  width: 100%;
-  max-width: 100%;  /* 최대 폭 제한 해제 */
-  min-width: 300px;
-  min-height: 300px;
-  object-fit: cover;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  display: block;
-  margin: 0 auto; /* 중앙 정렬 */
-}
+
 
 /* 반응형: 패널의 최소 50% 높이 확보  @media (min-width: 768px) { */
 
@@ -212,11 +202,12 @@ body {
     width: 32px;
     height: 32px;
     object-fit: cover; /* 이미지 비율 유지하며 크기 맞추기 */
-
+}
 
 /* 댓글 좋아요. 수정 삭제 */
 .log-meta-wrapper {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between; /* 좌우 정렬 */
   align-items: center;
   margin-top: 10px;
@@ -226,7 +217,31 @@ body {
 /* 좋아요 + 댓글 아이콘 영역 */
 .log-meta span {
   margin-right: 10px;
+  font-size: 25px;
+}
+
+.icon-box {
+  background: none;
+  border: none;
   font-size: 16px;
+  display: flex;
+  align-items: center;
+  color: #888;
+  cursor: default;
+  padding: 4px 8px;
+  vertical-align: middle;
+}
+
+.locLoveBtn img {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.2s ease-in-out;
+  vertical-align: middle;
+}
+.locLoveBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 /* 목록 버튼 기본 스타일 */
@@ -248,15 +263,26 @@ body {
 @media screen and (max-width: 600px) {
   .log-meta-wrapper {
     flex-direction: column;
-    align-items: flex-start; /* 왼쪽 정렬 */
+    align-items: flex-start; /*왼쪽 정렬- stretch;도 있었 */
+    gap: 10px;
   }
-
+  
+  .log-meta {
+    justify-content: space-between;
+    width: 100%;
+  }
   .btn-back {
     align-self: flex-end; /* 오른쪽 끝으로 */
     margin-top: 10px;
   }
 }
-
+.comment-card {
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
 /* 반응형: 모바일에서 간격 조정 */
 @media (max-width: 768px) {
   .comment-wrapper {

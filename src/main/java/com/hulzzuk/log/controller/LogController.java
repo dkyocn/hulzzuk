@@ -2,6 +2,7 @@ package com.hulzzuk.log.controller;
 
 import java.io.File;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +32,8 @@ import com.hulzzuk.log.model.vo.LogReviewVO;
 import com.hulzzuk.log.model.vo.LogVO;
 import com.hulzzuk.love.model.service.LoveService;
 import com.hulzzuk.plan.model.vo.PlanVO;
+import com.hulzzuk.recomment.model.service.RecommentService;
+import com.hulzzuk.recomment.model.vo.RecommentVO;
 import com.hulzzuk.user.model.vo.UserVO;
 
 import jakarta.servlet.ServletContext;
@@ -59,6 +62,8 @@ public class LogController {
 	
 	@Autowired
 	private CommentService commentService;
+	@Autowired
+	private RecommentService recommentService;
 	
 	// 대표 이미지 저장 경로
 	private String SAVE_DIR;
@@ -272,14 +277,9 @@ public Long getRecentLogId(@RequestBody Map<String, String> params) {
 // 로그 상세보기 + 후기 리스트 + 댓글/대댓글
 @RequestMapping(value = "/detail.do", method = RequestMethod.GET)
 public ModelAndView viewLogDetail(@RequestParam("logId") Long logId, HttpSession session) {
-    
-  /*  // 로그인 여부 확인
-    UserVO loginUser = (UserVO) session.getAttribute("loginUser");
-    if (loginUser == null) {
-        session.setAttribute("redirectAfterLogin", "/log/detail.do?logId=" + logId);
-        return new ModelAndView("redirect:/user/loginSelect.do");
-    }
-*/
+	UserVO loginUser = (UserVO) session.getAttribute("loginUser");
+	
+  
     // 1. 로그 메타 정보 조회 (제목, 날짜, 이미지 등)
     LogVO log = logService.getLogById(logId);
 
@@ -287,19 +287,39 @@ public ModelAndView viewLogDetail(@RequestParam("logId") Long logId, HttpSession
     List<LogReviewVO> reviews = logService.getReviewListByLogId(logId);  //ServiceImple에서 logDao.getReviewsByLogId(logId); --여기서 이름 바뀜!
 
     // 3. 댓글 목록 조회 // 댓글, 대댓글 분리해서 조회
-    List<CommentVO> comments = commentService.getLogComment(logId);
-    List<CommentVO> replies = commentService.getRepliesByLogId(logId); // 이 라인 추가
-    //List<LogCommentVO> comments = logService.getCommentsByLogId(logId); //공통으로 변경함으로 주석처리.이후삭제
+    
+    List<LogCommentVO> comments = logService.getTopLevelComments(logId);
+    Map<Long, List<LogCommentVO>> replyMap = new HashMap<>();
 
-//    // 4. 댓글 ID 리스트 추출 → 대댓글 조회용
-//    List<Long> commentIdList = comments.stream()
-//        .map(LogCommentVO::getCommentId)
-//        .collect(Collectors.toList());
+	 // 각 댓글에 대댓글을 붙이기
+	 for (LogCommentVO comment : comments) {
+	     Long commentId = comment.getCommentId();
+	     List<LogCommentVO> replies = logService.getRecommentsByCommentId(comment.getCommentId());
+	     replyMap.put(comment.getCommentId(), replies);
+	 }
+    
+    //userNick위해 사용 
+   // List<LogCommentVO> nickComments = logService.getCommentsByLogId(logId);
+    //mav.addObject("nickComments", nickComments);
+    
+    /**    // 4. 대댓글 전부 수집
+    List<RecommentVO> allReplies = new ArrayList<>();
+    for (CommentVO comment : comments) {
+        List<RecommentVO> replies = recommentService.getVocRecomment(comment.getCommentId());
+        allReplies.addAll(replies);
+    }**/
+//목록조회하지 않고 n번 호출로 Comment/Recomment 쓰기 
+    
+    
+    // 4. 댓글 ID 리스트 추출 → 대댓글 조회용
+   // List<Long> commentIdList = comments.stream()
+   //     .map(CommentVO::getCommentId)
+   //     .collect(Collectors.toList());
 
-//    // 5. 대댓글 목록 조회
-//    List<LogCommentVO> replies = (commentIdList == null || commentIdList.isEmpty())
-//        ? Collections.emptyList()
-//        : logService.getRepliesByCommentIds(commentIdList);
+    // 5. 대댓글 목록 조회
+   // List<RecommentVO> replies = (commentIdList == null || commentIdList.isEmpty())
+    //    ? Collections.emptyList()//
+    //    : logService.getRepliesByCommentIds(commentIdList);  -- 리스트로 안넘겨주므로 삭
     
 
     // 6. 찜 개수 계산
@@ -310,10 +330,11 @@ public ModelAndView viewLogDetail(@RequestParam("logId") Long logId, HttpSession
 
     // 7. View로 데이터 전달
     ModelAndView mav = new ModelAndView("logs/logDetailView");
+    mav.addObject("loginUser", loginUser);
     mav.addObject("log", log);
-    mav.addObject("reviews", reviews);
-    mav.addObject("comments", comments);
-    mav.addObject("replies", replies);
+    mav.addObject("reviews", reviews);  // 리뷰장소정
+    mav.addObject("comments", comments); //댓글 
+    mav.addObject("replyMap", replyMap);  // JSP에서 ${replyMap[comment.commentId]} 식으로 사용
     mav.addObject("loveCount", loveCount == 0 ? 0 : loveCount);
 
     return mav;
@@ -323,7 +344,7 @@ public ModelAndView viewLogDetail(@RequestParam("logId") Long logId, HttpSession
     //댓글등록 
 	@RequestMapping(value = "/commentInsert.do", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> insertComment(@RequestBody LogCommentVO comment, HttpSession session) {
+	public Map<String, Object> insertLogComment(@RequestBody LogCommentVO comment, HttpSession session) {
 	    Map<String, Object> result = new HashMap<>();
 	
 	    UserVO loginUser = (UserVO) session.getAttribute("loginUser");
@@ -335,7 +356,7 @@ public ModelAndView viewLogDetail(@RequestParam("logId") Long logId, HttpSession
 	    }
 	
 	    comment.setUserId(loginUser.getUserId());
-	    logService.insertComment(comment);
+	    logService.insertLogComment(comment);
 	
 	    result.put("success", true);
 	    result.put("message", "댓글이 등록되었습니다.");
@@ -343,25 +364,65 @@ public ModelAndView viewLogDetail(@RequestParam("logId") Long logId, HttpSession
 	}
 
 
-    //대댓글등록
-    @RequestMapping(value = "/comment/replyInsert.do", method = RequestMethod.POST)
-    public String insertReply(LogCommentVO reply, HttpSession session) {
-        UserVO loginUser = (UserVO) session.getAttribute("loginUser");
+	// 대댓글 등록 (Ajax)
+	@RequestMapping(value = "/comment/replyInsert.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> insertReplyComment(@RequestBody LogCommentVO reply, HttpSession session) {
+	    Map<String, Object> result = new HashMap<>();
+	    UserVO loginUser = (UserVO) session.getAttribute("loginUser");
 
-        // 로그인 체크
-        if (loginUser == null) {
-            return "redirect:/member/login.do"; // 로그인 페이지로 리다이렉트
-        }
+	    if (loginUser == null) {
+	        result.put("success", false);
+	        result.put("message", "로그인이 필요합니다.");
+	        result.put("redirect", "/member/login.do");
+	        return result;
+	    }
 
-        // 유저 정보 세팅
-        reply.setUserId(loginUser.getUserId());
+	    reply.setUserId(loginUser.getUserId());
+	    logService.insertReplyComment(reply);
 
-        // 댓글 등록
-        logService.insertReply(reply);
+	    result.put("success", true);
+	    result.put("message", "대댓글이 등록되었습니다.");
+	    return result;
+	}
+	// 댓글 삭제
+	@RequestMapping(value = "/comment/delete.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> deleteLogComment(@RequestBody LogCommentVO comment, HttpSession session) {
+	    Map<String, Object> result = new HashMap<>();
+	    UserVO loginUser = (UserVO) session.getAttribute("loginUser");
 
-        return "redirect:/log/detail.do?logId=" + reply.getLogId();
-    }
-    
+	    if (loginUser == null || !loginUser.getUserId().equals(comment.getUserId())) {
+	        result.put("success", false);
+	        result.put("message", "권한이 없습니다.");
+	        return result;
+	    }
+
+	    logService.deleteLogComment(comment.getCommentId());
+	    result.put("success", true);
+	    result.put("message", "댓글이 삭제되었습니다.");
+	    return result;
+	}
+
+	// 댓글 수정
+	@RequestMapping(value = "/comment/update.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> updateLogComment(@RequestBody LogCommentVO comment, HttpSession session) {
+	    Map<String, Object> result = new HashMap<>();
+	    UserVO loginUser = (UserVO) session.getAttribute("loginUser");
+
+	    if (loginUser == null || !loginUser.getUserId().equals(comment.getUserId())) {
+	        result.put("success", false);
+	        result.put("message", "권한이 없습니다.");
+	        return result;
+	    }
+
+	    logService.updateLogComment(comment);
+	    result.put("success", true);
+	    result.put("message", "댓글이 수정되었습니다.");
+	    return result;
+	}
+
     
     
     

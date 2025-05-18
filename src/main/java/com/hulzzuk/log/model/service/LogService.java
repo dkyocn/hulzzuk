@@ -9,6 +9,7 @@ import com.hulzzuk.log.model.vo.LogReviewVO;
 import com.hulzzuk.log.model.vo.LogVO;
 import com.hulzzuk.plan.model.vo.PlanVO;
 
+
 public interface LogService {
 
     List<LogVO> getLogList(Paging paging);
@@ -70,36 +71,29 @@ public interface LogService {
 	List<LogReviewVO> getReviewListByLogId(Long logId); // selectLogReviewList로그인서트용임 .
 	//디테일뷰 전용 getReviewListByLogId() 메서드
 	
-	//로그컨텐트얻기위한 임시테스트
+	//로그컨텐트얻기위한 임시테스트후 적용함 
 	List<LogReviewVO> getReviewsByLogId(Long logId);
-	//로그컨텐트얻기위한 3차시
+	//로그컨텐트얻기위한 3차시도 
 	List<LogReviewVO> getPlacesByPlanDay(Long planId, int planDay);
 	
-	List<LogCommentVO> getCommentsByLogId(Long logId); //*************로그디테일뷰 에서도 
-	List<LogCommentVO> getRepliesByCommentIds(List<Long> commentIdList);
-	//댓글입
-	void insertComment(LogCommentVO comment);
-	//대댓글
-	void insertReply(LogCommentVO reply);
-	/**
-	 * 
-	 * @Override
-	public LogVO selectRecentLogId() {
-	return logDao.selectRecentLogId();
-	}
+	/** 이후삭제  >>> 다시도입  **/ 
+	List<LogCommentVO> getCommentsByLogId(Long logId); //*************로그디테일뷰 에서도  // 전체 댓글/대댓글
+	//List<LogCommentVO> getRepliesByCommentIds(List<Long> commentIds); // 대댓글만-- 이후삭제예//
 	
-	@Override
-	public void insertLog(LogVO log) {
-	logDao.insertLog(log);
-	}
 	
-	@Override
-	public void insertTripLog(LogReviewVO review) {
-	logDao.insertTripLog(review);
-	}
-	 * 
-	 */
 	
+	//댓글입력 
+	int insertLogComment(LogCommentVO comment);
+	//대댓글입력 
+	int insertReplyComment(LogCommentVO reply);
+	
+	
+	List<LogCommentVO> getTopLevelComments(Long logId);  // 댓글만 (PARENT_ID is null)
+	List<LogCommentVO> getRecommentsByCommentId(Long commentId);
+	
+	//댓글 삭제 및 업데이
+	int deleteLogComment(Long commentId);
+	int updateLogComment(LogCommentVO comment);
 	
 	
 

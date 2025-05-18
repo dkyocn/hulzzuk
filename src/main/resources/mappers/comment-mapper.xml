@@ -38,11 +38,7 @@
 		      where comment_id = #{commentId}
 	</select>
 	
-	<!--Log 댓글 조회  -->
-	<select id="getLogComment" resultType="com.hulzzuk.comment.model.vo.CommentVO">
-    SELECT *
-    FROM TB_COMMENT
-    WHERE LOG_ID = #{logId}
-    ORDER BY CREATED_AT ASC
-	</select>
+
+	
+	
 </mapper>

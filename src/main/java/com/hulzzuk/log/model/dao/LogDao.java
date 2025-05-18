@@ -194,34 +194,54 @@ public class LogDao {
 		return sqlSession.selectList("logMapper.getCommentsByLogId", logId);
 	}
 
-	public List<LogCommentVO> getRepliesByCommentIds(List<Long> commentIdList) {
-		 return sqlSession.selectList("logMapper.getRepliesByCommentIds", commentIdList);
-	}
-
+	
 	
 
 	 // 댓글(부모가 없는) 목록 반환 ************************로그디테일///************************로그디테일/// /** 부모 댓글 목록 조회 */
-		public List<LogCommentVO> getTopLevelComments(Long logId, Object someParam) {
-			return sqlSession.selectList("logMapper.selectTopLevelComments", logId);
+		public List<LogCommentVO> getTopLevelComments(Long logId) {
+			return sqlSession.selectList("logMapper.getTopLevelComments", logId);
 		}
-		// 특정 댓글의 대댓글 목록 반환  ************************로그디테일///************************로그디테일////** 대댓글 목록 조회 */
-		public List<LogCommentVO> getRepliesByParentId(Long commentId) {
-			return sqlSession.selectList("logMapper.selectRepliesByParentId", commentId);
-	    }
+//		// 특정 댓글의 대댓글 목록 반환  ************************로그디테일///************************로그디테일////** 대댓글 목록 조회 */
+//		public List<LogCommentVO> getRepliesByParentId(Long commentId) {
+//			return sqlSession.selectList("logMapper.selectRepliesByParentId", commentId);
+			
+//	    }
+		//대댓글 조회
+		public List<LogCommentVO> getRecommentsByCommentId(Long commentId) {
+			return sqlSession.selectList("logMapper.getRecommentsByCommentId", commentId);
+		}
+		
 		//************************로그디테일///************************로그디테일  **********************로그디테일//** 댓글 저장 */
-		public void insertTopLevelComment(LogCommentVO comment) {
-			sqlSession.insert("logMapper.insertTopLevelComment", comment); //정상 처리
-		}
+//		public void insertTopLevelComment(LogCommentVO comment) {
+//			sqlSession.insert("logMapper.insertTopLevelComment", comment); //정상 처리
+//		}
 		//************************로그디테일///************************로그디테일  **********************로그디테일//** 대댓글 저장 */
-		public void insertReplyComment(LogCommentVO comment) {
-			sqlSession.insert("logMapper.insertTopLevelComment", comment); //정상 처리
-		}
+//		public void insertReplyComment(LogCommentVO comment) {
+//			sqlSession.insert("logMapper.insertTopLevelComment", comment); //정상 처리
+//		}
 
 
-		 public void insertReply(LogCommentVO reply) {
-		        sqlSession.insert("logMapper.insertReply", reply);
+		 public int insertReplyComment(LogCommentVO reply) {
+		       return sqlSession.insert("logMapper.insertReplyComment", reply);
 		 }
 
+		//댓글삽입 
+		public int insertLogComment(LogCommentVO comment) {
+			return sqlSession.insert("logMapper.insertLogComment", comment);
+			
+		}
 
+		//대댓글삭
+		public int deleteLogComment(Long commentId) {
+			return sqlSession.delete("logMapper.deleteLogComment",commentId);
+		}
+
+		// 댓글삭
+		public int updateLogComment(LogCommentVO comment) {
+			return sqlSession.update("logMapper.updateLogComment",comment);
+		}
+
+
+	
 
 }

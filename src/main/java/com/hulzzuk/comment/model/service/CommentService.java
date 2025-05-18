@@ -14,13 +14,12 @@ public interface CommentService {
 	// voc 댓글 조회
 	List<CommentVO> getVocComment(Long vocId);
 	
-	//log 댓글 조회
-	List<CommentVO> getLogComment(Long logId);
 
 	// 댓글 생성
 	Map<String, Object> createComment(HttpSession session, String type, long id, String content);
 
 	// 댓글 삭제
-	Map<String, Object> deleteComment(HttpSession session, long id); 
+	Map<String, Object> deleteComment(HttpSession session, long id);
+
 	
 }
