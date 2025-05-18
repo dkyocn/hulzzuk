@@ -29,9 +29,12 @@ public class CommentController {
 											 @RequestParam(name = "id") Long id,
 											 @RequestParam(name = "content") String content) {
 
-		return commentService.createComment(session, type, id, content);
-	}
+			return commentService.createComment(session, type, id, content);
+		}
 
+
+	
+	
 	// 삭제
 	@RequestMapping(value = "delete.do", method = RequestMethod.POST)
 	@ResponseBody

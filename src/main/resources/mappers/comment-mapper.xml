@@ -37,4 +37,8 @@
 		select * from TB_COMMENT
 		      where comment_id = #{commentId}
 	</select>
+	
+
+	
+	
 </mapper>

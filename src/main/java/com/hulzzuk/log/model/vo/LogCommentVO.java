@@ -7,7 +7,7 @@ import com.hulzzuk.user.model.vo.UserVO;
 
 public class LogCommentVO {
 
-	
+		private String type;
 	 	private Long commentId;     // TB_COMMENT의 COMMENT_ID 또는 TB_RECOMMENT의 COMMENT_ID (참조)
 	    private Long recoId;        // TB_RECOMMENT의 RECO_ID
 	    private String content;
@@ -204,6 +204,14 @@ public class LogCommentVO {
 					+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", logId=" + logId + ", vocId=" + vocId
 					+ ", userId=" + userId + ", isReply=" + isReply + ", parentCommentId=" + parentCommentId
 					+ ", replies=" + replies + ", userNick=" + userNick + ", userProfile=" + userProfile + "]";
+		}
+
+		public String getType() {
+			return type;
+		}
+
+		public void setType(String type) {
+			this.type = type;
 		}
 
 

@@ -1,6 +1,5 @@
 package com.hulzzuk.comment.model.dao;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -33,4 +32,5 @@ public class CommentDao {
 	public int deleteComment(long commentId){
 		return sqlSessionTemplate.delete("commentMapper.deleteComment", commentId);
 	}
+
 }

@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hulzzuk.comment.model.dao.CommentDao;
+import com.hulzzuk.comment.model.service.CommentService;
+import com.hulzzuk.comment.model.vo.CommentVO;
 import com.hulzzuk.common.vo.Paging;
 import com.hulzzuk.location.model.enumeration.LocationEnum;
 import com.hulzzuk.log.model.dao.LogDao;
@@ -19,6 +22,8 @@ import com.hulzzuk.log.model.vo.LogCommentVO;
 import com.hulzzuk.log.model.vo.LogReviewVO;
 import com.hulzzuk.log.model.vo.LogVO;
 import com.hulzzuk.plan.model.vo.PlanVO;
+import com.hulzzuk.recomment.model.service.RecommentService;
+import com.hulzzuk.recomment.model.vo.RecommentVO;
 
 
 @Service("logService")
@@ -28,9 +33,6 @@ public class LogServiceImpl implements LogService {
     private LogDao logDao;
     @Autowired
     private SqlSession sqlSession;
-    
-   // @Autowired
-    //private LogReviewDao logReviewDao; // 로그탭안의 내용 조회를 위해서 주입
 
     @Override
     public List<LogVO> getLogList(Paging paging) {
@@ -155,7 +157,21 @@ public class LogServiceImpl implements LogService {
 	public List<LogReviewVO> getReviewListByLogId(Long logId) {
 		return logDao.getReviewsByLogId(logId); // 여기서 reviews 로 이름 바뀜!
 	}
-	
+
+	//0517 로그컨텐트테스트
+	@Override
+	public List<LogReviewVO> getPlacesByPlanDay(Long planId, int planDay) {
+		return logDao.getPlacesByPlanDay(planId, planDay);  // logMapper.xml의 getPlacesByPlanDay 연결됨
+	} 
+//
+	//0517 로그컨텐트테스트
+	@Override
+	public List<LogReviewVO> getReviewsByLogId(Long logId) {
+		 return logDao.getReviewsByLogId(logId);  // logMapper.xml의 getReviewsByLogId 연결됨
+		// return logDao.selectPlacesByPlanDayByLogId(logId);  //이전은 안맞았
+	}
+
+
 	
 	//로그디테일뷰 **********************
 	@Override
@@ -194,81 +210,48 @@ public class LogServiceImpl implements LogService {
 	    return merged;
 	}
 
-	//로그디테일뷰 **********************
+	@Override
+	public int insertLogComment(LogCommentVO comment) {  
+		return logDao.insertLogComment(comment);
+		
+	}
+	//대댓글 입력 등록.
+	@Override
+	public int insertReplyComment(LogCommentVO reply) {
+		return logDao.insertReplyComment(reply);
+		
+	}
+
 	@Override
 	public List<LogCommentVO> getCommentsByLogId(Long logId) {
 		return logDao.getCommentsByLogId(logId);
 	}
 
-	//로그디테일뷰 **********************
 	@Override
-    public List<LogCommentVO> getRepliesByCommentIds(List<Long> commentIdList) {
-        return logDao.getRepliesByCommentIds(commentIdList);
-    }
-	//로그 댓글 입력 
-	@Override
-	public void insertComment(LogCommentVO comment) {
-		logDao.insertTopLevelComment(comment);
+	public List<LogCommentVO> getTopLevelComments(Long logId) {
+		return logDao.getTopLevelComments(logId);
 	}
 
 	@Override
-	public void insertReply(LogCommentVO reply) {
-		logDao.insertReply(reply);
+	public List<LogCommentVO> getRecommentsByCommentId(Long commentId) {
+		return logDao.getRecommentsByCommentId(commentId);
+	}
+	//댓글삭제 
+	@Override
+	public int deleteLogComment(Long commentId) {
+	    return logDao.deleteLogComment(commentId);
+	}
+	// 댓글수정 
+	@Override
+	public int updateLogComment(LogCommentVO comment) {
+	    return logDao.updateLogComment(comment);
 	}
 
-
-	
-	/**
-	 * 
-	 * @Override
-public LogVO selectRecentLogId() {
-    return logDao.selectRecentLogId();
-}
-
-@Override
-public void insertLog(LogVO log) {
-    logDao.insertLog(log);
-}
-
-@Override
-public void insertTripLog(LogReviewVO review) {
-    logDao.insertTripLog(review);
-}
-	 * 
-	 */
-	//0517 로그컨텐트테스트
-	@Override
-	public List<LogReviewVO> getPlacesByPlanDay(Long planId, int planDay) {
-		return logDao.getPlacesByPlanDay(planId, planDay);  // logMapper.xml의 getPlacesByPlanDay 연결됨
-	} 
-//
-	//0517 로그컨텐트테스트
-	@Override
-	public List<LogReviewVO> getReviewsByLogId(Long logId) {
-		 return logDao.getReviewsByLogId(logId);  // logMapper.xml의 getReviewsByLogId 연결됨
-		// return logDao.selectPlacesByPlanDayByLogId(logId);  //이전은 안맞았
-	}
-	
-//	
-//	@Override
-//    public List<LogCommentVO> getCommentTreeByLogId(Long logId) {
-//        List<LogCommentVO> comments = logDao.getTopLevelComments(logId);
-//        for (LogCommentVO comment : comments) {
-//            List<LogCommentVO> replies = logDao.getRepliesByParentId(comment.getCommentId());
-//            comment.setReplies(replies);
-//        }
-//        return comments;
-//    }
-
-//	@Override
-//    public void insertComment(LogCommentVO comment) {
-//        if (comment!=null && comment.getParentCommentId() == null) {
-//            logDao.insertTopLevelComment(comment);   //댓글 
-//        } else {
-//            logDao.insertReplyComment(comment);   //대댓글    
-//            			//   void insertReplyComment(LogCommentVO comment); 인터페이스필요없음.분기해서내부에서만쓰므
-//        }
-//    }
 	
 	
+	
+	
+	
+
+
 }
