@@ -57,6 +57,48 @@
             }
         });
 	}
+	
+	/* function recomcreate(commentId, recontent){
+		var recontent = $("textarea[name='recontent']").val();
+		 if(!recontent || recontent.trim() === "") {
+			    alert("댓글 내용을 입력해주세요.");
+			    return;
+			}
+		    
+		 $.ajax({
+            url: '${pageContext.request.contextPath}/recomm/create.do',
+            type: 'POST',
+            data: { id: commentId, content: recontent },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === "success") {
+               	 location.reload();
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('삭제 실패:', status, error, xhr.responseText);
+                alert('항목 삭제에 실패했습니다. 오류: ' + xhr.responseText);
+            }
+        });
+	}
+	
+	function recomdelete(recommentId){
+		$.ajax({
+            url: '${pageContext.request.contextPath}/recomm/delete.do',
+            type: 'POST',
+            data: { id: recommentId },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === "success") {
+               	 location.reload();
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('삭제 실패:', status, error, xhr.responseText);
+                alert('항목 삭제에 실패했습니다. 오류: ' + xhr.responseText);
+            }
+        });
+	} */
 	</script>
 </head>
 <body>
@@ -146,13 +188,13 @@
 		                </c:forEach>
 		            </div>
 		        </c:if>
-		        	<div class="comment-submit-wrapper">
-					    <button type="submit" class="comment-submit-gray-btn">댓글 등록</button>
-					</div>
+		        	<%-- <div class="comment-submit-wrapper">
+		                <textarea name="recontent" class="recontent-input" id="recontent-${comment.commentId}" placeholder="댓글을 작성해 주세요"></textarea>
+		                	 <button type="button" class="comment-submit-gray-btn" onclick="recomcreate(${comment.commentId}, ${comment.commentId}).val()">댓글 등록</button>
+		            </div> --%>
 		    </div>
 		</c:forEach>
 </div>
-
     <!-- 목록 버튼 -->
     <div class="back-to-list">
         <a href="${pageContext.request.contextPath}/voc/page.do?vocEnum=ALL&page=1" class="list-btn">목록</a>

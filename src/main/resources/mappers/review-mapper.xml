@@ -120,6 +120,5 @@
  		delete from TB_REVIEW
  		where REVIEW_ID = #{ reviewId }
  </delete>
- 
  </mapper>
 	

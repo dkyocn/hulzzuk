@@ -44,7 +44,6 @@ public class ReviewServiceImpl implements ReviewService{
 	// 리뷰 리스트 조회
 	public List<ReviewVO> getReviewList(String locId, LocationEnum locationEnum,  SortEnum sortEnum) {
         List<ReviewVO> reviewList = reviewDao.getReviewList(locId, locationEnum, sortEnum);
- 
         return reviewList;
 	}
 	
@@ -72,18 +71,14 @@ public class ReviewServiceImpl implements ReviewService{
 	@Override
 	public ModelAndView getMyReviewList(HttpSession session, ModelAndView mv, String userId) {
 		String sessionUserId = (String) session.getAttribute("authUserId");
-		
 		// 세션 없을 경우 로그인 페이지로 이동
 	    if(sessionUserId == null) {
 	    	mv.setViewName("redirect:/user/loginSelect.do");
 	    	return mv;
 	    }
-	    
 		UserVO user = userDao.selectUser(userId);
 		List<ReviewVO> reviewList = reviewDao.getMyReviewList(userId);
-		
-		 HashMap<Long, String> result = new HashMap<>();
-		 
+		 HashMap<Long, String> result = new HashMap<>(); 
 		 for (ReviewVO reviewVO : reviewList) {
 			 if( reviewVO.getAccoId() != null) {
 				 result.put(reviewVO.getReviewId(), locationDao.getAccoName(reviewVO.getAccoId()));
@@ -95,15 +90,10 @@ public class ReviewServiceImpl implements ReviewService{
 				 result.put(reviewVO.getReviewId(), locationDao.getAttrName(reviewVO.getAttrId()));
 			 } 			 
 		 }
-		 mv.addObject("locName", result);		 
-	
-		
-		
+		 mv.addObject("locName", result);		 	
         mv.addObject("user", user);
         mv.addObject("reviewList", reviewList);
         mv.setViewName("review/myReview");
-        
-        
         return mv;
 	}
 	
@@ -155,7 +145,6 @@ public class ReviewServiceImpl implements ReviewService{
 		String[] reviews = reviewIds.split(",");
 		for(String id : reviews) {
 			int result = reviewDao.deleteReview(Long.parseLong(id));
-			
 			if(result <=  0) {
 				throw new IllegalArgumentException(ErrorCode.REVIEW_NOT_FOUND.getMessage());
 			}

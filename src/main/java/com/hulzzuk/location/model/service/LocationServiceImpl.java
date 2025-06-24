@@ -372,14 +372,10 @@ public class LocationServiceImpl implements LocationService{
 	 
 	 public String convertJsonToLocationImage(String placeName) {
 		 placeName = URLEncoder.encode(placeName, StandardCharsets.UTF_8);
-		 
 		 final String requestUrl = "https://dapi.kakao.com/v2/search/image?query="+ placeName;
-		 
 		 HttpClient client = HttpClientBuilder.create().build();
         HttpGet get = new HttpGet(requestUrl);
-        
         get.setHeader("Authorization", "KakaoAK 7e7c827b84e5f3847ec771f158f01cdc");
-
         JsonNode returnNode = null;
         String imageUrl = new String();
         try {
@@ -390,8 +386,7 @@ public class LocationServiceImpl implements LocationService{
             imageUrl = kakaolocList.get(0).get("image_url").asText();
             if(imageUrl.split("type").length == 2) {
             	imageUrl = "/hulzzuk/resources/images/logList/no_image.jpg";
-            }
-            
+            }  
         } catch (IOException e) {
             e.printStackTrace();
         }

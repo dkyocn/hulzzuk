@@ -93,7 +93,7 @@ public class VocServiceImpl implements VocService{
         return mv;
 	}
 	
-	// 상세페이지 => 리뷰 1개 조회
+	// 상세페이지
 	@Override
 	public ModelAndView getVocById(long vocId, ModelAndView mv, HttpSession session) {
 		VocVO vocVO = vocDao.getVocById(vocId); 
@@ -119,28 +119,18 @@ public class VocServiceImpl implements VocService{
 	                    UserVO recoUser = userDao.selectUser(reco.getUserId());
 	                    recouserNicks.put(reco.getUserId(), recoUser.getUserNick());
 	                }
-					/*
-					 * recommentList = recommentService.getVocRecomment(commentVO.getCommentId());
-					 * recouserNicks.put(, userDao.selectUser(commentVO.getUserId()).getUserNick());
-					 */
 				}
 		}
-		
-		
-		
 		mv.addObject("loginUserId", loginUserId);
 		mv.addObject("vocVO", vocVO);
 		mv.addObject("commentList", commentList);
-		mv.addObject("recommentMap", recommentMap);
 		mv.addObject("userNicks",userNicks);
 		mv.addObject("recouserNicks",recouserNicks);
-		
 		mv.setViewName("voc/vocDetailView");
-		
 		return mv; 
 	}
 	
-	// 리뷰 생성
+	// VOC 생성
 	@Override
 	public ModelAndView createVoc(ModelAndView mv, HttpServletRequest request, VocVO vocVO) {
 		int successYN = 0;
@@ -149,35 +139,35 @@ public class VocServiceImpl implements VocService{
 		vocVO.setUpdatedAt(new java.sql.Date(System.currentTimeMillis()));
 		successYN =  vocDao.createVoc(vocVO);
 		if(successYN == 0) {
-		    throw new  IllegalArgumentException("저장 안되었음요");
+		    throw new  IllegalArgumentException("VOC 생성을 실패하였습니다.");
 		    }else {
 		    	mv.setViewName("redirect:/voc/page.do?vocEnum=ALL&page=1");
 		    }
 		    return mv;
 	}
 
-	// 리뷰 수정
+	// VOC 수정
 	@Override
 	public ModelAndView updateVoc(ModelAndView mv, VocVO vocVO) {
 		int successYN = 0;
 		vocVO.setUpdatedAt(new java.sql.Date(System.currentTimeMillis()));
 		successYN = vocDao.updateVoc(vocVO);
 		if (successYN == 0) {
-			throw new IllegalArgumentException("저장 안되었음요");
+			throw new IllegalArgumentException("VOC  수정을 실패하였습니다.");
 		} else {
-			mv.setViewName("redirect:/voc/select.do?vocId=" + vocVO.getVocId()); // 목록 페이지 경로로 리다이렉트
+			mv.setViewName("redirect:/voc/select.do?vocId=" + vocVO.getVocId());
 		}
 		return mv;
 	}
 	
-	// 리뷰 삭제
+	// VOC 삭제
 	@Override
 	public ModelAndView deleteVoc(long vocId, ModelAndView mv) {
 		int result = vocDao.deleteVoc(vocId);
 		if(result <=  0) {
-			throw new IllegalArgumentException(ErrorCode.REVIEW_NOT_FOUND.getMessage());
+			throw new IllegalArgumentException("VOC 삭제를 실패하였습니다.");
 		}
-		mv.setViewName("redirect:/voc/page.do?vocEnum=ALL&page=1");  // 목록 페이지 경로로 리다이렉트
+		mv.setViewName("redirect:/voc/page.do?vocEnum=ALL&page=1"); 
 	    return mv;
 	}
 

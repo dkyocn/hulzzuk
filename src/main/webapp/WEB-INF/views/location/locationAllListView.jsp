@@ -17,7 +17,7 @@
 <c:import url="/WEB-INF/views/common/header.jsp" />
 
 <div class="inner">
-    <form class="search-box" action="page.do" method="get" id="searchForm">
+    <form class="search-box" action="page.do?page=1" method="get" id="searchForm">
         <select class="category" id="category" name="locationEnum" onchange="document.getElementById('searchForm').submit();">
             <option value="ALL">전체</option>
             <option value="ACCO" <c:if test="${param.locationEnum == 'ACCO'}">selected</c:if>>숙소</option>

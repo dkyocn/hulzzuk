@@ -15,7 +15,6 @@
 
 
 	<typeAliases>		
-
 		<typeAlias type="com.hulzzuk.log.model.vo.LogVO" alias="LogVO"/>
 		<typeAlias type="com.hulzzuk.user.model.vo.UserVO" alias="User" />
 		<typeAlias type="com.hulzzuk.love.model.vo.LoveVO" alias="Love"/>
