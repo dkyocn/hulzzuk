@@ -26,7 +26,7 @@
 <c:import url="/WEB-INF/views/common/header.jsp" />
 
 <div class="inner">
-    <form class="search-box" action="page.do" method="get" id="searchForm">
+    <form class="search-box" action="page.do?page=1" method="get" id="searchForm">
         <select class="category" id="category" name="locationEnum" onchange="document.getElementById('searchForm').submit();">
             <option value="ALL" <c:if test="${param.locationEnum == 'ALL'}">selected</c:if>>전체</option>
             <option value="ACCO" <c:if test="${param.locationEnum == 'ACCO'}">selected</c:if>>숙소</option>
@@ -69,7 +69,7 @@
 </c:choose>
 
 <div class="sort-box">
-    <form method="get" action="page.do">
+    <form method="get" action="page.do?page=1">
         <input type="hidden" name="locationEnum" value="${param.locationEnum}" />
         <input type="hidden" name="keyword" value="${param.keyword}" />
         <input type="hidden" name="page" value="${param.page}" />

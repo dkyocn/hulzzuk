@@ -31,14 +31,14 @@ public class VocController {
 		return vocService.getVocList(vocEnum, keyword, page, limit, mv);
 	}
 	
-	// 상세페이지 => 리뷰 1개 조회
+	// 상세페이지 
 	@RequestMapping(value = "select.do")
 	public ModelAndView getVocById(@RequestParam(name = "vocId") long vocId, ModelAndView mv, HttpSession session) {
 
 	return vocService.getVocById(vocId, mv, session);
 	}
 	
-	// 리뷰 생성
+	// VOC 생성
 	@RequestMapping(value = "create.do")
 	public ModelAndView createVoc(ModelAndView mv) {
 		mv.setViewName("voc/vocCreate");
@@ -46,13 +46,13 @@ public class VocController {
         return mv;
 	}
 	
-	// 등록 처리
+	// VOC 생성
 	@RequestMapping(value = "create.do", method = RequestMethod.POST)
 	public ModelAndView createVocPost(ModelAndView mv, HttpServletRequest request, VocVO vocVO) {
 	    return vocService.createVoc(mv, request, vocVO);
 	}
 	
-	// 리뷰 수정
+	// VOC 수정
 	@RequestMapping(value = "update.do")
 	public ModelAndView updateVoc(ModelAndView mv, @RequestParam(name = "vocId") long vocId) {
 		VocVO vocVO = vocService.getOneVoc(vocId); // 이건 서비스에서 조회
@@ -61,12 +61,13 @@ public class VocController {
         return mv;
 	}
 	
-	// 수정 처리
+	// VOC 수정 처리
 	@RequestMapping(value = "update.do", method = RequestMethod.POST)
 	public ModelAndView updateVoc(ModelAndView mv, VocVO vocVO) {
 		return vocService.updateVoc(mv, vocVO);
 	}
-	// 리뷰 삭제
+	
+	// VOC 삭제
 	@RequestMapping(value = "delete.do")
 	public ModelAndView deleteVoc(ModelAndView mv,
 										@RequestParam(name = "vocId") long vocId) {

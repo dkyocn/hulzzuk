@@ -32,9 +32,7 @@ public class CommentServiceImpl implements CommentService{
 	public Map<String, Object> createComment(HttpSession session, String type, long id, String content) {
 
 		UserVO loginUser = (UserVO) session.getAttribute("loginUser");
-
 		HashMap<String, Object> map = new HashMap<>();
-
 		if(loginUser != null){
 			CommentVO commentVO = new CommentVO();
 			switch (type){
@@ -45,16 +43,13 @@ public class CommentServiceImpl implements CommentService{
 					commentVO = new CommentVO(content,id,null, loginUser.getUserId());
 					break;
 			}
-
 			// 생성
 			if (commentDao.createComment(commentVO) == 0 ) {
 				throw new RuntimeException(ErrorCode.COMMENT_INSERT_ERROR.getMessage());
 			}
-
 			map.put("status","success");
 			map.put("comment",commentVO);
 		}
-
 		return map;
 	}
 

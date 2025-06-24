@@ -24,6 +24,7 @@
 	<div class="inner">
 		<img id="logo" src="resources/images/hulzzuk01.png"> <br>
 		<form class="search-box" action="loc/page.do" method="get" id="searchForm">
+				<input type="hidden" name=page  value=1>
 			<select class="category" id="category" name="locationEnum" onchange="document.getElementById('searchForm').submit();">
 				<option value="ALL">전체</option>
 				<option value="ACCO">숙소</option>
@@ -39,51 +40,7 @@
 	<br>
 	<div id="top3">
 		<section class="tiles">
-			<div id="logDiv">
-				<div class="title">
-					<button class="title" >Log</button>
-					<hr class="titlehr">
-				</div>
-				<div class="carouselWrapper" data-track="logTop">
-					<div id="logTop" class="sliderOuter">
-						<div class="sliderTrack">
-							<article class="style1">
-								<span class="image"> <img
-									src="resources/images/pic01.jpg" alt="" />
-								</span> <a href="generic.html">
-									<h2>Magna</h2>
-									<div class="content">
-										<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor
-											veroeros et feugiat.</p>
-									</div>
-								</a>
-							</article>
-							<article class="style2">
-								<span class="image"> <img
-									src="resources/images/pic02.jpg" alt="" />
-								</span> <a href="generic.html">
-									<h2>Lorem</h2>
-									<div class="content">
-										<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor
-											veroeros et feugiat.</p>
-									</div>
-								</a>
-							</article>
-							<article class="style3">
-								<span class="image"> <img
-									src="resources/images/pic03.jpg" alt="" />
-								</span> <a href="generic.html">
-									<h2>Feugiat</h2>
-									<div class="content">
-										<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor
-											veroeros et feugiat.</p>
-									</div>
-								</a>
-							</article>
-						</div>
-					</div>
-				</div>
-			</div>
+			
 			<br> <br>
 
 			<div id="accoDiv">
@@ -217,6 +174,51 @@
 				</div>
 			</div>
 			<br> <br>
+			<div id="logDiv">
+				<div class="title">
+					<button class="title" >Log</button>
+					<hr class="titlehr">
+				</div>
+				<div class="carouselWrapper" data-track="logTop">
+					<div id="logTop" class="sliderOuter">
+						<div class="sliderTrack">
+							<article class="style1">
+								<span class="image"> <img
+									src="resources/images/pic01.jpg" alt="" />
+								</span> <a href="generic.html">
+									<h2>Magna</h2>
+									<div class="content">
+										<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor
+											veroeros et feugiat.</p>
+									</div>
+								</a>
+							</article>
+							<article class="style2">
+								<span class="image"> <img
+									src="resources/images/pic02.jpg" alt="" />
+								</span> <a href="generic.html">
+									<h2>Lorem</h2>
+									<div class="content">
+										<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor
+											veroeros et feugiat.</p>
+									</div>
+								</a>
+							</article>
+							<article class="style3">
+								<span class="image"> <img
+									src="resources/images/pic03.jpg" alt="" />
+								</span> <a href="generic.html">
+									<h2>Feugiat</h2>
+									<div class="content">
+										<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor
+											veroeros et feugiat.</p>
+									</div>
+								</a>
+							</article>
+						</div>
+					</div>
+				</div>
+			</div>
 		</section>
 	</div>
 	<!-- Scripts -->

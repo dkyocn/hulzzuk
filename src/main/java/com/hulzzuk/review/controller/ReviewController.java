@@ -72,12 +72,6 @@ public class ReviewController {
 			return mv;
 	  }
 	  
-	  // 리뷰 생성 => summerNote 이미지파일 경로 지정
-	  @RequestMapping("imagePath.do")
-	  public ModelAndView imagePath(ModelAndView mv) {
-		  return mv;
-	  }
-	  
 	// 리뷰 삭제
 		@RequestMapping("delete.do")
 	    @ResponseBody
